@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input[type=text]::placeholder {
+    color: #9D9A98; /* Change placeholder color to grey */
+  }
+
+ 
