@@ -19,7 +19,7 @@ const  ToggleChangeProvider = ({children}) =>{
     
       const LightMode = () =>{
         setThemeMode("light")
-      }
+      } 
 
       useEffect(() => {
         document.querySelector('html').classList.remove("light", "dark")
