@@ -22,11 +22,14 @@ export const AllItemsContext = createContext({
 
 });
 
+
 const handleAllItmes = (currentValue, action) => {
   //make a global varibel which is contain whole items 
-  let newItem = currentValue;
+  let newItem = currentValue
+ 
 
   // if the add item function is run its add a new object in the newitem
+  
   if (action.type === "ADD_ITEM") {
     newItem = [ ...currentValue, { name :action.payload.name , email : action.payload.email }];
 
@@ -40,11 +43,19 @@ const handleAllItmes = (currentValue, action) => {
          newItem = [...currentValue];
          newItem[action.payload.index].name = action.payload.name;
          newItem[action.payload.index].email = action.payload.email;
+  } else if (action.type === 'INITIALIZE') {
+    newItem = action.payload; // Initialize with data from localStorage
   }
+
+    
+  
+  
 
   // return the newitem
   return newItem;
 };
+
+
 
 const AllItemsContextProvider = ({ children }) => {
   // heres we store all the value of the elements by usestate
@@ -55,9 +66,32 @@ const AllItemsContextProvider = ({ children }) => {
     const [index , setIndex] = useState()
   const [searchInputValue , setSearchInputValue]  = useState()
 
+  
+
+
+  
 
     // heres we usereducer to update anything  in the ui 
   const [allItems, dispatchAllItems] = useReducer(handleAllItmes, []);
+
+ 
+// get data from local storage and set into the allitems
+  useEffect(()=>{
+    const allContact = JSON.parse(localStorage.getItem("allItem"))
+    console.log(allContact + "this is");
+    if(allContact && allContact.length > 0){
+      dispatchAllItems({ type: "INITIALIZE", payload: allContact });
+    }
+  } , [])
+
+  // set data to local storage when the new item is create
+  useEffect(()=>{
+    localStorage.setItem("allItem" , JSON.stringify(allItems))
+  }, [allItems])
+
+  
+  
+
 
 
   //make add item funciton
@@ -85,7 +119,6 @@ const AllItemsContextProvider = ({ children }) => {
 
   // make deleteitem function which pass the index to handleAllItmes to delete the item
    const deleteItem = (index) =>{
-    console.log(index + " this is index");
     dispatchAllItems({
         type: "DELETE_ITEM",
         payload : {

@@ -3,6 +3,8 @@ import user from "../assets/user.png";
 import remove from "../assets/remove.png";
 import edit from "../assets/edit.png";
 import { AllItemsContext } from "../Context/AllListsContext";
+import { MdDelete } from "react-icons/md";
+import { FaUserEdit } from "react-icons/fa";
 
 const List = ({ item, index }) => {
   // intrect the functions and elements which is provided by allitemscontext using usecontext
@@ -28,23 +30,18 @@ const List = ({ item, index }) => {
         <br />
         <span className="text-sm ">{item.email}</span>
       </div>
-      <span className="cursor-pointer mr-1">
-        <img
-          onClick={() => {
-            handleEditBtn(item.name, item.email, index);
-          }}
-          src={edit}
-          alt=""
-        />
+      <span
+      onClick={() => {
+        handleEditBtn(item.name, item.email, index);
+      }}
+       className="cursor-pointer mr-1">
+        <FaUserEdit className="text-2xl" />
       </span>
-      <span className="cursor-pointer mr-1">
-        <img
-          src={remove}
-          onClick={() => {
+      <span onClick={() => {
             deleteItem(index);
           }}
-          alt=""
-        />
+          className="cursor-pointer mr-1">
+        <MdDelete className="text-2xl hover:text-red-500"  />
       </span>
     </div>
   );
