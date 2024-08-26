@@ -64,7 +64,7 @@ const AllItemsContextProvider = ({ children }) => {
     const [name , setName ] = useState()
     const [email , setEmail ] = useState()
     const [index , setIndex] = useState()
-  const [searchInputValue , setSearchInputValue]  = useState()
+  const [searchInputValue , setSearchInputValue]  = useState("")
 
   
 
@@ -78,7 +78,6 @@ const AllItemsContextProvider = ({ children }) => {
 // get data from local storage and set into the allitems
   useEffect(()=>{
     const allContact = JSON.parse(localStorage.getItem("allItem"))
-    console.log(allContact + "this is");
     if(allContact && allContact.length > 0){
       dispatchAllItems({ type: "INITIALIZE", payload: allContact });
     }

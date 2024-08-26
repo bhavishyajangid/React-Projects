@@ -1,0 +1,15 @@
+.spinner {
+    border-top-color: #8b5cf6; /* Purple color */
+    border-radius: 50%; /* Makes the loader round */
+    border-width: 8px; /* Border thickness */
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent; /* Loader color and transparency */
+    width: 64px; /* Size of the loader */
+    height: 64px; /* Size of the loader */
+    animation: spin 1s linear infinite; /* Animation */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

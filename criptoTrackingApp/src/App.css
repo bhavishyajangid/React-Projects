@@ -1,0 +1,28 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* color: white; */
+ 
+
+}
+
+
+body , html{
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  background: hsla(236, 100%, 8%, 1);
+
+  background: linear-gradient(90deg, hsla(236, 100%, 8%, 1) 10%, hsla(211, 100%, 28%, 1) 83%);
+  
+  background: -moz-linear-gradient(90deg, hsla(236, 100%, 8%, 1) 10%, hsla(211, 100%, 28%, 1) 83%);
+  
+  background: -webkit-linear-gradient(90deg, hsla(236, 100%, 8%, 1) 10%, hsla(211, 100%, 28%, 1) 83%);
+  
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000328", endColorstr="#00458e", GradientType=1 );
+}
+
+#scrollbar::-webkit-scrollbar{
+ display: none;
+}

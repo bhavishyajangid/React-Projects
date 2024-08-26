@@ -8,7 +8,7 @@ const AllLists = () => {
   const { allItems, searchInputValue } = useContext(AllItemsContext);
   return (
     <div
-      className="w-full h-[400px] overflow-y-auto mt-5 flex flex-col gap-3 relative  "
+      className="w-full h-[400px] overflow-y-auto mt-5 flex flex-col gap-3 relative "
       id="scrollable-container"
     >
 
@@ -17,9 +17,9 @@ const AllLists = () => {
       }
       {allItems.length === 0 && <WelcomeMessage />}
 
-      { // heres we make a conndition  if the searchInputValue in undefined mean on one search the element so display all the elemnts on the ui but when we seach the element searchinputvalue will be equal to seach item and its check if the seach value present in the allitems display the list in which seach value is present ohterwise print welcomemessage 
+      { // heres we make a conndition  if the searchInputValue in undefined mean on one search the element so display all the elemnts on the ui but when we seach the element searchinputvalue will be equal to seach item and its check if the seach value present in the allitems display the list in which seach value is present otherwise print welcomemessage 
       }
-      {allItems.map((item, index) =>
+      {/* {allItems.map((item, index) =>
         searchInputValue === undefined ? (
           <List key={index} item={item} index={index} />
         ) : item.name.includes(searchInputValue) ? (
@@ -27,9 +27,22 @@ const AllLists = () => {
         ) : (
           <WelcomeMessage />
         )
-      )}
-    </div>
-  );
-};
+      )} */}
+
+
+        {searchInputValue === undefined ? (
+    allItems.map(item => (
+      <List key={item} item={item} index={item.index} />
+    ))
+  ) : allItems.filter(item => item.name.includes(searchInputValue)).length > 0 ? (
+    allItems.filter(item => item.name.includes(searchInputValue)).map(item => (
+      <List key={item} item={item}/>
+    ))
+  ) : (
+    <P>not found</P>
+  )}
+      </div>
+    );
+  };
 
 export default AllLists;
