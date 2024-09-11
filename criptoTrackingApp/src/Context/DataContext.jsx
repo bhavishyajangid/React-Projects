@@ -32,7 +32,7 @@ const DataContextProvider = ({ children }) => {
       };
 
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencyInfo}` , options,
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencyInfo}`,
         {
           method: "GET",
           headers: {
