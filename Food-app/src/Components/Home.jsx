@@ -3,13 +3,15 @@ import MiddlePage from './MiddlePage'
 import AllLists from './AllLists'
 import AllDish from './AllDish'
 import AppName from './AppName'
-import Signup from './Signup'
-import Login from './Login'
+
 
 const Home = () => {
+  console.log('home page');
+  
   return (
     <>
     <div className='reletive'>
+
     <MiddlePage/>
     <AllLists/>
     <AllDish/>
@@ -21,4 +23,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default  Home

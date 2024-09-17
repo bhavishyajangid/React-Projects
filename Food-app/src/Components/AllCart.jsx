@@ -5,6 +5,8 @@ import { AllListContext } from "./Context/AllListContext";
 import { Input } from "postcss";
 
 const AllCart = () => {
+  console.log('all cart page');
+  
   const { addToCartItem, setDiscount } = useContext(AllListContext);
   const [promoCode, setPromoCode] = useState({ FUTURE20: 20, TOMATO: 40 });
   const inputValue = useRef("");

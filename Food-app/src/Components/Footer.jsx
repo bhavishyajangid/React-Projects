@@ -1,6 +1,8 @@
 import React from 'react'
 
 const Footer = () => {
+  console.log('footer');
+  
   return (
     <div className='w-full h-60 bg-gray-950 mt-5 m-auto flex max-md:flex-col max-md:h-fit'>
      <div className='w-1/2 h-full px-10 py-4 max-md:w-full  '>
@@ -25,4 +27,4 @@ const Footer = () => {
   )
 }
 
-export default Footer
+export default Footer 

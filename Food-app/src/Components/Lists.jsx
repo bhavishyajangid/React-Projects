@@ -1,7 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , memo} from "react";
 import { AllListContext } from "./Context/AllListContext";
 
 const Lists = ({ item }) => {
+  console.log('list page');
+  
 
   const { filterByCatogries } = useContext(AllListContext)
 

@@ -1,10 +1,11 @@
 import { AiFillDelete } from "react-icons/ai";
 import parcelimg from "../assets/orderimg.png";
 import { AllListContext } from "./Context/AllListContext";
-import { useContext } from "react";
+import { useContext , memo } from "react";
 const MyOrders = () => {
   const { addToCartItem  , quantity , userOrderDetails } = useContext(AllListContext);
-  console.log(userOrderDetails);
+   console.log('my orders page');
+   
   
   return (
     <div

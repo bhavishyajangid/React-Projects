@@ -1,9 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext , } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { IoIosRemove } from "react-icons/io";
 import { AllListContext } from "./Context/AllListContext";
 
 const Dishes = ({ item, id }) => {
+  console.log('dishes page');
+  
   const { quantity, setQuantity } = useContext(AllListContext);
   const [addBtn, setAddBtn] = useState(false);
 

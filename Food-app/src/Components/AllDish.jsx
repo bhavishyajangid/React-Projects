@@ -1,10 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext ,memo } from 'react'
 import Dishes from './Dishes'
 import { AllListContext } from './Context/AllListContext'
 
 
 
 const AllDish = () => {
+  console.log('alldishes page');
+  
   const {AllFoodData} = useContext(AllListContext)
 
   

@@ -1,8 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect , } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { AllListContext } from "./Context/AllListContext";
 
 const Cart = ({ item, id }) => {
+  console.log('cart');
+  
   const { quantity, setQuantity , setDiscount , addToCartItem } = useContext(AllListContext);
 
 

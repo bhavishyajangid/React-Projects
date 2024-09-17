@@ -8,6 +8,8 @@ import { CgProfile } from "react-icons/cg";
 import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const Navbar = () => {
+  console.log('navbar');
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const {addToCartItem} = useContext(AllListContext)
 
