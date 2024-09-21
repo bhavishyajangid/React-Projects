@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import FoodData from "../../FoodData/FoodData";
 import { AllCatogries } from "../../FoodData/FoodData";
-import { Result } from "postcss";
+
 
 // Create the context with default values
 export const AllListContext = createContext({

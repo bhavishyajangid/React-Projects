@@ -6,7 +6,7 @@ import AppName from './AppName'
 
 
 const Home = () => {
-  console.log('home page');
+
   
   return (
     <>
