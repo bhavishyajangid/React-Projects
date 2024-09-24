@@ -4,10 +4,10 @@ import logo from '../assets/logom.svg'
 import handLogo from '../assets/hand.png'
 const Navbar = () => {
   return (
-    <nav>
-        <div className='w-full h-[70px] px-16 bg-[#ffffff] border border-solid border-gray-200 flex justify-between max-sm:px-8'>
-    <div className='h-full  relative overflow-hidden flex bg-red p-2 items-center '>
-        <span className='text-3xl text-[#39b75d] mr-4 lg:hidden '><IoMdMenu/></span>
+    <nav className='w-full h-[70px]  border border-solid border-gray-200 bg-[#ffffff] fixed top-0 z-10 '>
+        <div className='w-11/12  max-w-[1280px]  flex justify-between m-auto '>
+    <div className='h-full  relative overflow-hidden flex bg-red p-2 items-center  '>
+        <span className='text-3xl text-[#39b75d]  lg:hidden '><IoMdMenu/></span>
         <img className='sm:hidden' src={handLogo} alt="" />
         <img className='w-[135px]  max-sm:hidden cursor-pointer' src={logo} alt="" />
     </div>
