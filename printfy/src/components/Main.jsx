@@ -7,8 +7,8 @@ import { BsPlayCircle } from "react-icons/bs";
 const Main = () => {
   return (
     <>
-    <div className='w-11/12  max-w-[1280px] px-6 py-14 m-auto   flex justify-between bg-contain bg-no-repeat bg-right overflow-hidden mt-20  max-md:flex-col  max-md:py-0 max-md:justify-normal max-md:px-5 max-sm:mt-5 max-md:bg-bottom  max-md:items-center' style={{ backgroundImage: `url(${myImage})` }}>
-        <div className='w-[40%]  flex flex-col justify-center max-lg:justify-start max-md:pt-10 max-md:w-full  md:min-w-[350px] ' >
+    <div className='w-11/12  max-w-[1280px] px-6 py-14 m-auto   flex justify-between bg-contain bg-no-repeat bg-right overflow-hidden mt-20  max-md:flex-col  max-md:py-0 max-md:justify-normal max-md:px-5  max-md:bg-bottom  max-md:items-center max-sm:mt-16 ' style={{ backgroundImage: `url(${myImage})` }}>
+        <div className='w-[40%]  flex flex-col justify-center max-lg:justify-start max-md:pt-10 max-md:w-full  md:min-w-[350px]' >
          <h1 className='text-[56px] font-medium leading-[72px] text-[#17262b] font-sans max-lg:text-4xl'>Create and sell  custom products</h1>
 
          <ul className='w-full  text-[#485256] font-medium mt-5 '>
