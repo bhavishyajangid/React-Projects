@@ -3,11 +3,12 @@ import { NavLink, Link } from 'react-router-dom';
 import { IoMenu } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
-import Sidebar from "./Sidebar"; // Import the Sidebar component
+import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const {itemsInCart} = useSelector(state => state.addToCart)
+  const {Quantity} = useSelector(state => state.addToCart)
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -62,7 +63,7 @@ const Navbar = () => {
             <Link to="/cart">
               <FaCartShopping className="text-3xl text-gray-500 mr-2 cursor-pointer max-sm:hidden relative" />
               {
-                (itemsInCart.length === 0) ? null : <span className="w-5 h-5 flex justify-center items-center  top-3 right-[170px] absolute text-sm bg-yellow-300 rounded-full">{itemsInCart.length}</span>
+                (Object.keys(Quantity).length === 0) ? null : <span className="w-5 h-5 flex justify-center items-center  top-3 right-[170px] absolute text-sm bg-yellow-300 rounded-full">{Object.keys(Quantity).length}</span>
               }
               
             </Link>

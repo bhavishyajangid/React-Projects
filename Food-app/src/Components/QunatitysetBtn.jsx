@@ -7,6 +7,7 @@ import { increment , decrement } from '../Store/addToCart';
 const QunatitysetBtn = ({id , addBtn}) => {
     const dispatch = useDispatch()
     const {Quantity} = useSelector((state) => state.addToCart)
+    
   return (    
   <div
     className={`w-[95px] h-[35px] bg-white rounded-3xl  bottom-2 right-3 flex justify-between items-center px-1 ${addBtn ? 'absolute' : "reletive bg-transparent"} `}

@@ -6,6 +6,7 @@ import { addPromoCode, TotalPaymentCalculate } from "../Store/PaymentInfo";
 import { addItemInCart } from "../Store/addToCart";
 
 const AllCart = () => { 
+
   const {Quantity , itemsInCart} = useSelector((state) => state.addToCart)
   const {FoodData} = useSelector((state) => state.Items)
   const dispatch = useDispatch()

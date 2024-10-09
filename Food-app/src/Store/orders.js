@@ -31,7 +31,7 @@ const orderSlice = createSlice({
         } ,  
 
         handleOrderCancel : (state , action) => {
-            state.orderQuantity[action.payload].status = "Cancelled"
+            state.orderQuantity[action.payload].status = 'Cancelled'
         }
     }
 })
