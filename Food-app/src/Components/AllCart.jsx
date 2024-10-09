@@ -1,38 +1,38 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Cart from "./Cart";
 import TotalPayment from "./TotalPayment";
-import { AllListContext } from "./Context/AllListContext";
-import { Input } from "postcss";
+import { useDispatch, useSelector } from "react-redux";
+import { addPromoCode, TotalPaymentCalculate } from "../Store/PaymentInfo";
+import { addItemInCart } from "../Store/addToCart";
 
-const AllCart = () => {
-  console.log('all cart page');
-  
-  const { addToCartItem, setDiscount } = useContext(AllListContext);
-  const [promoCode, setPromoCode] = useState({ FUTURE20: 20, TOMATO: 40 });
+const AllCart = () => { 
+  const {Quantity , itemsInCart} = useSelector((state) => state.addToCart)
+  const {FoodData} = useSelector((state) => state.Items)
+  const dispatch = useDispatch()
   const inputValue = useRef("");
+  
 
-  const setupPromoCode = () => {
-    if (addToCartItem.length !== 0) {
-      const result = Object.fromEntries(
-        Object.entries(promoCode).filter(
-          ([keys, value]) => keys === inputValue.current.value
-        )
-      );
+useEffect(() => {
+  const keys = Object.keys(Quantity);
+  const result = keys.map((item) => 
+     FoodData.filter((item2) => item2.id == item)
+  ).flat()
+  const subtotal = result.reduce((acc , item , i) => {
+          return acc + item.price * Quantity[item.id]
+  } , 0)
+  
+  dispatch(addItemInCart(result))
+  dispatch(TotalPaymentCalculate(subtotal))
+}, [Quantity])
 
-      if (Object.keys(result).length === 0) {
-        alert("Invalid promo code");
-      } else {
-        setDiscount(result[inputValue.current.value]);
-        inputValue.current = ""
-      }
-    } else {
-      alert("Add food to the cart");
+  function handleSubmitBtn() {
+    if(itemsInCart.length !==0){
+      dispatch(addPromoCode(inputValue.current.value))
+    }else{
+      alert("please first add a item in your cart")
     }
-
-  };
-
-
-
+    inputValue.current.value = ''
+  }
   return (
     <>
       <div
@@ -48,19 +48,22 @@ const AllCart = () => {
             <span className="w-32  text-center">Total</span>
             <span className="w-32  text-center">Remove</span>
           </div>
-          {addToCartItem.length === 0 ? (
+
+
+          {  
+          itemsInCart.length === 0 ? (
             <p className="text-center text-gray-500">
               Theres no item in your cart
             </p>
-          ) : (
-            addToCartItem.map((item) => (
-              <Cart item={item} key={item.id} id={item.id} />
+          ) : ( 
+            itemsInCart.map((item , i) => ( 
+              <Cart item={item} key={item.id} id={item.id}   />
             ))
           )}
         </div>
 
         <div className="w-4/5 min-h-52 max-[500px]:w-full px-6    flex justify-between mt-5">
-          <TotalPayment />
+          <TotalPayment  />
           <div className="w-2/5 h-60 max-md:hidden  ">
           <p className="text-xs text-gray-500 mt-12">use FUTURE20 promo code for 20% discount</p>
             <p className="text-sm text-gray-500 mt-2 ">
@@ -75,7 +78,7 @@ const AllCart = () => {
                 placeholder="Promo"
               />
               <button
-                onClick={setupPromoCode}
+                onClick={handleSubmitBtn}
                 className="w-[104px] bg-black text-white text-md max-lg:w-[130px] "
               >
                 Submit

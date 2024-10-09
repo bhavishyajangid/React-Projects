@@ -11,6 +11,8 @@ import MyOrders from './Components/MyOrders.jsx';
 import { handleFormData } from './Components/PaymentInfo.jsx';
 import AllDish from './Components/AllDish.jsx';
 import AllLists from './Components/AllLists.jsx';
+import { Provider } from 'react-redux';
+import counterStore from './Store/Index.js';
 
 let router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,7 +28,8 @@ let router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render(
-
+  <Provider store={counterStore}>
     <RouterProvider router={router} />
+    </Provider>
  
 )

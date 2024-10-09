@@ -1,18 +1,26 @@
-import React, { useContext, useState , useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import TotalPayment from './TotalPayment'
-import { Form, redirect, useActionData } from 'react-router-dom'
-import { AllListContext } from './Context/AllListContext'
-import { Link } from 'react-router-dom'
+import { Form,   redirect,  useActionData, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getOrderDetails, paymentDone } from '../Store/OrdersDetails'
+import { handleOrderedItems } from '../Store/orders'
 
 
 const PaymentInfo = () => {
-   const {setUserOrderDetails, userOrderDetails} = useContext(AllListContext)
+  const {itemsInCart , Quantity} = useSelector(state => state.addToCart)
+  const {FoodData} = useSelector(state => state.Items)
    const data = useActionData()
+   const navigate = useNavigate()
+   const dispatch = useDispatch()
+   
 
  
    useEffect(() => {
-      if (data) {    
-        setUserOrderDetails(data);
+      if (data) { 
+        alert('order placed sucessfully')
+         dispatch(getOrderDetails(data));
+         dispatch(handleOrderedItems({Quantity , itemsInCart , FoodData }))
+        navigate('/orders')
       }
     }, [data]);
    
@@ -41,14 +49,15 @@ const PaymentInfo = () => {
         </div>
 
            <input className='w-full h-8  border-solid border-gray-500 border text-sm pl-2 rounded-sm mt-2 ' type="number" name='number' placeholder='Phone' required />
-  
+       
         <button type='submit' className=' w-full h-10 rounded-md bg-orange-500 text-white text-ld mt-3 font-medium border-none '>Place order</button>
+        
         </Form>
       </div>
 
 
 
-<TotalPayment/>
+<TotalPayment visible={"none"}/>
 
 
     
@@ -59,13 +68,10 @@ const PaymentInfo = () => {
 export default PaymentInfo
 
 export const handleFormData = async(data) =>{
-   
     const data2 = await data.request.formData()
     const formData = Object.fromEntries(data2)
-    
-
-
      return formData
-     
+    
    
 }
+

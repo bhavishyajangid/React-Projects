@@ -1,32 +1,12 @@
-import React, { useContext, useEffect , } from "react";
+import React, { useEffect , } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { AllListContext } from "./Context/AllListContext";
+import { useDispatch, useSelector } from "react-redux";
+import { removeItem} from "../Store/addToCart";
+import QunatitysetBtn from "./QunatitysetBtn";
 
 const Cart = ({ item, id }) => {
-  console.log('cart');
-  
-  const { quantity, setQuantity , setDiscount , addToCartItem } = useContext(AllListContext);
-
-
-
-
-
-
-  const deleteItemFromCart = () => {
-    const obj = Object.fromEntries(
-      Object.entries(quantity).filter(([key, value]) => parseInt(key) !== id)
-    );
-
-    setQuantity(obj);
-    if(addToCartItem.length == 0){
-      setDiscount(0)
-     }
-
-  };
-
-
-
-
+  const {Quantity} = useSelector(state => state.addToCart)
+  const dispatch = useDispatch()
   return (
     <div className="w-full min-h-12 flex justify-between items-center text-sm font-medium border-b border-b-gray-300">
       <div className="w-32  flex justify-center max-sm:font-normal">
@@ -40,14 +20,12 @@ const Cart = ({ item, id }) => {
       <span className="w-32  text-center max-sm:font-normal">
         ₹ {item.price}
       </span>
+     <QunatitysetBtn id={id}/>
       <span className="w-32  text-center max-sm:font-normal">
-        {quantity[id]}
-      </span>
-      <span className="w-32  text-center max-sm:font-normal">
-        ₹ {quantity[id] * item.price}
+        ₹ {Quantity[id] * item.price}
       </span>
       <button
-        onClick={deleteItemFromCart}
+        onClick={() => {dispatch(removeItem(id))}}
         className="w-32  flex justify-center "
       >
         <AiFillDelete className="text-red-500 text-xl" />

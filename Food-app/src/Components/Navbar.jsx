@@ -1,20 +1,16 @@
-import React, { useContext, useState } from "react";
-import { FiSearch } from "react-icons/fi";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink, Link } from 'react-router-dom';
 import { IoMenu } from "react-icons/io5";
-import { AllListContext } from "./Context/AllListContext";
 import { CgProfile } from "react-icons/cg";
+import { useState } from "react";
 import Sidebar from "./Sidebar"; // Import the Sidebar component
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  console.log('navbar');
-  
+  const {itemsInCart} = useSelector(state => state.addToCart)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const {addToCartItem} = useContext(AllListContext)
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
   return (
     <div>
       <nav>
@@ -66,7 +62,7 @@ const Navbar = () => {
             <Link to="/cart">
               <FaCartShopping className="text-3xl text-gray-500 mr-2 cursor-pointer max-sm:hidden relative" />
               {
-                (addToCartItem.length === 0) ? null : <span className="w-5 h-5 flex justify-center items-center  top-3 right-[170px] absolute text-sm bg-yellow-300 rounded-full">{addToCartItem.length}</span>
+                (itemsInCart.length === 0) ? null : <span className="w-5 h-5 flex justify-center items-center  top-3 right-[170px] absolute text-sm bg-yellow-300 rounded-full">{itemsInCart.length}</span>
               }
               
             </Link>

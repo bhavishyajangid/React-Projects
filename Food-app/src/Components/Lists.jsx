@@ -1,23 +1,13 @@
-import React, { useContext, useState , memo} from "react";
-import { AllListContext } from "./Context/AllListContext";
+
+import { useDispatch } from "react-redux";
+import { filterCategory } from "../Store/Catogries";
 
 const Lists = ({ item }) => {
-  console.log('list page');
-  
-
-  const { filterByCatogries } = useContext(AllListContext)
-
-  const setCatogries = (event) => {
-    const span = event.currentTarget.querySelector("span");
-
-    const spanText = span.innerText;
-
-    filterByCatogries(spanText)
-  };
+const dispatch = useDispatch()
   return (
     <div
-      onClick={(event) => {
-        setCatogries(event);
+      onClick={() => {
+        dispatch(filterCategory(item.category))
       }}
       className="w-32 h-full   flex flex-col justify-around items-center cursor-pointer"
     >

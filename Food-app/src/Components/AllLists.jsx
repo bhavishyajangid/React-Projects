@@ -1,17 +1,17 @@
-import React, { useContext , memo } from 'react';
+
 import Lists from './Lists';
-import AllListContextProvider, { AllListContext } from './Context/AllListContext';
+import { useSelector } from 'react-redux';
 
 const AllLists = () => {
-  console.log('all list page');
+  const {category} = useSelector(state => state.category);
+
   
-  const {AllCatogries} = useContext(AllListContext)
   return (
     <div className='w-5/6 h-36  flex  m-auto mt-7 overflow-x-auto scrollbar-hide  border-solid border-b-[1px] border-gray-300 max-sm:w-full ' id='menu'>
       <div className='flex gap-2'>
 
         {
-          AllCatogries.map((item, index) => (
+          category.map((item, index) => (
             <Lists key={index} item={item} />
           ))
         }

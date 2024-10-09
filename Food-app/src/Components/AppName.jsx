@@ -1,7 +1,7 @@
 import React from 'react'
 
 const AppName = () => {
-  console.log('app anme');
+
   
   return (
     <div className='w-5/6 h-26 m-auto mt-16'>

@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const MiddlePage = () => {
-  console.log('middle page');
   
   return (
     <div className="w-5/6  m-auto  flex flex-col max-sm:w-full">
