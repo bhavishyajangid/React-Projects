@@ -5,23 +5,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPromoCode, TotalPaymentCalculate } from "../Store/PaymentInfo";
 import { addItemInCart } from "../Store/addToCart";
 
-const AllCart = () => { 
 
+const AllCart = () => { 
+  
   const {Quantity , itemsInCart} = useSelector((state) => state.addToCart)
   const {FoodData} = useSelector((state) => state.Items)
   const dispatch = useDispatch()
   const inputValue = useRef("");
   
-
-useEffect(() => {
-  const keys = Object.keys(Quantity);
-  const result = keys.map((item) => 
-     FoodData.filter((item2) => item2.id == item)
+  useEffect(() => {
+    const keys = Object.keys(Quantity);
+    const result = keys.map((item) => 
+      FoodData.filter((item2) => item2.id == item)
   ).flat()
   const subtotal = result.reduce((acc , item , i) => {
-          return acc + item.price * Quantity[item.id]
+    return acc + item.price * Quantity[item.id]
   } , 0)
-  
   dispatch(addItemInCart(result))
   dispatch(TotalPaymentCalculate(subtotal))
 }, [Quantity])
