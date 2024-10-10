@@ -23,7 +23,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           Home
         </NavLink>
         <NavLink
-          to="/none"
+          to="/menu"
           className="block px-4 py-2 text-lg hover:bg-gray-700"
           onClick={toggleSidebar}
         >

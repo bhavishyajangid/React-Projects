@@ -5,7 +5,10 @@ import { removeItem} from "../Store/addToCart";
 import QunatitysetBtn from "./QunatitysetBtn";
 
 const Cart = ({ item, id }) => {
-  const {Quantity} = useSelector(state => state.addToCart)
+//  let Quantity = JSON.parse(localStorage.getItem('Quantity'))
+const {Quantity} = useSelector(state => state.addToCart)
+ console.log(JSON.parse(localStorage.getItem('Quantity')) , 'local');
+ 
   const dispatch = useDispatch()
   return (
     <div className="w-full min-h-12 flex justify-between items-center text-sm font-medium border-b border-b-gray-300">

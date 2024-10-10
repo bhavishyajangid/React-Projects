@@ -39,6 +39,10 @@ const addToCartSlice = createSlice({
 
         addItemInCart : (state , action) => {
         state.itemsInCart = action.payload
+        console.log('running');
+        
+        
+
         },
       
         removeItem : (state , action) => {

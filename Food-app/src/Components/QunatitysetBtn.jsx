@@ -6,7 +6,8 @@ import { increment , decrement } from '../Store/addToCart';
 
 const QunatitysetBtn = ({id , addBtn}) => {
     const dispatch = useDispatch()
-    const {Quantity} = useSelector((state) => state.addToCart)
+    // const Quantity =  JSON.parse(localStorage.getItem('Quantity'))
+    const {Quantity} = useSelector(state => state.addToCart)  
     
   return (    
   <div

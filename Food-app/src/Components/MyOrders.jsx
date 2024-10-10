@@ -5,7 +5,6 @@ const MyOrders = () => {
   const {orderDetails} = useSelector(state => state.orderDetails)
   const dispatch = useDispatch()
   const cancelOrder = (index) => {
-    console.log("click");
     alert('order cancel')
        dispatch(handleOrderCancel(index))
   }

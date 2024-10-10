@@ -59,11 +59,11 @@ const Navbar = () => {
               Contact Us
             </NavLink>
           </li>
-          <li className="h-full flex justify-end items-center gap-5">
+          <li className="h-full flex justify-end items-center gap-5 relative">
             <Link to="/cart">
-              <FaCartShopping className="text-3xl text-gray-500 mr-2 cursor-pointer max-sm:hidden relative" />
+              <FaCartShopping className="text-3xl text-gray-500 mr-2 cursor-pointer max-sm:hidden " />
               {
-                (Object.keys(Quantity).length === 0) ? null : <span className="w-5 h-5 flex justify-center items-center  top-3 right-[170px] absolute text-sm bg-yellow-300 rounded-full">{Object.keys(Quantity).length}</span>
+                (Object.keys(Quantity).length === 0) ? null : <span className="w-4 h-4 flex justify-center items-center  top-4 right-[60px] absolute text-sm bg-yellow-300 rounded-full max-sm:hidden">{Object.keys(Quantity).length}</span>
               }
               
             </Link>
