@@ -1,5 +1,5 @@
 import React from 'react'
-import { Allcards, Policies, HeroImg } from '../export'
+import { Allcards, Policies, HeroImg, Subscription } from '../export'
 
 
 const Home = () => {
@@ -8,6 +8,7 @@ const Home = () => {
     <HeroImg/>
     <Allcards/>
     <Policies/>
+    <Subscription/>
     </>
   )
 }

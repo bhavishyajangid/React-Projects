@@ -17,7 +17,7 @@ const Header = () => {
   const navItem = [
     {
       name: "HOME",
-      path: "/home",
+      path: "/",
       active : true
     },
     {
