@@ -1,4 +1,4 @@
-import Button from "./components/Header/Button";
+import HeaderBtn from "./components/Header/HeaderBtn";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar";
 import Logo from "./components/Logo";
@@ -18,7 +18,9 @@ import QuantityBtn from "./components/QuantityBtn/QuantityBtn";
 import Review from "./components/Reviews/Review";
 import ReviewPage from "./Pages/ReviewPage";
 import ReletedProducts from "./Pages/ReletedProducts";
-
+import Button from "./components/Button";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 export  {
     Button ,
     Header , 
@@ -40,6 +42,8 @@ export  {
     Review, 
     ReviewPage , 
     ReletedProducts,
-
+    HeaderBtn , 
+    Signup, 
+    Login
     
 }

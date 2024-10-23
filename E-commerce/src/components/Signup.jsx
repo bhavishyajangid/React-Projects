@@ -1,38 +1,48 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useReducer, useRef, useState } from 'react'
 import authService from '../appwrite/auth'
 import {Button , Input} from '../export'
 import { Link, useNavigate } from 'react-router-dom'
 import {useForm} from 'react-hook-form'
-import { login as authLogin } from '../Store/authSlice'
+import { login } from '../Store/authSlice'
 import { useDispatch } from 'react-redux'
-const Login = () => {
-    const navigate = useNavigate();
+const Signup = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const [error , setError] = useState('')
     const {register, handleSubmit} = useForm()
-    const [error, setError] = useState("")
-    const Login = async(data) => {
+
+    const Signup = async(data) => {
         setError("")
         try {
-            const session = await authService.login(data)
-            if (session) {
+            const userData = await authService.createAccount(data)
+            if (userData) {
                 const userData = await authService.getCurrentUser()
-                if(userData) dispatch(authLogin(userData));
+                if(userData) dispatch(login(userData));
                 navigate("/")
             }
         } catch (error) {
             setError(error.message)
-        }   
+        }
+          
     }
   return (
     <div className='w-4/5 h-[70vh] max-lg:w-11/12 m-auto flex items-center justify-center'>
      <div className=' flex flex-col items-center gap-5 p-5 '>
-     <h1 className='text-3xl text-[#414753] prata-regular'>Log In <span className='inline-block w-9 max-sm:h-[1.5px] h-[2px] bg-gray-900'></span></h1>
+     <h1 className='text-3xl text-[#414753] prata-regular'>Sign Up <span className='inline-block w-9 max-sm:h-[1.5px] h-[2px] bg-gray-900'></span></h1>
      {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-     <form onClick={handleSubmit(Login)} className=' flex flex-col gap-5 items-center'>
-        <Input 
+     <form onSubmit={handleSubmit(Signup)} className=' flex flex-col gap-5 items-center'>
+        <Input
         className='w-96 h-10 border border-black border-solid outline-none px-2' 
-        placeholder='Email'
+        placeholder='Name' 
+        {...register("name", {
+        required: true,
+        })}
+        />
+        
+        <Input  
+        className='w-96 h-10 border border-black border-solid outline-none px-2' 
+        placeholder='Email' 
+        type='email' 
         {...register("email", {
             required: true,
             validate: {
@@ -44,20 +54,20 @@ const Login = () => {
 
         <Input  
         className='w-96 h-10 border border-black border-solid outline-none px-2' 
-        placeholder='Password'
+        placeholder='Password' 
         {...register("password", {
             required: true,
-            })}
+        })}
         />
 
         <div className='w-full flex items-center justify-between '>
-            <button className='text-xs  '>Forgot Password</button>
-            <Link to="/signup">
-            <button className='text-xs'>Create account</button>
+            <Link to="/login">
+            <button className='text-xs'>Login account</button>
             </Link>
         </div>
+
         <Button type='submit'>
-            Log In
+            Sign Up
         </Button>
      </form>
      </div>
@@ -65,4 +75,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signup

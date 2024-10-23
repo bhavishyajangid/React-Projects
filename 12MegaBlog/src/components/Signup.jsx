@@ -54,6 +54,7 @@ function Signup() {
                         {...register("name", {
                             required: true,
                         })}
+                       
                         />
                         <Input
                         label="Email: "
