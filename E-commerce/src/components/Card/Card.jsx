@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 const Card = ({item , id}) => {
+  
   return (
     <Link to={`/product/${id}`}>
     <div className='max-w-[220px] min-w-[180px] rounded-lg px-2 py-3  '>

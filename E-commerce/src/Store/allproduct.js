@@ -5,6 +5,7 @@ const allProductsSlice = createSlice({
     initialState : {
         allProducts : [], 
         Quantity : {},
+
     },
     reducers : {
         setAllProducts : (state , action) => {
@@ -32,7 +33,7 @@ const allProductsSlice = createSlice({
               }
               console.log(updatedQuantity , 'updatedQunatity');
               state.Quantity = updatedQuantity;
-        }
+        } ,
     }
 })
 export const {setAllProducts, decreaseQunatity , increaseQuantity} = allProductsSlice.actions

@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useId, useReducer, useRef, useState } from 'react'
 import authService from '../appwrite/auth'
 import {Button , Input} from '../export'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,8 +9,10 @@ const Signup = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const [error , setError] = useState('')
+   // using react-form library for handle form 
     const {register, handleSubmit} = useForm()
 
+    // making signup funcationalty
     const Signup = async(data) => {
         setError("")
         try {
@@ -23,7 +25,6 @@ const Signup = () => {
         } catch (error) {
             setError(error.message)
         }
-          
     }
   return (
     <div className='w-4/5 h-[70vh] max-lg:w-11/12 m-auto flex items-center justify-center'>
@@ -34,7 +35,7 @@ const Signup = () => {
         <Input
         className='w-96 h-10 border border-black border-solid outline-none px-2' 
         placeholder='Name' 
-        {...register("name", {
+        {...register("username", {
         required: true,
         })}
         />
@@ -66,7 +67,7 @@ const Signup = () => {
             </Link>
         </div>
 
-        <Button type='submit'>
+        <Button className='w-96 h-10 rounded-md bg-black text-white' type='submit'>
             Sign Up
         </Button>
      </form>

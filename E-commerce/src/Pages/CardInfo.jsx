@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Bounce, toast , ToastContainer } from 'react-toastify';
+import { useParams } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import {
-  Button,
   Starlogo,
   QuantityBtn,
   PolicyCard,
-  Review,
   ReviewPage,
   ReletedProducts,
 } from "../export";
 import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartId, addToCartItem } from "../Store/addToCart";
+import { addToCartItem } from "../Store/addToCart";
 const CardInfo = () => {
-  const {Quantity} = useSelector(state => state.allProducts)
-  const {cartItem} = useSelector(state => state.addToCart)
-  const dispatch = useDispatch()
+  const { Quantity } = useSelector((state) => state.allProducts);
+  const { cartItem } = useSelector((state) => state.addToCart);
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [cardInfo, setCardInfo] = useState(null);
-  const [imgIndex , setImgIndex] = useState(0);
-console.log(cartItem.products , 'khgjhghjg');
+  const [imgIndex, setImgIndex] = useState(0);
 
-
+  // fetch card information using product id
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,41 +33,48 @@ console.log(cartItem.products , 'khgjhghjg');
     };
 
     fetchData();
-    
   }, [id]);
 
-  const addToCart = () => {
-    fetch('https://dummyjson.com/carts/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: 1,
-        products: [ 
-          ...cartItem.products  ,
-          {id : id , quantity : Quantity[id]}
-        ]
+  // make add to card funcationalty
+  const addToCart = async() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    // add to cart product in the backend and take response from it
+    console.log(userData.$id.slice(-4) , userData , 'userdata');
+    
+    try {
+      const res = await fetch("https://dummyjson.com/carts/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: "b",
+          products: [...cartItem.products, { id: id, quantity: Quantity[id] }],
+        }),
       })
-    })
-    .then(res => res.json())
-    .then(res => dispatch(addToCartItem(res)))
-    toast.success("Success Notification !", {
-      position: "top-center"
-    });
-  }
-
-
+        const response = await res.json()
+      if(response){
+        dispatch(addToCartItem(response))
+        toast.success("product added into cart");
+      }
+    } catch (error) {
+      toast.error('ERROR : product not added into cart');
+    }
+    
+  };
 
   return (
     <>
       {cardInfo ? (
         <div>
-<ToastContainer autoClose={false} draggable={false} />
+          {/* <ToastContainer autoClose={false} draggable={false} /> */}
 
           <div className="w-4/5 max-w-[1500px] max-lg:w-11/12 max-sm:w-full  m-auto max-sm:flex-col flex ">
             <div className="w-1/2 max-sm:w-full max-lg:h-full  flex max-sm:gap-5  max-sm:flex-col-reverse max-sm:items-center max-sm:mb-5">
               <div className="flex w-[25%] max-sm:w-full  flex-col gap-5 max-sm:flex-row max-sm:px-5">
                 {cardInfo.images.map((item, index) => (
-                  <img onClick={ () => {setImgIndex(index)}}
+                  <img
+                    onClick={() => {
+                      setImgIndex(index);
+                    }}
                     className="h-auto w-[80%] max-sm:w-[18%] cursor-pointer bg-gray-100"
                     key={index}
                     src={item}
@@ -102,9 +106,17 @@ console.log(cartItem.products , 'khgjhghjg');
                 <QuantityBtn id={id} />
               </div>
               <div className="w-full flex flex-wrap gap-5  justify-between items-center  mt-14 max-sm:justify-around">
-                
-                <button onClick={() => {addToCart()}} className="bg-black text-white px-8 h-10 rounded-md text-sm font-medium ">ADD TO CART</button>
-                <button className="bg-black text-white px-11 h-10 rounded-md text-sm font-medium mr-16 max-sm:mr-0 ">BUY NOW</button>
+                <button
+                  onClick={() => {
+                    addToCart();
+                  }}
+                  className="bg-black text-white px-8 h-10 rounded-md text-sm font-medium "
+                >
+                  ADD TO CART
+                </button>
+                <button className="bg-black text-white px-11 h-10 rounded-md text-sm font-medium mr-16 max-sm:mr-0 ">
+                  BUY NOW
+                </button>
               </div>
             </div>
           </div>
@@ -119,7 +131,7 @@ console.log(cartItem.products , 'khgjhghjg');
               icon={<GiShakingHands />}
             />
           </div>
-          <ReletedProducts category={cardInfo.category}/>
+          <ReletedProducts category={cardInfo.category} />
           {cardInfo.reviews && <ReviewPage reviews={cardInfo.reviews} />}
         </div>
       ) : (

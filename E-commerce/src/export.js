@@ -21,6 +21,8 @@ import ReletedProducts from "./Pages/ReletedProducts";
 import Button from "./components/Button";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import Allcart from "./Pages/Allcart";
+import Cart from "./components/Cart";
 export  {
     Button ,
     Header , 
@@ -44,6 +46,8 @@ export  {
     ReletedProducts,
     HeaderBtn , 
     Signup, 
-    Login
+    Login, 
+    Allcart ,
+    Cart
     
 }

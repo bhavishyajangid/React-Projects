@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
 
 const Sidebar = ({navItem , isOpen , toggleSidebar}) => {
-    console.log(isOpen);
     
     return (
             <div className={` absolute top-0 right-0  h-full w-48 bg-white shadow-lg transform transition-transform duration-300   ${isOpen ? '-translate-x-0 block' : 'translate-x-48  hidden'}`}>

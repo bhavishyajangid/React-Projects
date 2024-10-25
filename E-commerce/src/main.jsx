@@ -5,7 +5,7 @@ import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './Store/index.js'
-import { CardInfo, Home, Signup , Login } from './export.js'
+import { CardInfo, Home, Signup , Login, Card, Allcart } from './export.js'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} >
@@ -14,6 +14,7 @@ const router = createBrowserRouter(
       <Route path='/collection' /> 
       <Route path='/about' /> 
       <Route path='/contact' /> 
+      <Route path='/cart' element={<Allcart/>} /> 
       <Route path='/login' element={<Login/>} /> 
       <Route path='/signup' element={<Signup/>} /> 
     </Route>
