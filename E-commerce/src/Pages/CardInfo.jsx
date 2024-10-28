@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import {
   Starlogo,
@@ -11,10 +11,13 @@ import {
 import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartItem } from "../Store/addToCart";
+import {  cartBtnClick } from "../Store/addToCart";
+import dataBaseService from "../appwrite/cart";
+import { login } from "../Store/authSlice";
 const CardInfo = () => {
   const { Quantity } = useSelector((state) => state.allProducts);
-  const { cartItem } = useSelector((state) => state.addToCart);
+  const { cartBtn } = useSelector((state) => state.addToCart);
+  const { userData } = useSelector((state) => state.authSlice);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [cardInfo, setCardInfo] = useState(null);
@@ -34,29 +37,28 @@ const CardInfo = () => {
 
     fetchData();
   }, [id]);
-
+  
   // make add to card funcationalty
-  const addToCart = async() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    // add to cart product in the backend and take response from it
-    console.log(userData.$id.slice(-4) , userData , 'userdata');
-    
+  const addToCart = async() => { 
+    const quantity =  Quantity[id] || 1
     try {
-      const res = await fetch("https://dummyjson.com/carts/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: "b",
-          products: [...cartItem.products, { id: id, quantity: Quantity[id] }],
-        }),
-      })
-        const response = await res.json()
-      if(response){
-        dispatch(addToCartItem(response))
-        toast.success("product added into cart");
-      }
+      await dataBaseService.addToCart(
+        {
+          userId : userData.$id,
+        Id : String(cardInfo.id) ,
+        Tittle : String(cardInfo.title) ,
+        Image : String(cardInfo.images[0]),
+        Price : Math.round(cardInfo.price) ,
+        Quantity : Number(Quantity[id] || 1) ,
+        Total : Math.round(cardInfo.price * quantity),
+      }).then((res) => {
+          if(res) {
+            toast.success('product is added into cart')
+            dispatch(cartBtnClick(!cartBtn))
+          }
+      }) 
     } catch (error) {
-      toast.error('ERROR : product not added into cart');
+        toast.error('ERROR : not added' );
     }
     
   };
@@ -65,8 +67,6 @@ const CardInfo = () => {
     <>
       {cardInfo ? (
         <div>
-          {/* <ToastContainer autoClose={false} draggable={false} /> */}
-
           <div className="w-4/5 max-w-[1500px] max-lg:w-11/12 max-sm:w-full  m-auto max-sm:flex-col flex ">
             <div className="w-1/2 max-sm:w-full max-lg:h-full  flex max-sm:gap-5  max-sm:flex-col-reverse max-sm:items-center max-sm:mb-5">
               <div className="flex w-[25%] max-sm:w-full  flex-col gap-5 max-sm:flex-row max-sm:px-5">
@@ -100,7 +100,7 @@ const CardInfo = () => {
                 <Starlogo />
                 <span>({cardInfo.rating})</span>
               </div>
-              <h2 className="text-2xl font-medium mt-7"> ${cardInfo.price}</h2>
+              <h2 className="text-2xl font-medium mt-7"> ${Math.round(cardInfo.price)}</h2>
               <p className="text-[15px] mt-4">{cardInfo.description}</p>
               <div className="w-full mt-8">
                 <QuantityBtn id={id} />

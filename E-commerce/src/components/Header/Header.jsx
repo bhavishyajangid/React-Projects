@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import logo from "../../assets/Logo.png";
+import React, {  useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { FaBagShopping } from "react-icons/fa6";
-import { NavLink, Link, json, useNavigate } from "react-router-dom";
+import { NavLink, Link,  useNavigate } from "react-router-dom";
 import { HeaderBtn , Sidebar , Logo } from "../../export";
 import { HiOutlineMenu } from "react-icons/hi";
 import authService from "../../appwrite/auth";
@@ -65,9 +64,9 @@ const handleLogout = () => {
        <Logo/>
       </div>
       <ul className="flex gap-6 font-medium items-center max-md:hidden min-w-60 ">
-        {navItem.map((item) => (
+        {navItem.map((item , index) => (
             item.active  && 
-          <li>
+          <li key={index}>
             <NavLink to={item.path}>
               <span className="text-sm text-gray-600">{item.name}</span>
                 <hr

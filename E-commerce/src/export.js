@@ -23,6 +23,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Allcart from "./Pages/Allcart";
 import Cart from "./components/Cart";
+import Loader from "./components/Loader";
 export  {
     Button ,
     Header , 
@@ -48,6 +49,7 @@ export  {
     Signup, 
     Login, 
     Allcart ,
-    Cart
+    Cart,
+    Loader
     
 }

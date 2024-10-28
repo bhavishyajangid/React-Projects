@@ -14,6 +14,7 @@ import { login, logout } from './Store/authSlice'
 import Loader from './components/Loader'
 function App() {
   const [loading, setLoading] = useState(false)
+  
 const dispatch = useDispatch()
   useEffect(() => {
      authService.getCurrentUser()
@@ -25,7 +26,7 @@ const dispatch = useDispatch()
       }
      }).catch((error) => console.log(error)
      ).finally(() => setLoading(false))
-  })
+  } , [])
   return !loading ? (<>
     <ToastContainer/>
     <Header/>

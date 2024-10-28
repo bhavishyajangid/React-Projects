@@ -3,7 +3,9 @@ import { IoMdAdd } from "react-icons/io";
 import { IoIosRemove } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseQunatity, increaseQuantity } from "../../Store/allproduct";
-const QuantityBtn = ({ id }) => {
+const QuantityBtn = ({ 
+  id 
+}) => {
 
   const { Quantity } = useSelector((state) => state.allProducts);
   const dispatch = useDispatch();

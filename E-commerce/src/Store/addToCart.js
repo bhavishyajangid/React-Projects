@@ -1,19 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { json } from "react-router-dom";
+
 
 const addToCartSlice = createSlice({
     name : 'addToCart' , 
     initialState : {
-        cartItem : {products : []}, 
+        cartItem : [] , 
+        cartBtn : false ,
+        deleteItem : false ,
     },
     reducers : {
-        addToCartItem : (state , action) => {
-           state.cartItem = action.payload
-           localStorage.setItem("cartItem" , JSON.stringify(state.cartItem))
-           console.log(state.cartItem, 'cartitem' , typeof state.cartItem);
-           
+        addToCartItem : (state , action) => {   
+          state.cartItem = action.payload   
+          console.log(action.payload , 'cart');
+                
         }, 
+        cartBtnClick : (state , action) => {
+            state.cartBtn = action.payload  
+        },
+
+
+    
+
+
+        
     }
 })
-export const {addToCartItem , addToCartId} =addToCartSlice.actions
+export const {addToCartItem , addToCartId , cartBtnClick , deleteItem} =addToCartSlice.actions
 export default addToCartSlice
