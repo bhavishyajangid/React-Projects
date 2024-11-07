@@ -4,6 +4,7 @@ const Input = React.forwardRef(function({
     label = "" ,
     placeholder = 'Enter your email' ,
     className = '' ,
+    type ="text" ,
     ...props
 } , ref) {
   return (
@@ -11,7 +12,7 @@ const Input = React.forwardRef(function({
         {
             label && <label id='1'>{label}</label>
         }
-        <input ref={ref} className={`${className}`} type="text" placeholder={placeholder} id='1' ${...props} />
+        <input ref={ref} className={`${className}`} type={type} placeholder={placeholder} id='1' ${...props} />
         </>
   )
 })

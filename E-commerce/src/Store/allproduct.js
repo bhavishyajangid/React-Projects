@@ -5,11 +5,14 @@ const allProductsSlice = createSlice({
     initialState : {
         allProducts : [], 
         Quantity : {},
+        searchBar : false,
+        filterProducts : []
 
     },
     reducers : {
         setAllProducts : (state , action) => {
           state.allProducts = action.payload
+          state.filterProducts = action.payload
         }, 
 
         increaseQuantity : (state , action) => {
@@ -34,7 +37,17 @@ const allProductsSlice = createSlice({
               console.log(updatedQuantity , 'updatedQunatity');
               state.Quantity = updatedQuantity;
         } ,
+
+        toggleSearchBar : (state , action) => {
+          state.searchBar = action.payload;
+          console.log(action.payload ,'searchbar' , state.searchBar);
+          
+        }, 
+        setFilterProducts : (state , action) => {
+          console.log(action.payload);
+          state.filterProducts = action.payload
+        }
     }
 })
-export const {setAllProducts, decreaseQunatity , increaseQuantity} = allProductsSlice.actions
+export const {setAllProducts, decreaseQunatity , increaseQuantity , toggleSearchBar , setFilterProducts} = allProductsSlice.actions
 export default allProductsSlice

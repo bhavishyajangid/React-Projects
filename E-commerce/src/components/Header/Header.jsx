@@ -5,12 +5,13 @@ import { FaBagShopping } from "react-icons/fa6";
 import { NavLink, Link,  useNavigate } from "react-router-dom";
 import { HeaderBtn , Sidebar , Logo } from "../../export";
 import { HiOutlineMenu } from "react-icons/hi";
-import authService from "../../appwrite/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../Store/authSlice";
+import { toggleSearchBar } from "../../Store/allproduct";
 const Header = () => {
   const navigate = useNavigate()
   const {status} = useSelector(state => state.authSlice)
+  const {searchbar} = useSelector(state => state.allProducts)
+  const {cartItem} = useSelector(state => state.addToCart)
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false);
 
@@ -19,16 +20,12 @@ const Header = () => {
 };
 
 
-const handleLogout = () => {
-  authService.logout().then(() => {
-    dispatch(logout())
-    navigate('/')
-    
-})
 
-
-
+const handleSearchBar = () => {
+  dispatch(toggleSearchBar(!searchbar))
+  navigate('/collection')
 }
+
   const navItem = [
     {
       name: "HOME",
@@ -54,7 +51,7 @@ const handleLogout = () => {
         name : 'ADMIN PANEL' , 
         path : '/admin',
         active : false
-    }
+    },
   ];
 
  
@@ -81,10 +78,10 @@ const handleLogout = () => {
         {status ? (
           <li className="flex gap-5 text-xl items-center ">
             <HeaderBtn className="max-sm:hidden" />
-            <FiSearch className="cursor-pointer" />
-            <FaUser className="cursor-pointer" />
+            <FiSearch onClick={handleSearchBar} className="cursor-pointer" />
+            <FaUser className="cursor-pointer" onClick={toggleSidebar} />
            <Link to="/cart">
-            <div className="relative"><FaBagShopping/> <span className="absolute top-2 left-2 font-medium cursor-pointer bg-cyan-200 text-center rounded-full inline-block w-4 h-4 text-xs">0</span></div>
+            <div className="relative"><FaBagShopping/> <span className="absolute top-2 left-2 font-medium cursor-pointer bg-cyan-200 text-center rounded-full inline-block w-4 h-4 text-xs">{cartItem.length}</span></div>
             </Link>
           </li>
         ) : (
@@ -94,7 +91,6 @@ const handleLogout = () => {
           </li>
         )}
         <li>
-        <button onClick={handleLogout}>logout</button>
         <HiOutlineMenu className="max-md:block text-2xl cursor-pointer hidden" onClick={toggleSidebar}/>
           <Sidebar navItem={navItem} toggleSidebar={toggleSidebar} isOpen={isOpen}/>
         </li>

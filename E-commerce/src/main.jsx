@@ -5,19 +5,9 @@ import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import { Provider, useSelector } from 'react-redux'
 import store from './Store/index.js'
-import { CardInfo, Home, Signup , Login, Card, Allcart } from './export.js'
+import { CardInfo, Home, Signup , Login,  Allcart, OrderInfo, Collection, About, Contactus} from './export.js'
 
 
-// const fetchCartItem = async() => {
-//   try {
-//     const response = await dataBaseService.getCarts(userData.$id); // Assuming userId is passed as a parameter
-//     return response.documents; // Return the cart items
-//   } catch (error) {
-//     console.error('Failed to fetch cart items:', error);
-//     throw new Response('Failed to fetch cart items', { status: 500 }); // Handle errors appropriately
-//   }
-
-// }
 
 
 const router = createBrowserRouter(
@@ -25,12 +15,13 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />} >
       <Route path='' element={<Home/>} /> 
       <Route path='/product/:id' element={<CardInfo/>} /> 
-      <Route path='/collection' /> 
-      <Route path='/about' /> 
-      <Route path='/contact' /> 
+      <Route path='/collection' element={<Collection/>} /> 
+      <Route path='/about'  element={<About/>}/> 
+      <Route path='/contact' element={<Contactus/>} /> 
       <Route path='/cart' element={<Allcart/>} /> 
       <Route path='/login' element={<Login/>} /> 
       <Route path='/signup' element={<Signup/>} /> 
+      <Route path='/orderinfo' element={<OrderInfo/>} /> 
     </Route>
   )
 )

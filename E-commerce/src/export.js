@@ -24,6 +24,18 @@ import Login from "./components/Login";
 import Allcart from "./Pages/Allcart";
 import Cart from "./components/Cart";
 import Loader from "./components/Loader";
+import CartTotal from "./components/CartTotal";
+import Promo from "./Pages/Promo";
+import OrderInfo from "./Pages/OrderInfo";
+import PaymentOption from "./components/PaymentOption";
+import AllPaymentOption from "./Pages/AllPaymentOption";
+import Collection from "./Pages/Collection";
+import About from "./Pages/About";
+import Contactus from "./Pages/Contactus";
+import Searchbar from "./Pages/Searchbar";
+import Filter from "./Pages/Filter";
+import AllCollection from "./Pages/AllCollection";
+import CategoryName from "./components/CategoryName";
 export  {
     Button ,
     Header , 
@@ -50,6 +62,18 @@ export  {
     Login, 
     Allcart ,
     Cart,
-    Loader
-    
+    Loader,
+    CartTotal,
+    Promo, 
+    OrderInfo,
+    PaymentOption,
+    AllPaymentOption,
+Collection,
+About ,
+Contactus,
+Searchbar, 
+Filter, 
+AllCollection, 
+CategoryName,
+
 }

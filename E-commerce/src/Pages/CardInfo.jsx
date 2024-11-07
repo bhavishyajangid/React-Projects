@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { json, useParams } from "react-router-dom";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { useParams } from "react-router-dom";
+import {  toast } from "react-toastify";
 import {
   Starlogo,
   QuantityBtn,
@@ -11,14 +11,10 @@ import {
 import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
-import {  cartBtnClick } from "../Store/addToCart";
 import dataBaseService from "../appwrite/cart";
-import { login } from "../Store/authSlice";
 const CardInfo = () => {
   const { Quantity } = useSelector((state) => state.allProducts);
-  const { cartBtn } = useSelector((state) => state.addToCart);
   const { userData } = useSelector((state) => state.authSlice);
-  const dispatch = useDispatch();
   const { id } = useParams();
   const [cardInfo, setCardInfo] = useState(null);
   const [imgIndex, setImgIndex] = useState(0);
@@ -54,10 +50,11 @@ const CardInfo = () => {
       }).then((res) => {
           if(res) {
             toast.success('product is added into cart')
-            dispatch(cartBtnClick(!cartBtn))
           }
       }) 
     } catch (error) {
+      console.log(error);
+      
         toast.error('ERROR : not added' );
     }
     

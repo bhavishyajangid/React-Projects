@@ -5,18 +5,38 @@ const addToCartSlice = createSlice({
     name : 'addToCart' , 
     initialState : {
         cartItem : [] , 
-        cartBtn : false ,
-        deleteItem : false ,
+       cartTotal : {
+         subTotal : 0,
+         delivery : 0,
+         Total : 0,
+         Method : 'CASH ON DELIVERY'
+       }
     },
     reducers : {
         addToCartItem : (state , action) => {   
           state.cartItem = action.payload   
-          console.log(action.payload , 'cart');
+
+          const subTotal = state.cartItem?.reduce((acc, curr) => {
+            return acc + curr.Total;
+          }, 0);
+          
+          const delivery = subTotal > 500 ? 0 : 10
+          const Total = subTotal + delivery
+          state.cartTotal = {
+             subTotal : subTotal ,
+             delivery : delivery,
+             Total : Total,
+             Method : 'cod'
+             }
                 
-        }, 
-        cartBtnClick : (state , action) => {
-            state.cartBtn = action.payload  
         },
+
+        updateMethod : (state , action) => {
+            state.cartTotal.Method = action.payload
+        }
+        
+       
+        
 
 
     
@@ -25,5 +45,5 @@ const addToCartSlice = createSlice({
         
     }
 })
-export const {addToCartItem , addToCartId , cartBtnClick , deleteItem} =addToCartSlice.actions
+export const {addToCartItem ,updateMethod} =addToCartSlice.actions
 export default addToCartSlice
