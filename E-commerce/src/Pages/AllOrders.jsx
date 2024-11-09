@@ -7,7 +7,7 @@ import { setAllOrders } from '../Store/orders'
 const AllOrders = () => {
     const dispatch = useDispatch()
     const {userData} = useSelector(state => state.authSlice)
-    const {allOrders , userDetails} = useSelector(state => state.orderSlice)
+    const {allOrders} = useSelector(state => state.orderSlice)
     const [loader , setLoader] = useState(true)
   useEffect(() => {
     try {
