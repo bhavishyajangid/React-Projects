@@ -7,6 +7,7 @@ import {
   PolicyCard,
   ReviewPage,
   ReletedProducts,
+  Loader,
 } from "../export";
 import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
@@ -132,7 +133,7 @@ const CardInfo = () => {
           {cardInfo.reviews && <ReviewPage reviews={cardInfo.reviews} />}
         </div>
       ) : (
-        <p>Loading...</p>
+        <Loader/>
       )}
     </>
   );

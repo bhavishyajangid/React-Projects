@@ -16,7 +16,7 @@ const handleLogout = () => {
   }
      const {userData} = useSelector(state => state.authSlice)
     return (
-            <div className={` absolute top-0 right-0  h-full w-48 bg-white shadow-lg transform transition-transform duration-300   ${isOpen ? '-translate-x-0 block' : 'translate-x-48  hidden'}`}>
+            <div className={` absolute top-0 right-0  h-full w-48 bg-white shadow-lg transform transition-transform duration-300    ${isOpen ? '-translate-x-0 block' : 'translate-x-48  hidden'}`}>
                 <nav className="p-4">
                     <div className='w-full flex justify-start items-center'>
                     <button className="text-2xl cursor-pointer  text-end" onClick={toggleSidebar}><RxCross2  /></button>

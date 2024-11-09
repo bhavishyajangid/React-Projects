@@ -36,6 +36,9 @@ import Searchbar from "./Pages/Searchbar";
 import Filter from "./Pages/Filter";
 import AllCollection from "./Pages/AllCollection";
 import CategoryName from "./components/CategoryName";
+import PaymentLoader from "./Pages/PaymentLoader";
+import AllOrders from "./Pages/AllOrders";
+import Order from "./components/Order";
 export  {
     Button ,
     Header , 
@@ -75,5 +78,8 @@ Searchbar,
 Filter, 
 AllCollection, 
 CategoryName,
+PaymentLoader, 
+AllOrders, 
+Order
 
 }

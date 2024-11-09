@@ -38,6 +38,11 @@ const handleSearchBar = () => {
       active : true
     },
     {
+       name : 'ORDERS',
+       path : '/order',
+       active : true
+    },
+    {
       name: "ABOUT",
       path: "/about",
       active : true

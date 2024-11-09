@@ -5,7 +5,7 @@ import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import { Provider, useSelector } from 'react-redux'
 import store from './Store/index.js'
-import { CardInfo, Home, Signup , Login,  Allcart, OrderInfo, Collection, About, Contactus} from './export.js'
+import { CardInfo, Home, Signup , Login,  Allcart, OrderInfo, Collection, About, Contactus, AllOrders} from './export.js'
 
 
 
@@ -21,6 +21,7 @@ const router = createBrowserRouter(
       <Route path='/cart' element={<Allcart/>} /> 
       <Route path='/login' element={<Login/>} /> 
       <Route path='/signup' element={<Signup/>} /> 
+      <Route path='/order' element={<AllOrders/>} /> 
       <Route path='/orderinfo' element={<OrderInfo/>} /> 
     </Route>
   )

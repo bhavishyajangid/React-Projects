@@ -5,9 +5,6 @@ import { Card, Tittle } from "../export";
 
 const Allcards = () => {
   const { allProducts } = useSelector((state) => state.allProducts);
-
-  
-  
   // fetch product data from an api
   const dispatch = useDispatch();
   useEffect(() => {

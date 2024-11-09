@@ -6,7 +6,8 @@ const allProductsSlice = createSlice({
         allProducts : [], 
         Quantity : {},
         searchBar : false,
-        filterProducts : []
+        filterProducts : [],
+        sortedArray : 'rel'
 
     },
     reducers : {
@@ -16,7 +17,7 @@ const allProductsSlice = createSlice({
         }, 
 
         increaseQuantity : (state , action) => {
-          const quantity = state.Quantity[action.payload] || 0;
+          const quantity = state.Quantity[action.payload] || 1;
           const updatedQuantity = {
             ...state.Quantity ,
             [action.payload] : quantity + 1
@@ -45,9 +46,36 @@ const allProductsSlice = createSlice({
         }, 
         setFilterProducts : (state , action) => {
           console.log(action.payload);
-          state.filterProducts = action.payload
-        }
+          if(state.sortedArray === 'asc') {
+            state.filterProducts =  [...action.payload].sort((a , b) => a.price - b.price)
+          }else if(state.sortedArray === 'desc'){
+            state.filterProducts =  [...action.payload].sort((a , b) => b.price - a.price)
+          }else{
+            state.filterProducts = action.payload
+          }
+
+        }, 
+        setSortedArray : (state , action) => {
+           state.sortedArray = action.payload
+           
+           
+           if(action.payload === 'asc'){
+            let data =  [...state.filterProducts].sort((a , b) => a.price - b.price)
+            state.filterProducts = data
+     
+             }else if(action.payload === 'desc') {
+               let data =  [...state.filterProducts].sort((a , b) => b.price - a.price)
+            state.filterProducts = data
+             }else{
+               state.filterProducts = state.allProducts
+
+             }
+        }, 
+        FilterSearchItem : (state , action) => {
+            state.filterProducts = state.allProducts.filter((item) => item.title.toUpperCase().includes(action.payload.toUpperCase()) === true)
+                  
+      }
     }
 })
-export const {setAllProducts, decreaseQunatity , increaseQuantity , toggleSearchBar , setFilterProducts} = allProductsSlice.actions
+export const {setAllProducts, decreaseQunatity , increaseQuantity , toggleSearchBar , setFilterProducts , setSortedArray , FilterSearchItem} = allProductsSlice.actions
 export default allProductsSlice

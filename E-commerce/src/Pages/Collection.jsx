@@ -11,7 +11,7 @@ const Collection = () => {
         searchBar && <Searchbar/>
     }
  
- <div className="w-full flex gap-10">
+ <div className="w-full flex gap-10 max-sm:gap-3 max-sm:flex-col">
  <Filter/>
  <AllCollection/>
  </div>
