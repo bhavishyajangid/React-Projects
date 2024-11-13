@@ -24,7 +24,7 @@ const CartTotal = ({ cartTotal, className = "", btn = "true" }) => {
         </div>
         <div className="w-full h-10 border-b border-b-gray-300 flex justify-between items-center p-1">
           <span>Delivery Fee</span>
-          <span>$ {cartTotal.delivery}</span>
+          <span>$ {cartTotal.delivery || 0}</span>
         </div>
 
         {/* <div className={`w-full h-10 border-b border-b-gray-300 flex justify-between items-center p-1 `}>
@@ -35,7 +35,7 @@ const CartTotal = ({ cartTotal, className = "", btn = "true" }) => {
         <div className="w-full h-10 flex justify-between items-center p-1">
           <span className="text-base font-semibold">Total</span>
           <span className="text-base text-gray-800 font-medium">
-            $ {cartTotal.Total}
+            $ {cartTotal.Total || 0}
           </span>
         </div>
 

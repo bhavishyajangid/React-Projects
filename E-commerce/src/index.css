@@ -7,6 +7,9 @@
 *{
   font-family: Outfit;
 }
+body{
+  overflow-x: hidden;
+}
 a.active hr{
   display: block;
 }

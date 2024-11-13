@@ -7,7 +7,12 @@ const PaymentOption = ({item}) => {
   const dispatch = useDispatch()
 
     const handleBtn = () => {
-          dispatch(updateMethod(item))
+      if(item !== 'CASH ON DELIVERY'){
+        alert('Method is not available')
+      }else{
+        dispatch(updateMethod(item))
+      }
+          
     }
 
   return (

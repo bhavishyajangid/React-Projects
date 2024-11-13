@@ -1,16 +1,12 @@
 import React, { useCallback, useState } from "react";
-import {
-  CartTotal,
-  Tittle,
-  Loader,
-  PaymentLoader,
-} from "../export";
+import { CartTotal, Tittle, PaymentLoader } from "../export";
 import OrderForm from "./OrderForm";
 import { useDispatch, useSelector } from "react-redux";
 import OrderServices from "../appwrite/orders";
-import { setAllOrders, setUserDetails } from "../Store/orders";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { setUserDetails } from "../Store/orders";
+import dataBaseService from "../appwrite/cart";
 import { addToCartItem } from "../Store/addToCart";
 
 const OrderInfo = () => {
@@ -19,42 +15,58 @@ const OrderInfo = () => {
   const { cartItem, cartTotal } = useSelector((state) => state.addToCart);
   const { userData } = useSelector((state) => state.authSlice);
   const [loader, setLoader] = useState(false);
+  const todayDate = new Date();
+  const formattedDate =
+    todayDate.getFullYear() +
+    "-" +
+    (todayDate.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    todayDate.getDate().toString().padStart(2, "0");
 
+  console.log(cartTotal.Method, "outer");
   const placeOrder = useCallback(async (data) => {
-    setLoader(true);
-    const todayDate = new Date();
-     const formattedDate = todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1).toString().padStart(2, '0') + '-' + todayDate.getDate().toString().padStart(2, '0');
-    try {
-    cartItem.forEach(async(item) => {
-        const response = await OrderServices.placeOrder({
-          Id: item.Id,
-          Image: item.Image,
-          Price: item.Price,
-          Quantity: item.Quantity,
-          Tittle: item.Tittle,
-          Total: item.Total,
-          userId: item.userId,
-          Status: "Orders",
-          Method : cartTotal.Method,
-          Date : formattedDate
-        });
-          if(response){
-            console.log(response);
-            toast.success('Orders sucessfully placed')
-            navigate('/order')
-          }else{
-            toast.error('Failed to place order')
-          }
-
-          })
-          
-    } catch (error) {
-      console.error(error);
-      toast.error("ERROR: Technical error occurred");
-    } finally {
-      setLoader(false);
-    }
-  }, [cartItem, userData]);
+    console.log(cartTotal.Method, "inner");
+    if(cartTotal.Method){
+    
+        setLoader(true);
+        try {
+          cartItem.forEach(async (item) => {
+            const response = await OrderServices.placeOrder({
+              Id: item.Id,
+              Image: item.Image,
+              Price: item.Price,
+              Quantity: item.Quantity,
+              Tittle: item.Tittle,
+              Total: item.Total,
+              userId: item.userId,
+              Status: "Orders",
+              Method: cartTotal.Method,
+              Date: formattedDate,
+            });
+            if (response) {
+              navigate("/order");
+              cartItem.forEach((item) => {
+                dataBaseService.deleteCart(item.Id);
+              });
+              dispatch(setUserDetails(data));
+            } else {
+              toast.error("Failed to place order");
+            }
+          });
+          toast.success("Orders sucessfully placed");
+        
+        } catch (error) {
+          console.error(error);
+          toast.error("ERROR: Technical error occurred");
+        } finally {
+          setLoader(false);
+        }
+      }else{
+        alert('select a payment method')
+      }
+    },
+    [cartItem, userData , cartTotal.Method]
+  );
 
   return (
     <>

@@ -86,7 +86,7 @@ const handleSearchBar = () => {
             <FiSearch onClick={handleSearchBar} className="cursor-pointer" />
             <FaUser className="cursor-pointer" onClick={toggleSidebar} />
            <Link to="/cart">
-            <div className="relative"><FaBagShopping/> <span className="absolute top-2 left-2 font-medium cursor-pointer bg-cyan-200 text-center rounded-full inline-block w-4 h-4 text-xs">{cartItem.length}</span></div>
+            <div className="relative"><FaBagShopping/> <span className="absolute top-2 left-2 font-medium cursor-pointer bg-cyan-200 text-center rounded-full inline-block w-4 h-4 text-xs">{cartItem.length || 0}</span></div>
             </Link>
           </li>
         ) : (

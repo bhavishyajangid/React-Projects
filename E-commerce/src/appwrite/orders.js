@@ -35,7 +35,7 @@ export class Order{
     
 
 
-    async deleteCart (id) {
+    async cancelOrder(id) {
         try {
            await this.Database.deleteDocument(
                 conf.appwriteDatabaseId,
@@ -63,22 +63,7 @@ export class Order{
         }
     }
 
-    // async updateOrders ({Id , Image , Price , Quantity , Tittle , Total , userId , Status , Method , Date}) {
-    //     console.log(Id , Image , Price , Quantity , Tittle , Total , userId , Status , Method , Date);
-        
-    //     try {
-    //         return await this.Database.updateDocument(
-    //             conf.appwriteDatabaseId, 
-    //             conf.appwriteOrdersCollectionId, 
-    //             Id,
-    //            {
-    //             Id , Image , Price , Quantity , Tittle , Total , userId , Status , Method , Date
-    //             }
-    //         )
-    //  } catch (error) {
-    //      return error
-    //  }
-    // }
+   
 }
 
 const OrderServices = new Order()

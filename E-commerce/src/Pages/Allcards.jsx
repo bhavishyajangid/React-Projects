@@ -8,7 +8,7 @@ const Allcards = () => {
   // fetch product data from an api
   const dispatch = useDispatch();
   useEffect(() => {
-    fetch("https://dummyjson.com/products?limit=0")
+    fetch("https://dummyjson.com/products?limit=10")
       .then((res) => res.json())
       // set this data into store
       .then((res) => dispatch(setAllProducts(res.products)));
@@ -19,7 +19,7 @@ const Allcards = () => {
       <div className="w-full grid grid-cols-responsive max-sm:grid-cols-2  gap-2 mt-2   ">
         {
           // display all the cards
-          allProducts?.slice(0, 10).map((item) => (
+          allProducts?.map((item) => (
             <Card key={item.id} item={item} id={item.id} />
           ))
         }
