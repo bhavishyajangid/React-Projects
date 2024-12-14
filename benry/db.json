@@ -1,0 +1,485 @@
+{
+    "Profiles": [
+      {
+        "id": 1,
+        "name": "Aarav Sharma",
+        "email": "aarav.sharma@example.com",
+        "phone": "+91 9876543210",
+        "age": 28,
+        "gender": "Male",
+        "birthDate": "1995-04-15",
+        "role": "Software Engineer",
+        "description": "Responsible for developing and maintaining web applications.",
+        "image": "https://randomuser.me/api/portraits/men/1.jpg",
+        "address": {
+          "address": "15 MG Road",
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "stateCode": "KA",
+          "postalCode": "560001",
+          "coordinates": {
+            "lat": 12.971598,
+            "lng": 77.594566
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 2,
+        "name": "Ananya Singh",
+        "email": "ananya.singh@example.com",
+        "phone": "+91 8765432109",
+        "age": 25,
+        "gender": "Female",
+        "birthDate": "1998-07-10",
+        "role": "Frontend Developer",
+        "description": "Specializes in building user-facing features for web applications.",
+        "image": "https://randomuser.me/api/portraits/women/2.jpg",
+        "address": {
+          "address": "45 Residency Road",
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "stateCode": "MH",
+          "postalCode": "400001",
+          "coordinates": {
+            "lat": 19.076090,
+            "lng": 72.877426
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 3,
+        "name": "Rajesh Kumar",
+        "email": "rajesh.kumar@example.com",
+        "phone": "+91 9988776655",
+        "age": 32,
+        "gender": "Male",
+        "birthDate": "1991-02-23",
+        "role": "Backend Developer",
+        "description": "Focuses on server-side logic and database management.",
+        "image": "https://randomuser.me/api/portraits/men/3.jpg",
+        "address": {
+          "address": "88 Sector 21",
+          "city": "Noida",
+          "state": "Uttar Pradesh",
+          "stateCode": "UP",
+          "postalCode": "201301",
+          "coordinates": {
+            "lat": 28.535517,
+            "lng": 77.391029
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 4,
+        "name": "Simran Gupta",
+        "email": "simran.gupta@example.com",
+        "phone": "+91 9876543211",
+        "age": 29,
+        "gender": "Female",
+        "birthDate": "1994-05-12",
+        "role": "UI/UX Designer",
+        "description": "Designs user interfaces and creates user experiences.",
+        "image": "https://randomuser.me/api/portraits/women/4.jpg",
+        "address": {
+          "address": "10 Park Avenue",
+          "city": "Delhi",
+          "state": "Delhi",
+          "stateCode": "DL",
+          "postalCode": "110001",
+          "coordinates": {
+            "lat": 28.613939,
+            "lng": 77.209021
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 5,
+        "name": "Vikram Patel",
+        "email": "vikram.patel@example.com",
+        "phone": "+91 9123456789",
+        "age": 31,
+        "gender": "Male",
+        "birthDate": "1992-08-22",
+        "role": "Product Manager",
+        "description": "Oversees product development from concept to launch.",
+        "image": "https://randomuser.me/api/portraits/men/5.jpg",
+        "address": {
+          "address": "32 M G Road",
+          "city": "Ahmedabad",
+          "state": "Gujarat",
+          "stateCode": "GJ",
+          "postalCode": "380001",
+          "coordinates": {
+            "lat": 23.022505,
+            "lng": 72.571365
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 6,
+        "name": "Priya Verma",
+        "email": "priya.verma@example.com",
+        "phone": "+91 9012345679",
+        "age": 27,
+        "gender": "Female",
+        "birthDate": "1996-09-14",
+        "role": "Data Scientist",
+        "description": "Uses statistical and machine learning techniques to analyze data.",
+        "image": "https://randomuser.me/api/portraits/women/6.jpg",
+        "address": {
+          "address": "99 Liberty Road",
+          "city": "Pune",
+          "state": "Maharashtra",
+          "stateCode": "MH",
+          "postalCode": "411001",
+          "coordinates": {
+            "lat": 18.520430,
+            "lng": 73.856743
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 7,
+        "name": "Arjun Mehta",
+        "email": "arjun.mehta@example.com",
+        "phone": "+91 8456781234",
+        "age": 30,
+        "gender": "Male",
+        "birthDate": "1993-11-05",
+        "role": "Full-stack Developer",
+        "description": "Works on both the frontend and backend of applications.",
+        "image": "https://randomuser.me/api/portraits/men/7.jpg",
+        "address": {
+          "address": "73 Broadway Street",
+          "city": "Chennai",
+          "state": "Tamil Nadu",
+          "stateCode": "TN",
+          "postalCode": "600002",
+          "coordinates": {
+            "lat": 13.082680,
+            "lng": 80.270721
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 8,
+        "name": "Rina Das",
+        "email": "rina.das@example.com",
+        "phone": "+91 9234567890",
+        "age": 26,
+        "gender": "Female",
+        "birthDate": "1997-12-11",
+        "role": "Marketing Manager",
+        "description": "Handles marketing campaigns and customer outreach.",
+        "image": "https://randomuser.me/api/portraits/women/8.jpg",
+        "address": {
+          "address": "10 Sunset Boulevard",
+          "city": "Kolkata",
+          "state": "West Bengal",
+          "stateCode": "WB",
+          "postalCode": "700001",
+          "coordinates": {
+            "lat": 22.572645,
+            "lng": 88.363892
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 9,
+        "name": "Nikhil Reddy",
+        "email": "nikhil.reddy@example.com",
+        "phone": "+91 9876543212",
+        "age": 33,
+        "gender": "Male",
+        "birthDate": "1990-01-13",
+        "role": "System Administrator",
+        "description": "Maintains and manages IT infrastructure and servers.",
+        "image": "https://randomuser.me/api/portraits/men/9.jpg",
+        "address": {
+          "address": "12 City Center",
+          "city": "Hyderabad",
+          "state": "Telangana",
+          "stateCode": "TS",
+          "postalCode": "500001",
+          "coordinates": {
+            "lat": 17.385044,
+            "lng": 78.486671
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 10,
+        "name": "Alok Tiwari",
+        "email": "alok.tiwari@example.com",
+        "phone": "+91 8745632109",
+        "age": 35,
+        "gender": "Male",
+        "birthDate": "1988-03-07",
+        "role": "Business Analyst",
+        "description": "Analyzes business needs and defines software requirements.",
+        "image": "https://randomuser.me/api/portraits/men/10.jpg",
+        "address": {
+          "address": "55 Gandhi Street",
+          "city": "Lucknow",
+          "state": "Uttar Pradesh",
+          "stateCode": "UP",
+          "postalCode": "226001",
+          "coordinates": {
+            "lat": 26.846693,
+            "lng": 80.946167
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 11,
+        "name": "Ayesha Khan",
+        "email": "ayesha.khan@example.com",
+        "phone": "+91 8765432110",
+        "age": 27,
+        "gender": "Female",
+        "birthDate": "1996-10-02",
+        "role": "HR Manager",
+        "description": "Manages recruitment, employee relations, and other HR functions.",
+        "image": "https://randomuser.me/api/portraits/women/11.jpg",
+        "address": {
+          "address": "120 Beach Road",
+          "city": "Goa",
+          "state": "Goa",
+          "stateCode": "GA",
+          "postalCode": "403001",
+          "coordinates": {
+            "lat": 15.2993,
+            "lng": 74.1241
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 12,
+        "name": "Sahil Bhatia",
+        "email": "sahil.bhatia@example.com",
+        "phone": "+91 9876543222",
+        "age": 30,
+        "gender": "Male",
+        "birthDate": "1993-02-10",
+        "role": "DevOps Engineer",
+        "description": "Focuses on automation of development processes.",
+        "image": "https://randomuser.me/api/portraits/men/12.jpg",
+        "address": {
+          "address": "200 Corporate Park",
+          "city": "Chandigarh",
+          "state": "Chandigarh",
+          "stateCode": "CH",
+          "postalCode": "160001",
+          "coordinates": {
+            "lat": 30.7333,
+            "lng": 76.7794
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 13,
+        "name": "Neha Shah",
+        "email": "neha.shah@example.com",
+        "phone": "+91 9435678901",
+        "age": 26,
+        "gender": "Female",
+        "birthDate": "1997-05-18",
+        "role": "Content Writer",
+        "description": "Creates engaging content for websites and blogs.",
+        "image": "https://randomuser.me/api/portraits/women/13.jpg",
+        "address": {
+          "address": "78 Green Park",
+          "city": "Jaipur",
+          "state": "Rajasthan",
+          "stateCode": "RJ",
+          "postalCode": "302001",
+          "coordinates": {
+            "lat": 26.912434,
+            "lng": 75.787270
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 14,
+        "name": "Deepak Joshi",
+        "email": "deepak.joshi@example.com",
+        "phone": "+91 9625349876",
+        "age": 34,
+        "gender": "Male",
+        "birthDate": "1989-12-30",
+        "role": "Database Administrator",
+        "description": "Ensures data integrity and availability within the database.",
+        "image": "https://randomuser.me/api/portraits/men/14.jpg",
+        "address": {
+          "address": "64 Downtown Lane",
+          "city": "Surat",
+          "state": "Gujarat",
+          "stateCode": "GJ",
+          "postalCode": "395001",
+          "coordinates": {
+            "lat": 21.170240,
+            "lng": 72.831062
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 15,
+        "name": "Sonia Arora",
+        "email": "sonia.arora@example.com",
+        "phone": "+91 9176543221",
+        "age": 29,
+        "gender": "Female",
+        "birthDate": "1994-01-17",
+        "role": "Network Engineer",
+        "description": "Responsible for maintaining computer networks and systems.",
+        "image": "https://randomuser.me/api/portraits/women/15.jpg",
+        "address": {
+          "address": "22 IT Park",
+          "city": "Bhubaneswar",
+          "state": "Odisha",
+          "stateCode": "OR",
+          "postalCode": "751001",
+          "coordinates": {
+            "lat": 20.296059,
+            "lng": 85.818949
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 16,
+        "name": "Tushar Sharma",
+        "email": "tushar.sharma@example.com",
+        "phone": "+91 9356743201",
+        "age": 31,
+        "gender": "Male",
+        "birthDate": "1992-04-25",
+        "role": "Cloud Architect",
+        "description": "Designs and manages cloud computing architecture.",
+        "image": "https://randomuser.me/api/portraits/men/16.jpg",
+        "address": {
+          "address": "123 Skyline View",
+          "city": "Bengaluru",
+          "state": "Karnataka",
+          "stateCode": "KA",
+          "postalCode": "560001",
+          "coordinates": {
+            "lat": 12.971598,
+            "lng": 77.594566
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 17,
+        "name": "Sanya Bhagat",
+        "email": "sanya.bhagat@example.com",
+        "phone": "+91 8456723098",
+        "age": 32,
+        "gender": "Female",
+        "birthDate": "1991-03-11",
+        "role": "Sales Executive",
+        "description": "Handles sales and customer acquisition for the company.",
+        "image": "https://randomuser.me/api/portraits/women/17.jpg",
+        "address": {
+          "address": "35 New Market",
+          "city": "Kochi",
+          "state": "Kerala",
+          "stateCode": "KL",
+          "postalCode": "682001",
+          "coordinates": {
+            "lat": 9.9312,
+            "lng": 76.2673
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 18,
+        "name": "Harsh Chauhan",
+        "email": "harsh.chauhan@example.com",
+        "phone": "+91 9456723088",
+        "age": 28,
+        "gender": "Male",
+        "birthDate": "1995-06-23",
+        "role": "Security Analyst",
+        "description": "Monitors and manages cybersecurity for the organization.",
+        "image": "https://randomuser.me/api/portraits/men/18.jpg",
+        "address": {
+          "address": "50 Cyber Tower",
+          "city": "Gurugram",
+          "state": "Haryana",
+          "stateCode": "HR",
+          "postalCode": "122001",
+          "coordinates": {
+            "lat": 28.4595,
+            "lng": 77.0266
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 19,
+        "name": "Ravi Yadav",
+        "email": "ravi.yadav@example.com",
+        "phone": "+91 9536723010",
+        "age": 26,
+        "gender": "Male",
+        "birthDate": "1997-07-14",
+        "role": "Mobile App Developer",
+        "description": "Specializes in building mobile applications.",
+        "image": "https://randomuser.me/api/portraits/men/19.jpg",
+        "address": {
+          "address": "88 Tech Park",
+          "city": "Bhopal",
+          "state": "Madhya Pradesh",
+          "stateCode": "MP",
+          "postalCode": "462001",
+          "coordinates": {
+            "lat": 23.2599,
+            "lng": 77.4126
+          },
+          "country": "India"
+        }
+      },
+      {
+        "id": 20,
+        "name": "Rohit Jain",
+        "email": "rohit.jain@example.com",
+        "phone": "+91 8765432298",
+        "age": 30,
+        "gender": "Male",
+        "birthDate": "1993-08-20",
+        "role": "QA Engineer",
+        "description": "Responsible for ensuring quality control in the software.",
+        "image": "https://randomuser.me/api/portraits/men/20.jpg",
+        "address": {
+          "address": "33 Tech Valley",
+          "city": "Indore",
+          "state": "Madhya Pradesh",
+          "stateCode": "MP",
+          "postalCode": "452001",
+          "coordinates": {
+            "lat": 22.7196,
+            "lng": 75.8577
+          },
+          "country": "India"
+        }
+      }
+    ]
+  }
+  
