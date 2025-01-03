@@ -11,7 +11,7 @@ import {
 } from "../export";
 import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import dataBaseService from "../appwrite/cart";
 const CardInfo = () => {
   const { Quantity } = useSelector((state) => state.allProducts);

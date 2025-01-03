@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { FaStar } from "react-icons/fa6";
-import { AiFillLike } from "react-icons/ai";
-import { AiFillDislike } from "react-icons/ai";
+
 const Review = ({
 item
 }) => {
