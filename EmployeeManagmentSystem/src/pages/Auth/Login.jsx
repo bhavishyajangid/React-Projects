@@ -6,6 +6,7 @@ import { Button, Loader } from '../../export';
 import authServices from '../../Appwrite/Auth';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Store/authSlice';
+import { toast } from "react-toastify"
 import dataBaseServices from '../../Appwrite/Database';
 const Login = () => {
     const { register, handleSubmit } = useForm();
@@ -18,15 +19,13 @@ const Login = () => {
       setLoader(true)
          try {
           const loginUser = await authServices.login(data)
-          
           if(loginUser){
-            console.log(loginUser);
+            dispatch(login(loginUser))
+            navigate("/")
+             toast.success("Login sucessfully");
           }
-            
          } catch (error) {
-          alert(error)
-          console.log(error);
-          
+          toast.error("failed to login")
          }finally{
           setLoader(false)
          }

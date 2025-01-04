@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import { useDispatch } from 'react-redux';
 import authServices from './Appwrite/Auth.js';
 import { login } from './Store/authSlice.js';
+import dataBaseServices from './Appwrite/Database.js';
 
 function App() {
   const dispatch = useDispatch()
@@ -19,8 +20,10 @@ function App() {
       try {
        const loginUser  = await authServices.getCurrentUser()
         if(loginUser){
-          dispatch(login(loginUser))
-          setIsAuth(true)
+           const userDetails = await dataBaseServices.getUserDetails(loginUser.$id)
+           if(userDetails){
+             dispatch(login(userDetails))
+           }
         }
        
       } catch (error) {

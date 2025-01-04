@@ -24,7 +24,6 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // Submit handler function
@@ -38,29 +37,18 @@ const Signup = () => {
       } else {
         try {
           setLoader(true);
-          // create account
-          const newUser = await authServices.createAccount(data);
-          if (newUser) {
-            const currentUser = await authServices.getCurrentUser();
-    
-            if(currentUser){
-                dataBaseServices.setUserProfileData({...data , isEmailVerify : userEmailVerify , id : newUser.$id})
-                .then((res) => {
-                  console.log(res);
-                    dispatch(login(res))
+          const newUser = await authServices.createAccount({...data , isEmailVerify : userEmailVerify});
+          if(newUser){
+            dispatch(login(newUser))
                     navigate("/");
                     setLoader(false);
                     toast.success("Account created succesfully");
-                })
-                .catch((error) => {
-                  alert(error)
-                })
-            }
-
           }
         } catch (error) {
-          alert(error);
-        } 
+           toast.error("account not created")
+        } finally{
+          setLoader(false)
+        }
       }
     }
 

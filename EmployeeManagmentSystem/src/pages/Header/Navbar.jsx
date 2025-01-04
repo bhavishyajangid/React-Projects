@@ -3,14 +3,21 @@ import { Button } from '../../export'
 import { Link, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../Store/authSlice'
+import { toast } from "react-toastify"
 import authServices from '../../Appwrite/Auth'
 const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const {currentUserDetails , isLogin} = useSelector(state => state.authSlice)
-
+  
+  
   const handleLogout = () => {
-    authServices.logout()
+    const logoutUser = authServices.logout()
+    if(logoutUser){
+       toast.success("Logout sucessfully")
+    }else{
+      toast.error("Error while logout")
+    }
     dispatch(logout())
     navigate("/")
   }
@@ -39,7 +46,7 @@ const Navbar = () => {
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8'>
         <div>
         {
-           isLogin && <h1 className='text-xl font-medium'>Hello <br /> <span className='text-2xl font-medium'>{currentUserDetails.name} 👋</span></h1>
+           isLogin && <h1 className='text-xl font-medium'>Hello <br /> <span className='text-2xl font-medium'>{currentUserDetails.userName} 👋</span></h1>
         }
         </div>
         
