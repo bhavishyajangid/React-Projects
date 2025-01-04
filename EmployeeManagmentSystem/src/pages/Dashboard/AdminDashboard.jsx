@@ -19,7 +19,7 @@ const AdminDashboard = () => {
                <textarea className='w-full h-48 outline-none bg-transparent border border-solid border-gray-500 rounded-lg p-2 mt-1 overflow-y-scroll scroll-bar' name="" id="description">
                </textarea>
             </div>
-               <Button  btn="Submit" />
+               <Button className="w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600"  btn="Submit" />
             </div>
         </form>
     </div>

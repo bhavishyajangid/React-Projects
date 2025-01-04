@@ -1,10 +1,60 @@
 import React from 'react'
-
+import { Button } from '../../export'
+import { Link, useNavigate } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../Store/authSlice'
+import authServices from '../../Appwrite/Auth'
 const Navbar = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {currentUserDetails , isLogin} = useSelector(state => state.authSlice)
+
+  const handleLogout = () => {
+    authServices.logout()
+    dispatch(logout())
+    navigate("/")
+  }
+  const navbarOpiton = [
+     {
+      tittle : "Login",
+      link : "/login",
+      isVisible : !isLogin,
+      type : "button"
+     },
+     {
+      tittle : "Signup",
+      link : "/signup",
+      isVisible : !isLogin,
+      type : "button"
+     },
+     {
+      tittle : "Logout",
+      isVisible : isLogin,
+      logout : handleLogout,
+      type : "button"
+     },
+
+  ]
   return (
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8'>
-        <h1 className='text-xl font-medium'>Hello <br /> <span className='text-2xl font-medium'>Bhavishya 👋</span></h1>
-        <button className='bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none'>Logout</button>
+        <div>
+        {
+           isLogin && <h1 className='text-xl font-medium'>Hello <br /> <span className='text-2xl font-medium'>{currentUserDetails.name} 👋</span></h1>
+        }
+        </div>
+        
+        <div className='flex gap-5'>
+        {
+            navbarOpiton.map((item) => (
+              <Link to={item.link}>
+                {
+                  item.isVisible &&  <Button type={item.type} btn={item.tittle} logout={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600"/>
+                }
+               
+              </Link>
+            ))
+        }
+        </div>
       </nav>
 )
 }

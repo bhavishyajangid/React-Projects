@@ -1,16 +1,47 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import {Home , Navbar} from './export.js'
-import { Outlet } from 'react-router'
-
+import { Loader, Navbar} from './export.js'
+import { Outlet, useLocation} from 'react-router'
+import { ToastContainer } from "react-toastify";
+import { useDispatch } from 'react-redux';
+import authServices from './Appwrite/Auth.js';
+import { login } from './Store/authSlice.js';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch()
+  const [loader ,setLoader] = useState(true)
+  const location = useLocation()
 
+  const noNavbarRoutes = ["/login" ,"/signup"]
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+       const loginUser  = await authServices.getCurrentUser()
+        if(loginUser){
+          dispatch(login(loginUser))
+          setIsAuth(true)
+        }
+       
+      } catch (error) {
+        console.log(error)
+      } finally{
+        setLoader(false)
+      }
+    }
+
+    checkLogin()
+  },[])
+
+  if(loader){
+     return <Loader/>
+  }
   return (
     <>
-     <Navbar/>
+
+     {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
      <Outlet/>
+    <ToastContainer/>
     </>
   )
 }

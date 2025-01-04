@@ -3,7 +3,7 @@ import Navbar from '../Header/Navbar';
 import { Outlet } from 'react-router';
 import { AdminDashboard, EmployeeTask, Login, PastTaskInfo, Tasks } from '../../export';
 
-const Home = () => {
+const EmployeeDashboard = () => {
    
 
     return (
@@ -11,9 +11,9 @@ const Home = () => {
         <PastTaskInfo/>
         <EmployeeTask/>
         <AdminDashboard/>
-        <Login/>
+        {/* <Login/> */}
         </>
     );
 };
 
-export default Home;
+export default EmployeeDashboard;

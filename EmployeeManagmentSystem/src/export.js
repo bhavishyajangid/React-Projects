@@ -2,7 +2,7 @@
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Navbar from "./pages/Header/Navbar.jsx";
-import Home from "./pages/Dashboard/EmployeeDashboard.jsx";
+import EmployeeDashboard from "./pages/Dashboard/EmployeeDashboard.jsx";
 import Tasks from "./components/Tasks";
 import TaskDetails from "./components/TaskDetails";
 import EmployeeTask from "./pages/employeeTask/EmployeeTask";
@@ -11,11 +11,13 @@ import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import Button from "./components/Button.jsx";
 import Input from "./components/Input.jsx";
 import VerifyEmail from "./pages/verificationPage/VerifyEmail.jsx";
+import Loader from "./components/Loader.jsx";
+import VerifyOtp from "./components/VerifyOtp.jsx";
 export  {
     Login, 
     Signup,
     Navbar,
-    Home,
+    EmployeeDashboard,
     Tasks,
     TaskDetails,
     EmployeeTask,
@@ -23,5 +25,7 @@ export  {
     AdminDashboard,
     Button,
     Input,
-    VerifyEmail
+    VerifyEmail,
+    Loader,
+    VerifyOtp
 }

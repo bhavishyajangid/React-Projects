@@ -1,16 +1,40 @@
 import React, { useState } from 'react';
 import Input from '../../components/Input';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router';
-import { Button } from '../../export';
+import { Link, Navigate, useNavigate } from 'react-router';
+import { Button, Loader } from '../../export';
+import authServices from '../../Appwrite/Auth';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Store/authSlice';
+import dataBaseServices from '../../Appwrite/Database';
 const Login = () => {
     const { register, handleSubmit } = useForm();
+    const [loader , setLoader] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const LoginDetails = (data) => {
-        console.log('submit');
-        
-          console.log(data);
+
+    const LoginDetails = async(data) => {
+      setLoader(true)
+         try {
+          const loginUser = await authServices.login(data)
           
+          if(loginUser){
+            console.log(loginUser);
+          }
+            
+         } catch (error) {
+          alert(error)
+          console.log(error);
+          
+         }finally{
+          setLoader(false)
+         }
+          
+    }
+
+    if(loader){
+      return <Loader/>
     }
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#111111]">
@@ -22,15 +46,15 @@ const Login = () => {
           <Input 
           type='text' 
           label='Username' 
-          {...register("Username" , {required : true})}
+          {...register("email" , {required : true})}
           />
         
        
         <Input type='password' label='Password'
         
-         {...register("Password" , {required : true})} 
+         {...register("password" , {required : true})} 
         />
-        <Button type="submit" className="mt-5" btn="Login" />
+        <Button type="submit" className="mt-5  w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600" btn="Login" />
 
         <div className=" text-center">
           <p className="text-sm text-gray-600">
