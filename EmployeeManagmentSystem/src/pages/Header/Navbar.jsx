@@ -19,7 +19,7 @@ const Navbar = () => {
       toast.error("Error while logout")
     }
     dispatch(logout())
-    navigate("/")
+    navigate("/login")
   }
   const navbarOpiton = [
      {
@@ -36,18 +36,27 @@ const Navbar = () => {
      },
      {
       tittle : "Logout",
-      isVisible : isLogin,
+      isVisible : true,
       logout : handleLogout,
       type : "button"
+     },
+     {
+      tittle : "Add task",
+      isVisible : currentUserDetails.admin,
+      type : "button" ,
+      link : "/newTask"
      },
 
   ]
   return (
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8'>
         <div>
-        {
-           isLogin && <h1 className='text-xl font-medium'>Hello <br /> <span className='text-2xl font-medium'>{currentUserDetails.userName} 👋</span></h1>
-        }
+       
+            <h1 className='text-xl font-medium'>Hello <br />
+            {
+               isLogin && <span className='text-2xl font-medium'>{currentUserDetails.userName} 👋</span>
+           } 
+           </h1>
         </div>
         
         <div className='flex gap-5'>

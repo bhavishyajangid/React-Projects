@@ -5,7 +5,7 @@ const Input = forwardRef(({ type, className, label, divClass, ...props }, ref) =
     <div>
       {label && <label htmlFor={label} className="block text-white text-sm mb-1">{label}</label>}
     
-      <div className={`h-9 flex items-center bg-white overflow-hidden rounded-lg ${divClass}`}>
+      <div className={`h-9 flex items-center   rounded-lg ${divClass}`}>
         {type === 'tel' && (
           <span className="px-2 py-2 text-sm font-medium inline-block bg-gray-400 text-white">+91</span>
         )}
@@ -18,11 +18,7 @@ const Input = forwardRef(({ type, className, label, divClass, ...props }, ref) =
           id={label}
         />
 
-        {/* {type === 'email' || type === 'tel' ? (
-          <button type="button" className="text-base px-3 font-medium h-full bg-red-300 text-blue-700">
-            Verify
-          </button>
-        ) : null} */}
+
       </div>
     </div>
   );

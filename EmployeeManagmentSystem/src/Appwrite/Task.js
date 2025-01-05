@@ -1,32 +1,34 @@
-import { Client , Databases, ID , Query} from "appwrite";
+import { Client , Databases , ID , Query } from "appwrite";
 import conf from "../config/config";
-export class databaseServices{
+
+export class taskService{
     client = new Client();
-    database;
+    Task
 
     constructor(){
         this.client
 
         .setEndpoint(conf.appwriteUrl)
         .setProject(conf.appwriteProjectId)
-        this.database = new Databases(this.client)
+        this.Task = new Databases(this.client)
     }
 
-
-     async setUserProfileData({username ,number , isEmailVerify, email , id}){
-        console.log(username ,number , isEmailVerify, email , id);
+    async setTask({Tittle , Date , AssignTo , Category , Description , Urgent , TaskId}){
         
         try {
-            const userPersonalData = await this.database.createDocument(
+            const userPersonalData = await this.Task.createDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteAuthCollectionId,
+                conf.appwriteAllTaskCollectionId,
                 ID.unique() , 
                 {
-                    userId : String(id),
-                    userName : String(username),
-                    email : String(email),
-                    number : String(number),
-                    isEmailVerify : Boolean(isEmailVerify)
+                    Tittle: String(Tittle),
+                    Date : String(Date),
+                    AssignTo : String(AssignTo),
+                    Category : String(Category),
+                    Description: String(Description),
+                    isCompleted : false,
+                    Urgent : Urgent,
+                    TaskId : ID.unique()
                 }  
             )
             return userPersonalData
@@ -36,7 +38,9 @@ export class databaseServices{
         }
      }
 
-     async getUserDetails(userId) { 
+
+
+    async getUserDetails(userId) { 
         try {
           const userDetails = await this.database.listDocuments(
             conf.appwriteDatabaseId,  // Your database ID
@@ -51,6 +55,6 @@ export class databaseServices{
       }
 }
 
-const dataBaseServices = new databaseServices();
+const TaskServices = new taskService();
 
-export default dataBaseServices
+export default TaskServices

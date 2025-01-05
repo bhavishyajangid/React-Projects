@@ -18,13 +18,13 @@ function App() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-       const loginUser  = await authServices.getCurrentUser()
-        if(loginUser){
-           const userDetails = await dataBaseServices.getUserDetails(loginUser.$id)
-           if(userDetails){
-             dispatch(login(userDetails))
-           }
-        }
+      //  const loginUser  = await authServices.getCurrentUser()
+      //   if(loginUser){
+      //      const userDetails = await dataBaseServices.getUserDetails(loginUser.$id)
+      //      if(userDetails){
+      //        dispatch(login(userDetails))
+      //      }
+      //   }
        
       } catch (error) {
         console.log(error)
