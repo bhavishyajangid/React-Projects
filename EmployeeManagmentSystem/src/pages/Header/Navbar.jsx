@@ -42,7 +42,7 @@ const Navbar = () => {
      },
      {
       tittle : "Add task",
-      isVisible : currentUserDetails.admin,
+      isVisible : currentUserDetails.admin || false,
       type : "button" ,
       link : "/newTask"
      },
@@ -52,11 +52,12 @@ const Navbar = () => {
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8'>
         <div>
        
-            <h1 className='text-xl font-medium'>Hello <br />
             {
-               isLogin && <span className='text-2xl font-medium'>{currentUserDetails.userName} 👋</span>
+           
+               isLogin &&  <h1 className='text-xl font-medium  max-sm:lg'>Hello <br /> <span className='text-2xl font-medium max-md:text-xl max-sm:lg '>{currentUserDetails.userName} 👋</span>
+               </h1>
            } 
-           </h1>
+           
         </div>
         
         <div className='flex gap-5'>

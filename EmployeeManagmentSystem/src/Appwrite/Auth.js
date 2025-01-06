@@ -47,7 +47,7 @@ export class authService {
               
                
             if(loginUser){
-                     const userDetails = await dataBaseServices.getUserDetails(loginUser.userId)
+                     const userDetails = await dataBaseServices.getUserDetails(loginUser.userId , "userId")
                      if(userDetails){
                          return userDetails
 

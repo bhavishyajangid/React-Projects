@@ -1,19 +1,28 @@
 import React from 'react'
 
-const AdminTask = () => {
+const AdminTask = ({item}) => {
+
+  const ControleDescriptionText = (text , maxLength) => {
+     if(text.length > maxLength){
+      return text.slice(0, maxLength) + "........."; 
+     }else{
+       return text
+     }
+
+  }
   return (
-    <div className='  bg-sky-500 rounded-md p-5 flex flex-col gap-3 cursor-pointer '>
+    <div className=' bg-pink-200 rounded-md p-5 flex flex-col justify-around gap-3 cursor-pointer '>
 
             <div className='flex justify-between items-center'>
-               <span className='bg-red-500  text-gray-200 px-3 py-2 text-sm font-medium rounded-md border-none'>Urgent</span>
-               <span className='text-black font-medium'>20/10/2003</span>
+               <span className={`${item.Urgent ? "bg-red-500" : "bg-green-500"}  text-gray-200 px-3 py-2 text-sm font-medium rounded-md border-none`}>{item.Urgent ? "Urgent" : "Calm"}</span>
+               <span className='text-black font-medium'>{item.Date}</span>
             </div>
-          <h1 className='text-black capitalize font-medium '>make a youtube video</h1>
+          <h1 className='text-black capitalize font-medium '>{item.Tittle}</h1>
 
-          <p className=' text-gray-900 text-sm '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, commodi. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam, obcaecati. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolores, quaerat!</p>
+          <p className=' text-gray-900 text-sm '>{ControleDescriptionText(item.Description , 300)}</p>
            
-           <h2 className='text-black font-medium '>Assing To : - Ramesh</h2>
-           <span className='bg-red-500 px-3 w-fit py-2 text-gray-200 font-medium rounded-md border-none text-sm '>Not Completed</span>
+           <h2 className='text-black font-medium '>Assing To : - {item.AssignTo}</h2>
+           <span className={` px-3 w-fit py-2 text-gray-200 font-medium rounded-md border-none text-sm ${item.isCompleted ? "bg-green-500" : "bg-red-500"}`}>{item.isCompleted ? "Completed" : "Not Completed" }</span>
          </div>
   )
 }

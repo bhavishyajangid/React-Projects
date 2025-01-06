@@ -1,5 +1,6 @@
 import { Client , Databases , ID , Query } from "appwrite";
 import conf from "../config/config";
+import dataBaseServices from "./Database";
 
 export class taskService{
     client = new Client();
@@ -13,9 +14,12 @@ export class taskService{
         this.Task = new Databases(this.client)
     }
 
-    async setTask({Tittle , Date , AssignTo , Category , Description , Urgent , TaskId}){
-        
-        try {
+    async setTask({Tittle , Date , AssignTo , Category , Description , Urgent}){
+      
+          const employee = await dataBaseServices.getUserDetails(AssignTo , "userName")
+         
+         if(employee && !employee.admin){
+          try {
             const userPersonalData = await this.Task.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteAllTaskCollectionId,
@@ -28,31 +32,53 @@ export class taskService{
                     Description: String(Description),
                     isCompleted : false,
                     Urgent : Urgent,
-                    TaskId : ID.unique()
+                    TaskId : employee.userId
                 }  
             )
+            console.log(userPersonalData);
+            
             return userPersonalData
         } catch (error) {
             console.log(error);
             
         }
-     }
+         }else{
+           return false
+         }
+
+    }
 
 
 
-    async getUserDetails(userId) { 
-        try {
-          const userDetails = await this.database.listDocuments(
-            conf.appwriteDatabaseId,  // Your database ID
-            conf.appwriteAuthCollectionId,  // Your collection ID
-            [Query.equal("userId", userId)]  // Query to find the user by userId
-          );
-          return userDetails.documents[0];  // Return the first document (user)
-        } catch (error) {
-          console.log(error);
-          return null;  // In case of error or no user found
+    async getAllTask() {
+      try { 
+        const allTask = await this.Task.listDocuments(
+           conf.appwriteDatabaseId,
+           conf.appwriteAllTaskCollectionId
+        );
+        if(allTask){
+          return allTask
         }
+      } catch (error) {
+          return error  
       }
+   }
+
+    // async getUserDetails(userId) { 
+    //     try {
+    //       const userDetails = await this.Task.listDocuments(
+    //         conf.appwriteDatabaseId,  // Your database ID
+    //         conf.appwriteAuthCollectionId,  // Your collection ID
+    //         [Query.equal("userName", userId)]  // Query to find the user by userId
+    //       );
+    //       return userDetails.documents[0];  // Return the first document (user)
+    //     } catch (error) {
+    //       console.log(error);
+    //       return null;  // In case of error or no user found
+    //     }
+    //   }
+   
+
 }
 
 const TaskServices = new taskService();

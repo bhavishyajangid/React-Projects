@@ -6,10 +6,15 @@ import React, { useState } from 'react'
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { Loader } from '../../export';
+import { useDispatch } from 'react-redux';
+import { addTaskSetByAdmin } from '../../Store/adminSlice';
+import { useNavigate } from 'react-router';
 
 
 const SetNewTask = () => {
    const [loader , setLoader] = useState(false)
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
    const [allTask , setAllTask] = useState([])
   const {
       register,
@@ -49,15 +54,13 @@ const SetNewTask = () => {
     try {
       setLoader(true)
        const userTask = await TaskServices.setTask(data)
+       console.log(userTask);
        if(userTask){
-        // console.log(userTask);
-        
-          setAllTask([userTask , ...allTask])
-          console.log(allTask);
-          
+           dispatch(addTaskSetByAdmin(userTask))
+           navigate("/")
            toast.success("Task Set Sucessfully")
        }else{
-         toast.error("Failed To Set Task")
+         toast.error(`${data.AssignTo}  not found`)
        }
     } catch (error) {
       toast.error(error)

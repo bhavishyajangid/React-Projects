@@ -36,12 +36,16 @@ export class databaseServices{
         }
      }
 
-     async getUserDetails(userId) { 
+     async getUserDetails(indentifier , queryType = "userId") {
+      
+      if (!["userId", "userName"].includes(queryType)) {
+        throw new Error("Invalid query type. Must be 'userId' or 'userName'.");
+    }
         try {
           const userDetails = await this.database.listDocuments(
             conf.appwriteDatabaseId,  // Your database ID
             conf.appwriteAuthCollectionId,  // Your collection ID
-            [Query.equal("userId", userId)]  // Query to find the user by userId
+            [Query.equal(queryType, indentifier)]  // Query to find the user by userId
           );
           return userDetails.documents[0];  // Return the first document (user)
         } catch (error) {
@@ -52,6 +56,4 @@ export class databaseServices{
 }
 
 const dataBaseServices = new databaseServices();
-console.log(sdhg);
-
 export default dataBaseServices

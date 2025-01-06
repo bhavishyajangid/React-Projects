@@ -15,8 +15,9 @@ import Loader from "./components/Loader.jsx";
 import VerifyOtp from "./components/VerifyOtp.jsx";
 import Home from "./pages/Dashboard/Home.jsx";
 import SetNewTask from "./pages/adminTask/SetNewTask.jsx";
-import SetTaskByAdmin from "./pages/adminTask/SetTaskByAdmin.jsx";
+import AdminAddedTask from "./pages/adminTask/adminAddedTask.jsx";
 import AdminTask from "./components/AdminTask.jsx";
+import CardSkeleton from "./components/CardSkeleton.jsx";
 export  {
     Login, 
     Signup,
@@ -34,6 +35,7 @@ export  {
     VerifyOtp,
     Home,
     SetNewTask,
-    SetTaskByAdmin,
-    AdminTask
+    AdminAddedTask,
+    AdminTask,
+    CardSkeleton
 }
