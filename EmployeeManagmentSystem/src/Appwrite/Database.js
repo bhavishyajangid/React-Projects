@@ -52,5 +52,6 @@ export class databaseServices{
 }
 
 const dataBaseServices = new databaseServices();
+console.log(sdhg);
 
 export default dataBaseServices
