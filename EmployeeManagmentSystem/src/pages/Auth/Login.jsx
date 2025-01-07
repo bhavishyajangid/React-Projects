@@ -20,17 +20,12 @@ const Login = () => {
          try {
           const loginUser = await authServices.login(data)
           if(loginUser){
-             if(loginUser.admin){
-                navigate("/admin")
-             }else{
-               navigate("/")
-             }
+             navigate("/home")
             dispatch(login(loginUser))
             toast.success("Login sucessfully");
           }
          } catch (error) {
           console.log(error);
-          
           toast.error("failed to login")
          }finally{
           setLoader(false)

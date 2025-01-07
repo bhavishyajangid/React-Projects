@@ -16,7 +16,7 @@ export class taskService{
 
     async setTask({Tittle , Date , AssignTo , Category , Description , Urgent}){
       
-          const employee = await dataBaseServices.getUserDetails(AssignTo , "userName")
+          const employee = await dataBaseServices.getUser(AssignTo , "userName")
          
          if(employee && !employee.admin){
           try {
@@ -64,19 +64,20 @@ export class taskService{
       }
    }
 
-    // async getUserDetails(userId) { 
-    //     try {
-    //       const userDetails = await this.Task.listDocuments(
-    //         conf.appwriteDatabaseId,  // Your database ID
-    //         conf.appwriteAuthCollectionId,  // Your collection ID
-    //         [Query.equal("userName", userId)]  // Query to find the user by userId
-    //       );
-    //       return userDetails.documents[0];  // Return the first document (user)
-    //     } catch (error) {
-    //       console.log(error);
-    //       return null;  // In case of error or no user found
-    //     }
-    //   }
+    async getUserTask(TaskId) { 
+      
+        try {
+          const userDetails = await this.Task.listDocuments(
+            conf.appwriteDatabaseId,  // Your database ID
+            conf.appwriteAllTaskCollectionId,  // Your collection ID
+            [Query.equal("TaskId", TaskId )]  // Query to find the user by userId
+          );
+          return userDetails.documents[0];  // Return the first document (user)
+        } catch (error) {
+          console.log(error);
+          return null;  // In case of error or no user found
+        }
+      }
    
 
 }

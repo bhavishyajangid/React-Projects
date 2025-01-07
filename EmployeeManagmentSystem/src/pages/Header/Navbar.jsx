@@ -14,26 +14,15 @@ const Navbar = () => {
   const handleLogout = () => {
     const logoutUser = authServices.logout()
     if(logoutUser){
+      dispatch(logout())
+      navigate("/")
        toast.success("Logout sucessfully")
     }else{
       toast.error("Error while logout")
     }
-    dispatch(logout())
-    navigate("/login")
+   
   }
   const navbarOpiton = [
-     {
-      tittle : "Login",
-      link : "/login",
-      isVisible : !isLogin,
-      type : "button"
-     },
-     {
-      tittle : "Signup",
-      link : "/signup",
-      isVisible : !isLogin,
-      type : "button"
-     },
      {
       tittle : "Logout",
       isVisible : true,

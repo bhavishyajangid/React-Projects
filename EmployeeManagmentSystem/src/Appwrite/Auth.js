@@ -1,6 +1,8 @@
 import { Client, Account, ID } from "appwrite";
 import conf from '../config/config.js'
 import dataBaseServices from "./Database.js";
+import TaskServices, { taskService } from "./Task.js";
+import { Tasks } from "../export.js";
 
 export class authService {
     client = new Client();
@@ -44,17 +46,13 @@ export class authService {
     async login({email, password}) {
         try {
             const loginUser = await this.account.createEmailPasswordSession(email, password);
-              
-               
+  
             if(loginUser){
-                     const userDetails = await dataBaseServices.getUserDetails(loginUser.userId , "userId")
-                     if(userDetails){
-                         return userDetails
-
-                     }else{
-                        return loginUser
-                     }
+                return  this.getUserAllDetails(loginUser , loginUser.userId)
             }
+
+            return null
+   
              
         } catch (error) {
             throw error;
@@ -64,7 +62,10 @@ export class authService {
 
     async getCurrentUser() {
         try {
-            return await this.account.get();
+            const isUserLogin =  await this.account.get();
+              if(isUserLogin){
+                return  this.getUserAllDetails(isUserLogin, isUserLogin.$id)
+              }
         } catch (error) {
            console.log(error);
             
@@ -73,6 +74,28 @@ export class authService {
         return null;
     }
 
+    
+    async getUserAllDetails( user, id){
+            const userDetails = await dataBaseServices.getUser(id , "userId")
+            if(userDetails){
+               if(userDetails.admin){
+                    const adminTaskData = await TaskServices.getAllTask()
+                    if(adminTaskData){
+                        return { ...userDetails, tasks: adminTaskData.
+                           documents }
+                    }
+               }else{
+                   const userTaskData = await TaskServices.getUserTask(id)
+                   if(userTaskData){
+                       return { ...userDetails, tasks: userTaskData.
+                           documents }
+                   }
+               }
+                
+            }else{
+                 return user
+            }
+   }
     
 
     async logout() {

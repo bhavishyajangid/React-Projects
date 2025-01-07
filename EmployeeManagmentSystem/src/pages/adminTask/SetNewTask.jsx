@@ -56,7 +56,7 @@ const SetNewTask = () => {
        const userTask = await TaskServices.setTask(data)
        console.log(userTask);
        if(userTask){
-           dispatch(addTaskSetByAdmin(userTask))
+           dispatch(SetNewTask(userTask))
            navigate("/")
            toast.success("Task Set Sucessfully")
        }else{

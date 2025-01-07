@@ -1,5 +1,6 @@
 import { Client , Databases, ID , Query} from "appwrite";
 import conf from "../config/config";
+import { Identity } from "twilio/lib/twiml/VoiceResponse";
 export class databaseServices{
     client = new Client();
     database;
@@ -36,8 +37,8 @@ export class databaseServices{
         }
      }
 
-     async getUserDetails(indentifier , queryType = "userId") {
-      
+     async getUser(indentifier , queryType = "userId") {
+        
       if (!["userId", "userName"].includes(queryType)) {
         throw new Error("Invalid query type. Must be 'userId' or 'userName'.");
     }

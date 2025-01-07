@@ -1,16 +1,15 @@
 import React from 'react'
-import EmployeeDashboard from './EmployeeDashboard'
-import AdminDashboard from './AdminDashboard'
 import { useSelector } from 'react-redux'
+import AdminDashboard from './AdminDashboard'
+import EmployeeDashboard from './EmployeeDashboard'
 
 const Home = () => {
-    const {currentUserDetails} = useSelector(state => state.authSlice)
+    const{currentUserDetails} = useSelector(state => state.authSlice)
   return (
     <div>
         {
-            currentUserDetails.admin ? <AdminDashboard/> : <EmployeeDashboard/>
+           currentUserDetails.admin ? <AdminDashboard/> : <EmployeeDashboard/>
         }
-        
     </div>
   )
 }
