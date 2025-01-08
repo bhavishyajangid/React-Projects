@@ -1,38 +1,120 @@
-import React, { useState } from 'react';
-import Input from '../../components/Input';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate } from 'react-router';
-import { Button, Loader } from '../../export';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { toast } from "react-toastify";
 import authServices from '../../Appwrite/Auth';
-import { useDispatch } from 'react-redux';
+import Input from '../../components/Input';
+import { Button, Loader, VerifyOtp } from '../../export';
 import { login } from '../../Store/authSlice';
-import { toast } from "react-toastify"
-import dataBaseServices from '../../Appwrite/Database';
+import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from '../../Store/otpSendSlice';
 const Login = () => {
+
+   const { otpSend , generatedOtp , loader, resend , userEmailVerify} = useSelector(state => state.otpSendSlice)
     const { register, handleSubmit } = useForm();
-    const [loader , setLoader] = useState(false)
+    const [second, setSecond] = useState(60);
+    const [userData , setUserData] = useState("")
+    const emailOtp = useRef(null);
+    const firstRender = useRef(true)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const location = useLocation()
 
 
     const LoginDetails = async(data) => {
-      setLoader(true)
-         try {
+      setUserData(data)
+      if(!userEmailVerify){
+         dispatch(setOtpSend(true))
+      }else{
+        try {
+          dispatch(setLoader(true))
           const loginUser = await authServices.login(data)
           if(loginUser){
              navigate("/home")
             dispatch(login(loginUser))
             toast.success("Login sucessfully");
           }
-         } catch (error) {
-          console.log(error);
-          toast.error("failed to login")
-         }finally{
-          setLoader(false)
-         }
+        } catch (error) {
+          toast.error(`${error}`)
+        }finally{
+          dispatch(setLoader(false))
+        }
           
-    }
+      }
+      }
+    
+      useEffect(() => {
+        if (firstRender.current) {
+          return;
+        }
+      
+        // Asynchronous function to send OTP
+        const handleSendOtp = async () => {
+          if (otpSend) {
+            try {
+              dispatch(setLoader(true))
+              const otp = await authServices.sendOtp(userData);  // Wait for OTP to be sent
+              
+              // Check if the OTP was successfully generated and sent
+              if (otp) {
+                console.log("Generated OTP:", otp);  // Logs the OTP value
+                dispatch(setGeneratedOtp(otp));  // Set OTP in Redux store (dispatch the resolved OTP)
+                toast.success("OTP sent successfully!");
+              } else {
+                toast.error("Failed to send OTP.");
+              }
+            } catch (error) {
+              toast.error("Error sending OTP.");
+            }finally{
+               dispatch(setLoader(false))
+            }
+          }
+        };
+      
+        handleSendOtp();  // Invoke the OTP sending function
+      
+      }, [otpSend, resend]);  // Run the effect when otpSend or resend changes
+      
 
+
+    useEffect(() => {
+        if (firstRender.current) {
+          firstRender.current = false;
+          return;
+        }
+    
+        if (second == 0) return;
+        // change the timer
+        const timer = setInterval(() => {
+          setSecond((prev) => (prev > 0 ? prev - 1 : prev));
+        }, 1000);
+    
+        return () => clearInterval(timer);
+      }, [otpSend , resend]);
+
+      useEffect(() => {
+        setSecond(60)
+         dispatch(resetState())
+      },[location , dispatch])
+
+      const verifyEmailOtp = () => {
+    
+        const otpVerify = authServices.verifyOtp(emailOtp.current.value , generatedOtp)
+        if(otpVerify){
+          dispatch(setUserEmailVerify(true))
+          toast.success("OTP Verified!");
+        }else{
+          toast.error("Invalid OTP, please try again.");
+        }
+        
+      };
+
+      
+  const resendOtp = () => {
+    setSecond(60);
+    dispatch(setResend(!resend))
+}
+     
     if(loader){
       return <Loader/>
     }
@@ -54,6 +136,13 @@ const Login = () => {
         
          {...register("password" , {required : true})} 
         />
+
+       {
+          !userEmailVerify && generatedOtp !== null && <VerifyOtp second={second} emailOtp={emailOtp} verifyEmailOtp = {verifyEmailOtp} resendOtp ={resendOtp}  />
+        }
+
+
+
         <Button type="submit" className="mt-5  w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600" btn="Login" />
 
         <div className=" text-center">

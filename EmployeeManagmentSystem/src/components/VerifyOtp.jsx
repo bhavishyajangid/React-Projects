@@ -2,13 +2,13 @@ import React from "react";
 import Input from "./Input"; // Adjust the import path for Input component
 
 
-const VerifyOtp = ({second , generatedOtp , userEmailVerify , emailOtp ,verifyEmailOtp, resendOtp}) => {
+const VerifyOtp = ({second , emailOtp ,verifyEmailOtp, resendOtp}) => {
     // take data using context api
   
   
   return (
     <div>
-      {!userEmailVerify && generatedOtp !== null && (
+      
         <div className="flex gap-3">
           <Input
             ref={emailOtp}
@@ -35,7 +35,7 @@ const VerifyOtp = ({second , generatedOtp , userEmailVerify , emailOtp ,verifyEm
             </button>
           )}
         </div>
-      )}
+      
     </div>
   );
 };

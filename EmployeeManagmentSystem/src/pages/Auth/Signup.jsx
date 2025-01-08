@@ -1,21 +1,17 @@
-import React, { memo, useEffect, useState , useRef } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Input, Loader, VerifyOtp } from "../../export";
 import authServices from "../../Appwrite/Auth";
-import { useDispatch, useSelector } from "react-redux";
-import emailjs, { send } from "emailjs-com";
-import dataBaseServices from "../../Appwrite/Database";
+import { Button, Input, Loader, VerifyOtp } from "../../export";
 import { login } from "../../Store/authSlice";
+import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from "../../Store/otpSendSlice";
+
 const Signup = () => {
+  const { otpSend , generatedOtp ,resend , loader , userEmailVerify} = useSelector(state => state.otpSendSlice)
   const [second, setSecond] = useState(60);
-  const [otpSend, setOtpSend] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState(null);
   const [userData , setUserData] = useState("")
-  const [resend , setResend] = useState(false)
-  const [loader , setLoader] = useState(false)
-  const [userEmailVerify , setUserEmailVerify] = useState(false)
   const emailOtp = useRef(null);
   const firstRender = useRef(true)
   const {
@@ -32,68 +28,60 @@ const Signup = () => {
       setUserData(data);
       if (!userEmailVerify) {
         // if email not verify first verify for create a account
-        setOtpSend(true)
+        dispatch(setOtpSend(true))
         
       } else {
         try {
-          setLoader(true);
+          dispatch(setLoader(true))
           const newUser = await authServices.createAccount({...data , isEmailVerify : userEmailVerify});
           if(newUser){
-            dispatch(login(newUser))
                     navigate("/");
-                    setLoader(false);
+                   dispatch(setLoader(false))
                     toast.success("Account created succesfully");
           }
+
+          
         } catch (error) {
-           toast.error("account not created")
+           toast.error(`${error}`)
         } finally{
-          setLoader(false)
+          dispatch(setLoader(false))
         }
       }
     }
 
-  useEffect(() => {
+    useEffect(() => {
+      if (firstRender.current) {
+        return;
+      }
     
-    if (firstRender.current) {
-      return;
-    }
-        
-    // send otp to the user email
-    const sentOtp = () => {
-      console.log("otp send succesfully", generatedOtp);
-      const otpCode = Math.floor(Math.random() * 1000000);
-
-      const templateParams = {
-        to_email: userData.email, // The recipient's email
-        to_name: userData.name, // The recipient's name
-        from_name: "The Manager", // The sender's name
-        message: `Your OTP code is: ${otpCode}`,
+      // Asynchronous function to send OTP
+      const handleSendOtp = async () => {
+        if (otpSend) {
+          try {
+            dispatch(setLoader(true))
+            const otp = await authServices.sendOtp(userData);  // Wait for OTP to be sent
+            
+            // Check if the OTP was successfully generated and sent
+            if (otp) {
+              console.log("Generated OTP:", otp);  // Logs the OTP value
+              dispatch(setGeneratedOtp(otp));  // Set OTP in Redux store (dispatch the resolved OTP)
+              toast.success("OTP sent successfully to email !");
+            } else {
+              toast.error("Failed to send OTP.");
+            }
+          } catch (error) {
+            console.error("Error sending OTP:", error);
+            toast.error("Error sending OTP.");
+          }finally{
+            dispatch(setLoader(false))
+         }
+        }
       };
-
-      // emailjs.init("V6RgthY8oQceVRjcO");
-      // emailjs
-      //   .send(
-      //     "service_lsyugp9",
-      //     "template_jxaqwnp",
-      //     templateParams,
-      //     "V6RgthY8oQceVRjcO"
-        // ) // Replace with your EmailJS credentials
-        // .then(
-        //   (response) => {
-        //     if (response) {
-              setGeneratedOtp(otpCode);
-              console.log(otpCode);
-              toast.success("OTP sent successfully!");
-        //     }
-        //   },
-        //   (error) => {
-        //     toast.error("Failed to send OTP. Please try again!");
-        //   }
-        // );
-    };
-
-    sentOtp();
-  }, [otpSend , resend]);
+    
+      handleSendOtp();  // Invoke the OTP sending function
+    
+    }, [otpSend, resend]);  // Run the effect when otpSend or resend changes
+    
 
   useEffect(() => {
     if (firstRender.current) {
@@ -110,19 +98,27 @@ const Signup = () => {
     return () => clearInterval(timer);
   }, [otpSend , resend]);
 
+  // if the user change the route or naviagate to another page the state will reset 
+   useEffect(() => {
+          dispatch(resetState())
+          setSecond(60)
+    },[location , dispatch])
 
-  const verifyEmailOtp = () => {
-    if (parseInt(emailOtp.current.value) === parseInt(generatedOtp)) {
+
+  const verifyEmailOtp = async() => {
+    const otpVerify = await authServices.verifyOtp(emailOtp.current.value , generatedOtp)
+    if(otpVerify){
+      dispatch(setUserEmailVerify(true))
       toast.success("OTP Verified!");
-      setUserEmailVerify(true);
-    } else {
+    }else{
       toast.error("Invalid OTP, please try again.");
     }
+    
   };
 
   const resendOtp = () => {
       setSecond(60);
-      setResend(prev => !prev);
+      dispatch(setResend(!resend))
   }
 
 
@@ -130,7 +126,11 @@ const Signup = () => {
     return <Loader />;
   }
   return (
+    
+      <>
+      
     <div className=" h-screen flex justify-center items-center  bg-[#111111]">
+     
       <form
         className=" px-5 py-2 flex flex-col  gap-3 rounded-lg shadow-lg w-96 bg-[#1C1C1C]"
         onSubmit={handleSubmit(handleSignup)}
@@ -138,6 +138,7 @@ const Signup = () => {
         <h2 className="text-2xl font-semibold text-center ">Sign Up</h2>
 
         {/* Username Input */}
+        
         <Input
           type="text"
           label="Username"
@@ -167,7 +168,10 @@ const Signup = () => {
         </div>
 
         {/* // verify otp componetns */}
-        <VerifyOtp second={second} generatedOtp={generatedOtp} userEmailVerify={userEmailVerify} emailOtp={emailOtp} verifyEmailOtp = {verifyEmailOtp} resendOtp ={resendOtp}  />
+        {
+          !userEmailVerify && generatedOtp !== null && <VerifyOtp second={second} emailOtp={emailOtp} verifyEmailOtp = {verifyEmailOtp} resendOtp ={resendOtp}  />
+        }
+        
 
         {/* Password Input */}
         <Input
@@ -208,6 +212,7 @@ const Signup = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 
