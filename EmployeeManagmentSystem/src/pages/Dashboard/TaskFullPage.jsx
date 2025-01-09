@@ -6,7 +6,10 @@ const TaskFullPage = () => {
   console.log(TaskId);
   
   return (
-    <div>TaskFullPage</div>  
+    <>
+    <div>TaskFullPage</div>
+    <div></div>  
+    </>
   )
 }
 
