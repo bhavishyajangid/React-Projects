@@ -8,7 +8,6 @@ const TaskFullPage = () => {
   return (
     <>
     <div>TaskFullPage</div>
-    <div></div>  
     </>
   )
 }
