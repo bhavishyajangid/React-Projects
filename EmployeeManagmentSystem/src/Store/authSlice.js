@@ -6,7 +6,6 @@ const authSlice = createSlice({
     initialState: {
        currentUserDetails : [],
        isLogin : false ,
-       rough : false,
     },
     reducers : {
         login : (state , action) => {
@@ -17,9 +16,12 @@ const authSlice = createSlice({
         logout : (state) => {
             state.isLogin = false
             state.currentUserDetails = null
+        },
+        addNewTask : (state , action) => {
+            state.currentUserDetails.tasks = [...state.currentUserDetails.tasks , action.payload ]
         }
     }
 })
 
-export const {login , logout} = authSlice.actions
+export const {login , logout , addNewTask} = authSlice.actions
 export default authSlice

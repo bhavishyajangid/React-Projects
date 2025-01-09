@@ -13,7 +13,8 @@ export class authService {
         this.client
         
         .setEndpoint(conf.appwriteUrl)
-        .setProject(conf.appwriteProjectId);
+        .setProject(conf.appwriteProjectId)
+        // .setKey(conf.appwriteAuthKey)
         this.account = new Account(this.client);
         
     }
@@ -111,6 +112,25 @@ export class authService {
         }
     }
 
+  //   async deleteUser(userId) {
+  //     try {
+  //         // Call the Appwrite API to delete the user
+  //         const response = await users.delete(userId);
+  //         console.log('User deleted successfully:', response);
+  //     } catch (error) {
+  //         console.error('Error deleting user:', error.message);
+  //     }
+  // }
+
+  //  async getAllUser(){
+  //    try {
+  //          const response = await users.list()
+  //          if(response) return response.users
+  //    } catch (error) {
+  //      console.log(error);
+       
+  //    }
+  //  }
 
     async sendOtp(user) {
         const otpCode = Math.floor(Math.random() * 1000000);

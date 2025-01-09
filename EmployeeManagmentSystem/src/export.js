@@ -14,10 +14,11 @@ import VerifyEmail from "./pages/verificationPage/VerifyEmail.jsx";
 import Loader from "./components/Loader.jsx";
 import VerifyOtp from "./components/VerifyOtp.jsx";
 import Home from "./pages/Dashboard/Home.jsx";
-import SetNewTask from "./pages/adminTask/SetNewTask.jsx";
-import AdminAddedTask from "./pages/adminTask/adminAddedTask.jsx";
+import SetNewTask from "./pages/admin/SetNewTask.jsx";
 import AdminTask from "./components/AdminTask.jsx";
 import CardSkeleton from "./components/CardSkeleton.jsx";
+import AllUsers from "./pages/admin/AllUsers.jsx";
+import TaskFullPage from "./pages/Dashboard/TaskFullPage.jsx";
 export  {
     Login, 
     Signup,
@@ -35,7 +36,8 @@ export  {
     VerifyOtp,
     Home,
     SetNewTask,
-    AdminAddedTask,
     AdminTask,
-    CardSkeleton
+    CardSkeleton,
+    AllUsers,
+    TaskFullPage
 }

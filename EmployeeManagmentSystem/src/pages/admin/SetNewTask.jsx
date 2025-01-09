@@ -9,6 +9,7 @@ import { Loader } from '../../export';
 import { useDispatch } from 'react-redux';
 import { addTaskSetByAdmin } from '../../Store/adminSlice';
 import { useNavigate } from 'react-router';
+import { addNewTask } from '../../Store/authSlice';
 
 
 const SetNewTask = () => {
@@ -50,14 +51,16 @@ const SetNewTask = () => {
   ]
 
   const GiveNewTask = async(data) => {
-
+    console.log("running");
+    
     try {
       setLoader(true)
        const userTask = await TaskServices.setTask(data)
        console.log(userTask);
        if(userTask){
-           dispatch(SetNewTask(userTask))
-           navigate("/")
+         dispatch(addNewTask(userTask))
+          //  dispatch(SetNewTask(userTask))
+           navigate("/home")
            toast.success("Task Set Sucessfully")
        }else{
          toast.error(`${data.AssignTo}  not found`)
@@ -75,7 +78,6 @@ const SetNewTask = () => {
     return <Loader/>
   }
   return (
-    
     <div className='w-11/12 min-h-96 m-auto p-5 flex flex-col justify-center    bg-[#1C1C1C] rounded-lg mt-10'>
         <form onSubmit={handleSubmit(GiveNewTask)} className='flex max-sm:flex-col  py-5 ' action="">
             <div className='w-1/2  max-sm:w-full max-sm:pr-0 pr-10 flex flex-col gap-8 '>
@@ -107,7 +109,7 @@ const SetNewTask = () => {
                </div>
                
             </div>
-               <Button className="w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600 mt-9"  btn="Submit" />
+               <Button className="w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600 mt-9" type="submit"  btn="Submit" />
             </div>
         </form>
     </div>

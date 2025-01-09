@@ -1,7 +1,7 @@
 
 import './App.css'
 import { useState , useEffect } from 'react';
-import {  Navbar} from './export.js'
+import {  CardSkeleton, Navbar} from './export.js'
 import { Outlet, useNavigate} from 'react-router'
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ function App() {
      },[dispatch])
    
      if(loader){
-      return <Loader/>
+      return <CardSkeleton/>
      }
 
   return (

@@ -23,24 +23,30 @@ const Navbar = () => {
    
   }
   const navbarOpiton = [
-     {
-      tittle : "Logout",
-      isVisible : true,
-      logout : handleLogout,
-      type : "button"
-     },
-     {
+    {
       tittle : "Add task",
       isVisible : currentUserDetails.admin || false,
       type : "button" ,
       link : "/newTask"
-     },
+    },
+    {
+      tittle : "Users",
+      isVisible : currentUserDetails.admin || false,
+      type : "button" ,
+      link : "/user"
+    },
+    {
+     tittle : "Logout",
+     isVisible : true,
+     logout : handleLogout,
+     type : "button"
+    },
+
 
   ]
   return (
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8'>
         <div>
-       
             {
            
                isLogin &&  <h1 className='text-xl font-medium  max-sm:lg'>Hello <br /> <span className='text-2xl font-medium max-md:text-xl max-sm:lg '>{currentUserDetails.userName} 👋</span>
