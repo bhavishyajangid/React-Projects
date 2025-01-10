@@ -23,8 +23,8 @@ const Login = () => {
 
     const LoginDetails = async(data) => {
       setUserData(data)
-      if(!userEmailVerify){
-         dispatch(setOtpSend(true))
+      if(userEmailVerify){
+        //  dispatch(setOtpSend(true))
       }else{
         try {
           dispatch(setLoader(true))

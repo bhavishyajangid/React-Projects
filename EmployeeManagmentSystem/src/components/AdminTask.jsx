@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router';
 const AdminTask = ({item}) => {
 
   const ControleDescriptionText = (text , maxLength) => {
@@ -11,7 +11,10 @@ const AdminTask = ({item}) => {
 
   }
   return (
-         <div className=' bg-pink-200 rounded-md p-5 flex flex-col justify-around gap-3 cursor-pointer '>
+ 
+      
+     
+         <div className=' bg-pink-200 rounded-md p-5 flex flex-col justify-around gap-3 cursor-pointer max-sm:w-full h-full'>
 
             <div className='flex justify-between items-center'>
                <span className={`${item.Urgent ? "bg-red-500" : "bg-green-500"}  text-gray-200 px-3 py-2 text-sm font-medium rounded-md border-none`}>{item.Urgent ? "Urgent" : "Calm"}</span>

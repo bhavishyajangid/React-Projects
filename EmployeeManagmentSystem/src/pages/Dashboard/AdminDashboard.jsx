@@ -14,9 +14,9 @@ const AdminDashboard = () => {
         <p className="text-sm text-center mt-10">There are no tasks</p>
       ) : (
         currentUserDetails.tasks.map((item) => (
-          <Link to={`/id/${item.TaskId}`}>
+          <Link to={`/id/${item.$id}`}>
             <AdminTask item={item} />
-          </Link>
+           </Link>
         ))
       )}
     </div>
