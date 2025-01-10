@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
-import { VerifyEmail, AdminDashboard, Home, SetNewTask , Loader, EmployeeDashboard, AllUsers, TaskFullPage} from './export.js'
+const TaskFullPage = lazy(() => import("./pages/Dashboard/TaskFullPage.jsx"))
+import { VerifyEmail, AdminDashboard, Home, SetNewTask , Loader, EmployeeDashboard, AllUsers} from './export.js'
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
 import {Provider} from 'react-redux'

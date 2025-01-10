@@ -19,9 +19,15 @@ const authSlice = createSlice({
         },
         addNewTask : (state , action) => {
             state.currentUserDetails.tasks = [...state.currentUserDetails.tasks , action.payload ]
+        },
+        deleteTheTask : (state , action) => {
+               const updatedTask  =  state.currentUserDetails.tasks.filter((task) => task.$id !== action.payload)
+            
+            state.currentUserDetails.tasks = updatedTask
+            
         }
     }
 })
 
-export const {login , logout , addNewTask} = authSlice.actions
+export const {login , logout , addNewTask , deleteTheTask} = authSlice.actions
 export default authSlice

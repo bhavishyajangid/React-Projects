@@ -81,20 +81,22 @@ export class taskService{
    
      // In TaskServices
 async deleteTask(documentId) {
-  console.log('Deleting task with ID:', documentId);
   try {
     // Use Appwrite's deleteDocument method
-    const deletedTask = await this.Task.deleteDocument(conf.appwriteAllTaskCollectionId, documentId);
+    const deletedTask = await this.Task.deleteDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteAllTaskCollectionId, 
+      documentId
+    );
 
     // Check if deletion was successful
     if (deletedTask) {
-      return deletedTask;
+      return true;
     } else {
-      return null;  // In case deletion fails or no task was deleted
+      return false;  
     }
   } catch (error) {
     console.error('Error in deleteTask service:', error);
-    throw error;  // Propagate the error to handle it in the caller (deleteTask)
   }
 }
 
