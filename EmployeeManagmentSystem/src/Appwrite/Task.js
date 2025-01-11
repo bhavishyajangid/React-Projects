@@ -35,9 +35,13 @@ export class taskService{
                     TaskId : employee.userId
                 }  
             )
-            console.log(userPersonalData);
+
+            if(userPersonalData){
+              return userPersonalData
+            }else{
+              return null
+            }
             
-            return userPersonalData
         } catch (error) {
             console.log(error);
             
@@ -65,6 +69,7 @@ export class taskService{
    }
 
     async getUserTask(TaskId) { 
+      console.log(TaskId);
       
         try {
           const userDetails = await this.Task.listDocuments(
@@ -91,7 +96,7 @@ async deleteTask(documentId) {
 
     // Check if deletion was successful
     if (deletedTask) {
-      return true;
+      return deletedTask;
     } else {
       return false;  
     }
@@ -101,6 +106,48 @@ async deleteTask(documentId) {
 }
 
 
+ async getSingleTask (documentId){
+  
+       try {
+           const task = this.Task.getDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteAllTaskCollectionId,
+            documentId
+           )
+
+           if(task){
+            return task
+           }
+           
+       } catch (error) {
+        console.log(error);
+        
+       }
+ }
+
+ async updateTask (documentId , task){
+  console.log(documentId , task);
+  
+  try {
+    const updatedTask = this.Task.updateDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteAllTaskCollectionId,
+      documentId,
+      {
+        ...task
+      } 
+    )
+    if(updatedTask){
+       return updatedTask
+    }
+    
+  } catch (error) {
+     console.log('Error when updating the task' , error);
+  }
+      
+
+
+ }
 }
 
 const TaskServices = new taskService();

@@ -3,10 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
-const TaskFullPage = lazy(() => import("./pages/Dashboard/TaskFullPage.jsx"))
-import { VerifyEmail, AdminDashboard, Home, SetNewTask , Loader, EmployeeDashboard, AllUsers} from './export.js'
+import { VerifyEmail, AdminDashboard, Home, AddTask, Loader, EmployeeDashboard, AllUsers, EditTask} from './export.js'
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
+const TaskFullPage = lazy(() => import("./pages/Dashboard/TaskFullPage.jsx"))
 import {Provider} from 'react-redux'
 import store from './Store/index.js'
 const router = createBrowserRouter(
@@ -17,11 +17,12 @@ const router = createBrowserRouter(
       <Route path='/user' element={<AllUsers/>}  /> 
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
-      <Route path='/id/:TaskId' element={<TaskFullPage/>}/>
+      <Route path='/id/:TaskId' element={<TaskFullPage />}/>
+      <Route path='/editTask/:taskId' element={<EditTask/>}/>
       <Route path='/verify-email' element={<VerifyEmail/>}/>
       <Route path='/employee' element={<EmployeeDashboard/>}/>
       <Route path='/admin' element={<AdminDashboard/>} />
-      <Route path='/newtask' element={<SetNewTask/>} />
+      <Route path='/newtask' element={<AddTask/>} />
     </Route>
   )
 )

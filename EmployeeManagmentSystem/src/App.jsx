@@ -26,6 +26,8 @@ function App() {
            if(userData){
              dispatch(login(userData))
              navigate("/home")
+           }else{
+             navigate('/')
            }
          } catch (error) {
            console.log(error)
