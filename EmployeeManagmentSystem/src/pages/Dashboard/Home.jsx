@@ -5,6 +5,7 @@ import EmployeeDashboard from './EmployeeDashboard'
 
 const Home = () => {
     const{currentUserDetails} = useSelector(state => state.authSlice)
+    
   return (
     <div>
         {

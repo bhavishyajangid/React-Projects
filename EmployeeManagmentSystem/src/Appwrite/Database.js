@@ -54,6 +54,22 @@ export class databaseServices{
           return null;  // In case of error or no user found
         }
       }
+
+      async getAllUser (){
+         try {
+           const allUserList = this.database.listDocuments(
+             conf.appwriteDatabaseId,
+             conf.appwriteAuthCollectionId
+           )
+
+           if(allUserList){
+              return allUserList
+           }
+         } catch (error) {
+          console.log('error while fetching all user form database' , error);
+          
+         } 
+      }
 }
 
 const dataBaseServices = new databaseServices();

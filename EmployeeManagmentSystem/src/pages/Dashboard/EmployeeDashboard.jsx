@@ -1,17 +1,15 @@
 import React from 'react';
-import Navbar from '../Header/Navbar';
-import { Outlet } from 'react-router';
-import { AdminDashboard, EmployeeTask, Login, PastTaskInfo, Tasks } from '../../export';
 import { useSelector } from 'react-redux';
+import { AllTask, PastTaskInfo } from '../../export';
 
 const EmployeeDashboard = () => {
 
-
+ const {currentUserDetails} = useSelector(state => state.authSlice)
 
     return (
         <>
         <PastTaskInfo/>
-        <EmployeeTask/>
+        <AllTask tasks={currentUserDetails.tasks}/>
         </>
     );
 };

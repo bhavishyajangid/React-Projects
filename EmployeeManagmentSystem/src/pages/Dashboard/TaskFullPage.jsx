@@ -4,8 +4,9 @@ import { Link, useNavigate, useParams } from 'react-router'
 import TaskServices from '../../Appwrite/Task'
 import { toast } from 'react-toastify'
 import { deleteTheTask } from '../../Store/authSlice'
-import { Loader } from '../../export'
+import { ChatBox, Loader } from '../../export'
 import { FaRegEdit } from "react-icons/fa";
+
 const TaskFullPage = () => {
   const [taskDetails , setTaskDetails] = useState(null)
   const {TaskId} = useParams()
@@ -63,10 +64,14 @@ if(!taskDetails){
         >
           {taskDetails.Urgent ? 'Urgent' : 'Calm'}
         </span>
-        <Link to={`/editTask/${taskDetails.$id}`}>
-          <FaRegEdit className='w-11 h-11 p-2 rounded-lg text-white bg-gray-500 ' />
 
-        </Link>
+        {
+           taskDetails.admin && <Link to={`/editTask/${taskDetails.$id}`}>
+           <FaRegEdit className='w-11 h-11 p-2 rounded-lg text-white bg-gray-500 ' />
+ 
+         </Link>
+        }
+        
          </div>
 
         {/* Task Date */}
@@ -85,9 +90,10 @@ if(!taskDetails){
         <button className="bg-red-500 w-40 py-2   font-medium rounded-lg capitalize text-white ">
           {taskDetails.isComplete ? 'Complete' : 'Not Completed'}
         </button>
-
+         
         <button onClick={() => {deleteTask(taskDetails.$id)}} className=' w-40 h-10 rounded-lg text bg-white font-medium text-gray-900'>Delete Task</button>
         </div>
+        <ChatBox/>
       </div>
     </>
   )

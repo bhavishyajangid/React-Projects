@@ -77,7 +77,7 @@ export class taskService{
             conf.appwriteAllTaskCollectionId,  // Your collection ID
             [Query.equal("TaskId", TaskId )]  // Query to find the user by userId
           );
-          return userDetails.documents[0];  // Return the first document (user)
+          return userDetails.documents;  // Return the first document (user)
         } catch (error) {
           console.log(error);
           return null;  // In case of error or no user found

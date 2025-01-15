@@ -74,7 +74,9 @@ export class authService {
     }
 
     
-    async getUserAllDetails( user, id){
+    async getUserAllDetails(user, id){
+          console.log(user , id);
+          
             const userDetails = await dataBaseServices.getUser(id , "userId")
             
             if(userDetails){
@@ -87,8 +89,9 @@ export class authService {
                }else{
                    const userTaskData = await TaskServices.getUserTask(id) 
                    if(userTaskData){
-                       return { ...userDetails, tasks: userTaskData.
-                           documents }
+                    console.log(userTaskData , 'taks');
+                    
+                       return { ...userDetails, tasks: userTaskData}
                    }else{
                       return {...userDetails , tasks : []}
                    }

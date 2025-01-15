@@ -8,6 +8,7 @@ import authServices from '../../Appwrite/Auth'
 import { IoMenu } from "react-icons/io5";
 import { useState } from 'react'
 import Sidebar from '../../components/Sidebar'
+import { setChatOpen } from '../../Store/chatBoxSlice'
 const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -80,6 +81,7 @@ const Navbar = () => {
 
         }
         <button onClick={() => {toggleSidebar()}} className='text-3xl max-sm:block hidden'><IoMenu /></button>
+        <button onClick={() => {dispatch(setChatOpen({isOpen : true}))}} className='text-3xl '><IoMenu /></button>
         </div>
       </nav>
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} navbarOpiton={navbarOpiton}/>
