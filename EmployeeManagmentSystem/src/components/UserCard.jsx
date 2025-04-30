@@ -5,6 +5,8 @@ import { ChatBox } from '../export';
 import { useDispatch } from 'react-redux';
 import { setChatOpen } from '../Store/chatBoxSlice';
 const UserCard = ({details}) => {
+  console.log(details , 'details');
+  
   const dispatch = useDispatch()
   return (
     <div className='w-full px-5 py-3 max-sm:px-3 bg-sky-300 rounded-md flex justify-between items-center '>

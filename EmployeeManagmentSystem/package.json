@@ -29,6 +29,7 @@
         "react-router": "^7.0.1",
         "react-router-dom": "^7.0.1",
         "react-toastify": "^11.0.2",
+        "redux-thunk": "^3.1.0",
         "twilio": "^5.3.7"
     },
     "devDependencies": {

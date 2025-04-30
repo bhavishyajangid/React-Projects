@@ -5,9 +5,13 @@ import TaskServices from '../../Appwrite/Task'
 import { toast } from 'react-toastify'
 import { deleteTheTask } from '../../Store/authSlice'
 import { ChatBox, Loader } from '../../export'
+import { LuMessageSquareText } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
+import { setChatOpen } from '../../Store/chatBoxSlice'
+import MessageIcon from '../../components/MessageIcon'
 
 const TaskFullPage = () => {
+  const {currentUserDetails} = useSelector(state => state.authSlice)
   const [taskDetails , setTaskDetails] = useState(null)
   const {TaskId} = useParams()
   const dispatch = useDispatch()
@@ -16,7 +20,7 @@ const TaskFullPage = () => {
   useEffect(() => {
      TaskServices.getSingleTask(TaskId)
     .then((res) => {
-      if(res){
+      if(res){  
         setTaskDetails(res)
       }
     })
@@ -64,6 +68,7 @@ if(!taskDetails){
         >
           {taskDetails.Urgent ? 'Urgent' : 'Calm'}
         </span>
+        <MessageIcon info={taskDetails}/>
 
         {
            taskDetails.admin && <Link to={`/editTask/${taskDetails.$id}`}>
@@ -91,7 +96,10 @@ if(!taskDetails){
           {taskDetails.isComplete ? 'Complete' : 'Not Completed'}
         </button>
          
-        <button onClick={() => {deleteTask(taskDetails.$id)}} className=' w-40 h-10 rounded-lg text bg-white font-medium text-gray-900'>Delete Task</button>
+         {
+           currentUserDetails.admin && <button onClick={() => {deleteTask(taskDetails.$id)}} className=' w-40 h-10 rounded-lg text bg-white font-medium text-gray-900'>Delete Task</button>
+         }
+        
         </div>
         <ChatBox/>
       </div>

@@ -5,15 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import authServices from "../../Appwrite/Auth";
 import { Button, Input, Loader, VerifyOtp } from "../../export";
-import { login } from "../../Store/authSlice";
 import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from "../../Store/otpSendSlice";
+import dataBaseServices from "../../Appwrite/Database";
 
 const Signup = () => {
+
   const { otpSend , generatedOtp ,resend , loader , userEmailVerify} = useSelector(state => state.otpSendSlice)
   const [second, setSecond] = useState(60);
   const [userData , setUserData] = useState("")
   const emailOtp = useRef(null);
-  const firstRender = useRef(true)
+  const firstRender = useRef(true);
+
   const {
     register,
     handleSubmit,
@@ -24,16 +26,25 @@ const Signup = () => {
   const navigate = useNavigate();
   // Submit handler function
   const handleSignup = async (data) => {
+
+       
+
     // if user is login they do dont able to create account
-      setUserData(data);
-      if (!userEmailVerify) {
+    
+    setUserData(data);
+      if (!userEmailVerify) { 
         // if email not verify first verify for create a account
-        dispatch(setOtpSend(true))
+        // dispatch(setOtpSend(true))
+        alert('otp send')
         
       } else {
         try {
           dispatch(setLoader(true))
+          console.log("user under process");
+          
           const newUser = await authServices.createAccount({...data , isEmailVerify : userEmailVerify});
+          console.log(newUser , "new user foud");
+          
           if(newUser){
                     navigate("/");
                    dispatch(setLoader(false))

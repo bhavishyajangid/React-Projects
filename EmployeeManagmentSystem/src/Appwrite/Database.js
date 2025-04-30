@@ -13,6 +13,28 @@ export class databaseServices{
         this.database = new Databases(this.client)
     }
 
+    async emailIsExists(emailToCheck) {
+      try {
+        const response = await this.database.listDocuments(
+          conf.appwriteDatabaseId,
+          conf.appwriteAuthCollectionId,
+          [
+            Query.equal("email", emailToCheck)
+          ]
+       )
+        
+      
+       
+       return response.documents.length > 0 ? true : false
+      } catch (error) {
+         console.log(error , "come when the chech email is exist");
+         return false
+         
+      }
+       
+
+
+    }
 
      async setUserProfileData({username ,number , isEmailVerify, email , id}){
         console.log(username ,number , isEmailVerify, email , id);
@@ -48,9 +70,11 @@ export class databaseServices{
             conf.appwriteAuthCollectionId,  // Your collection ID
             [Query.equal(queryType, indentifier)]  // Query to find the user by userId
           );
+          console.log(userDetails , "userDetail");
+          
           return userDetails.documents[0];  // Return the first document (user)
         } catch (error) {
-          console.log(error);
+          console.log("error occure in the getUser"  , error);
           return null;  // In case of error or no user found
         }
       }

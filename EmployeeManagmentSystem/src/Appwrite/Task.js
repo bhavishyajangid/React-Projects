@@ -18,6 +18,8 @@ export class taskService{
       
           const employee = await dataBaseServices.getUser(AssignTo , "userName")
          
+          console.log(employee , "employee");
+          
          if(employee && !employee.admin){
           try {
             const userPersonalData = await this.Task.createDocument(
@@ -43,7 +45,7 @@ export class taskService{
             }
             
         } catch (error) {
-            console.log(error);
+            console.log("error occure in setTask" , error);
             
         }
          }else{
@@ -61,6 +63,7 @@ export class taskService{
            conf.appwriteAllTaskCollectionId
         );
         if(allTask){
+          
           return allTask
         }
       } catch (error) {
@@ -69,7 +72,6 @@ export class taskService{
    }
 
     async getUserTask(TaskId) { 
-      console.log(TaskId);
       
         try {
           const userDetails = await this.Task.listDocuments(

@@ -1,4 +1,4 @@
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Databases } from "appwrite";
 import conf from '../config/config.js'
 import dataBaseServices from "./Database.js";
 import TaskServices from "./Task.js";
@@ -37,7 +37,8 @@ export class authService {
                return null;
             }
         } catch (error) {
-            throw error;
+            console.error(error)
+            return null
         }
     }
 
@@ -46,8 +47,10 @@ export class authService {
         try {
             const loginUser = await this.account.createEmailPasswordSession(email, password);
   
+            console.log(loginUser , 'LOGINUSER');
+            
             if(loginUser){
-                return  this.getUserAllDetails(loginUser , loginUser.userId)
+                return  await this.getUserAllDetails(loginUser , loginUser.userId)
             }
 
             return null
@@ -63,10 +66,12 @@ export class authService {
         try {
             const isUserLogin =  await this.account.get();
               if(isUserLogin){
-                return  this.getUserAllDetails(isUserLogin, isUserLogin.$id)
+                return  await this.getUserAllDetails(isUserLogin, isUserLogin.$id)
               }
+              return null
         } catch (error) {
            console.log(error);
+          
             
         }
 
@@ -75,30 +80,45 @@ export class authService {
 
     
     async getUserAllDetails(user, id){
-          console.log(user , id);
-          
-            const userDetails = await dataBaseServices.getUser(id , "userId")
+      console.log(user , id , 'user or id');
+      
+      try {
+
+      const userDetails = await dataBaseServices.getUser(id , "userId")
+      console.log(userDetails , id);
             
-            if(userDetails){
+            if(userDetails){ 
                if(userDetails.admin){
-                    const adminTaskData = await TaskServices.getAllTask()
-                    if(adminTaskData){
+
+                try {
+                  const adminTaskData = await TaskServices.getAllTask()
                         return { ...userDetails, tasks: adminTaskData.
-                           documents }
-                    }
-               }else{
-                   const userTaskData = await TaskServices.getUserTask(id) 
-                   if(userTaskData){
-                    console.log(userTaskData , 'taks');
+                           documents || [] } 
                     
-                       return { ...userDetails, tasks: userTaskData}
-                   }else{
-                      return {...userDetails , tasks : []}
-                   }
+                } catch (error) {
+                   console.error("Error fetching admin tasks:", error);
+                   return { ...userDetails, tasks: [] };
+                }
+                    
+               }else{
+                try {
+                  const userTaskData = await TaskServices.getUserTask(id) 
+                       return { ...userDetails, tasks: userTaskData || []}
+                   
+                } catch (error) {
+                  console.error("Error fetching user tasks:", error);
+                  return {...userDetails , tasks : []}
+                }
+                   
                }
                 
             }else{
-                 return user
+                 return { ...user, tasks: [] };
+            }
+          } 
+            catch (error) {
+              console.error("Error in getUserAllDetails:", error);
+              return { ...user, tasks: [] };
             }
    }
     
@@ -106,34 +126,38 @@ export class authService {
     async logout() {
 
         try {
-          const userLogout =  await this.account.deleteSessions();
-          if(userLogout){
+            await this.account.deleteSessions();
               return true
-          }
+          
         } catch (error) {
-             return error
+          console.error("Error deleting user:", error);
+             return false
         }
     }
 
-  //   async deleteUser(userId) {
-  //     try {
-  //         // Call the Appwrite API to delete the user
-  //         const response = await users.delete(userId);
-  //         console.log('User deleted successfully:', response);
-  //     } catch (error) {
-  //         console.error('Error deleting user:', error.message);
-  //     }
-  // }
+    
 
-  //  async getAllUser(){
-  //    try {
-  //          const response = await users.list()
-  //          if(response) return response.users
-  //    } catch (error) {
-  //      console.log(error);
-       
-  //    }
-  //  }
+    async deleteUser(userId) {
+      try {
+          // Call the Appwrite API to delete the user
+          const response = await users.delete(userId);
+          console.log('User deleted successfully:', response);
+          return true
+      } catch (error) {
+          console.error('Error deleting user:', error.message);
+          return false
+      }
+  }
+
+   async getAllUser(){
+     try {
+           const response = await users.list()
+           return response.users || []
+     } catch (error) {
+      console.error("Error in getAllUser:", error);
+       return [];
+     }
+   }
 
     async sendOtp(user) {
         const otpCode = Math.floor(Math.random() * 1000000);
@@ -157,11 +181,7 @@ export class authService {
             "V6RgthY8oQceVRjcO"  // Your user ID
           );
       
-          if (response) {
-            return otpCode;  // Return the OTP code after sending
-          } else {
-            return null;  // Return null if sending failed
-          }
+          return response ? otpCode : null;
         } catch (error) {
           console.error("Error sending OTP:", error);
           return null;  // Return null if there's an error
@@ -179,6 +199,8 @@ export class authService {
        return false
      }
     }
+
+    
    
 }
 

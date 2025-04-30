@@ -24,8 +24,6 @@ function App() {
          try {
           const userData  = await authServices.getCurrentUser()
            if(userData){
-            console.log(userData);
-            
              dispatch(login(userData))
              navigate("/home")
            }else{

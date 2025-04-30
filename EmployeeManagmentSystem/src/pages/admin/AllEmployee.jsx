@@ -16,7 +16,7 @@ const AllEmployee = () => {
             }
          })
          .catch((error) => {
-           console.log(error);
+           console.error("error occur in " , error);
          })       
     } , [])
 

@@ -24,7 +24,7 @@ const Login = () => {
     const LoginDetails = async(data) => {
       setUserData(data)
       if(userEmailVerify){
-        //  dispatch(setOtpSend(true))
+         dispatch(setOtpSend(true))
       }else{
         try {
           dispatch(setLoader(true))
@@ -54,6 +54,8 @@ const Login = () => {
             try {
               dispatch(setLoader(true))
               const otp = await authServices.sendOtp(userData);  // Wait for OTP to be sent
+              console.log(otp);
+              
               
               // Check if the OTP was successfully generated and sent
               if (otp) {

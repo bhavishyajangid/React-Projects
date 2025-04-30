@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import dataBaseServices from "../Appwrite/Database";
 
 
 const authSlice = createSlice({
@@ -6,6 +7,7 @@ const authSlice = createSlice({
     initialState: {
        currentUserDetails : [],
        isLogin : false ,
+       isEmailExist : false
     },
     reducers : {
         login : (state , action) => {
@@ -25,9 +27,26 @@ const authSlice = createSlice({
             
             state.currentUserDetails.tasks = updatedTask
             
+        },
+        isEmailAlreadyInUse : (state , action) => {
+            try {
+        
+                const verifyEmailExist = dataBaseServices.emailIsExists(action.payload) 
+        
+                console.log(verifyEmailExist);
+                
+                if(verifyEmailExist){
+                    state.isEmailExist = verifyEmailExist
+                }
+        
+               } catch (error) {
+                   console.log(error , "when the reponse is coming in the email check");  
+               }
         }
     }
 })
+
+  
 
 export const {login , logout , addNewTask , deleteTheTask} = authSlice.actions
 export default authSlice
