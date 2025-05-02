@@ -14,6 +14,13 @@ export class taskService{
         this.Task = new Databases(this.client)
     }
 
+    
+    unsubscribeFromTasks(subscription) {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    }
+
     async setTask({Tittle , Date , AssignTo , Category , Description , Urgent}){
       
           const employee = await dataBaseServices.getUser(AssignTo , "userName")

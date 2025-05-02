@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router'
 import TaskServices from '../../Appwrite/Task'
@@ -10,24 +10,32 @@ import { FaRegEdit } from "react-icons/fa";
 import { setChatOpen } from '../../Store/chatBoxSlice'
 import MessageIcon from '../../components/MessageIcon'
 
+
+
 const TaskFullPage = () => {
   const {currentUserDetails} = useSelector(state => state.authSlice)
   const [taskDetails , setTaskDetails] = useState(null)
   const {TaskId} = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+ 
 
   useEffect(() => {
-     TaskServices.getSingleTask(TaskId)
-    .then((res) => {
-      if(res){  
-        setTaskDetails(res)
+
+    const fetchTask = async() => {
+      try {
+      let res =  await TaskServices.getSingleTask(TaskId)
+      setTaskDetails(res);
+      } catch (error) {
+        
+        toast.error("Enable To Fetch Task Details")
+      }finally{
+
       }
-    })
-    .catch((error) => {
-      console.log(error);
-      
-    })
+
+    }
+
+    fetchTask()
     
   } , [TaskId])
  
@@ -46,7 +54,7 @@ const deleteTask = async(id) => {
             toast.error("failed to delete task")
           }
       } catch (error) {
-        console.log(error);
+        toast.error('SomeThing Went Wrong Try after Some Time')
       }   
     }
    
@@ -71,7 +79,7 @@ if(!taskDetails){
         <MessageIcon info={taskDetails}/>
 
         {
-           taskDetails.admin && <Link to={`/editTask/${taskDetails.$id}`}>
+           currentUserDetails.admin && <Link to={`/editTask/${taskDetails.$id}`}>
            <FaRegEdit className='w-11 h-11 p-2 rounded-lg text-white bg-gray-500 ' />
  
          </Link>

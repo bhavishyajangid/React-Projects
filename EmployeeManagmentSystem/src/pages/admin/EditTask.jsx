@@ -1,34 +1,32 @@
-import React, { useState } from 'react'
-import { AddTask, Loader } from '../../export'
-import { Navigate, useParams } from 'react-router'
-import TaskServices from '../../Appwrite/Task'
-import { toast } from 'react-toastify'
+import React, { useState, useEffect } from 'react';
+import { AddTask, Loader } from '../../export';
+import { useParams } from 'react-router';
+import TaskServices from '../../Appwrite/Task';
+import { toast } from 'react-toastify';
 
 const EditTask = () => {
-    const [task , setTask] = useState(null)
-    const {taskId} = useParams()
-    console.log(taskId);
-    
+  const [task, setTask] = useState(null);
+  const { taskId } = useParams();
 
-    useState(() => {
-        try {
-             TaskServices.getSingleTask(taskId).then((res) => {
-                if(res){
-                    setTask(res)
-                }
-             })
-        } catch (error) {
-            console.log(error);
-           toast.error("task not found")
-        }
-    } , [taskId])
+  useEffect(() => {
+    const editTask = async () => {
+      try {
+        let res = await TaskServices.getSingleTask(taskId);
+        setTask(res);
+      } catch (error) {
+        console.log(error);
+        toast.error("Task not found");
+      }
+    };
 
-    if(!task){
-        return <Loader/>
-    }
-  return (
-     <AddTask task={task}/>
-  )
-}
+    editTask();
+  }, [taskId]);
 
-export default EditTask
+  if (!task) {
+    return <Loader />;
+  }
+
+  return <AddTask task={task} />;
+};
+
+export default EditTask;

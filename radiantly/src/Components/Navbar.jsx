@@ -16,22 +16,22 @@ const Navbar = () => {
 
   return (
     <nav>
-      <div className="w-full h-14 bg-gray-700 px-7 flex justify-between items-center">
-        <span>
-          <IoIosMenu className="text-3xl text-white cursor-pointer" />
+      <div className="w-full h-14 bg-gray-700 px-7 max-sm:px-5 flex justify-between items-center">
+        <span className="text-xl text-orange-500 font-semibold max-sm:text-lg">
+           Pokemon
         </span>
-        <div className="w-60 h-9  bg-red-300 rounded-2xl overflow-hidden flex items-center cursor-pointer">
+        <div className="w-60 max-sm:w-44  h-9 max-sm:h-8   bg-red-300 rounded-2xl overflow-hidden flex items-center cursor-pointer">
           <input
             value={inputValue}
             onChange={(e) => {
               handleInput(e.target.value);
             }}
             placeholder="Search Here"
-            className="h-full border-none outline-none pl-3 "
+            className="w-[80%] h-full border-none outline-none pl-3 max-sm:text-sm "
             type="text"
           />
-          <span className="ml-2 ">
-            <IoSearchOutline className="text-2xl text-black " />
+          <span className="ml-2   ">
+            <IoSearchOutline className="text-2xl max-sm:text-xl text-black " />
           </span>
         </div>
       </div>

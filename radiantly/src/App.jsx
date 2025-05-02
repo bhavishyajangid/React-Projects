@@ -1,33 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Components/Navbar";
 import AllCards from "./Components/AllCards";
-import { useDispatch, useSelector } from "react-redux";
-import Loading from "./Components/Loading";
-import { setData, setLoading } from "./Store/DataSlice";
-
+import { useDispatch } from "react-redux";
+import { setData,  } from "./Store/DataSlice";
+import Skeleton from "./Components/Skeleton";
+import { ToastContainer, toast } from 'react-toastify';
 const App = () => {
-  const { loading } = useSelector((state) => state.mydata); // retrive loading state from store
+  const [loader , setLoader] = useState(true)
   const dispatch = useDispatch();
-
+ 
   useEffect(() => {
     // fetch the data from api 
     const fetchData = async () => {
-      dispatch(setLoading());
       try {
-        let data = await fetch("https://dummyapi.online/api/pokemon");// there are no images found in your api only url is given so i use this api 
-        let response = await data.json();
-        dispatch(setData(response)); // dispatch the fetched data to store
+        // Step 1: Get basic list of 150 Pokémon
+        const data = await fetch("https://pokeapi.co/api/v2/pokemon?limit=150");
+        const response = await data.json();
+    
+        // Step 2: Fetch detailed data for each Pokémon
+        const completedata = await Promise.all(
+          response.results.map(item => fetch(item.url).then(res => res.json()))
+        );
+    
+
+        dispatch(setData(completedata)); // Store full data in Redux or state
       } catch (err) {
-        throw new Error(err);
+        toast.error("Failed To Load Data")
+      }finally{
+        setLoader(false)
       }
     };
+    
 
     fetchData();
   }, []);
   return (
     <>
       <Navbar />
-      {loading ? <Loading /> : <AllCards />} // conditoinal statement
+      <ToastContainer/>
+      {loader ? <Skeleton/> : <AllCards />} 
     </>
   );
 };

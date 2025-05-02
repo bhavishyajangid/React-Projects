@@ -1,17 +1,22 @@
 import React from "react";
-const Cards = ({ item }) => {
+const Cards = ({ item}) => {
+  // console.log(item.types , 'item');
+  
   return (
-    <div className="w-72 h-[280px] rounded-xl bg-gray-400 px-4 pb-3 cursor-pointer  ">
+    <div className=" rounded-xl bg-gray-400 p-5 cursor-pointer max-h-60 max-sm:min-w-full max-w-80">
+      <span>{item.id}</span>
       <img
-        className=" h-40 w-full transition-transform duration-300 ease-in-out hover:scale-110"
-        src={item.image_url}
+        className=" h-32 transition-transform duration-300 ease-in-out hover:scale-110 m-auto"
+        src={item.sprites.front_default}
         alt="img"
       />
-      <h1 className="text-xl">{item.pokemon}</h1>
-      <span>{item.type}</span>
-      <span>abilities : {item.abilities[0]}</span>
-      <br />
-      <span>Location : {item.location}</span>
+      <h1 className="text-xl">{item.name}</h1>
+      <div className="flex gap-2"> 
+      {
+        item.types.map((info) =>  <span>{info.type.name} </span> 
+      )
+    }
+    </div>
     </div>
   );
 };

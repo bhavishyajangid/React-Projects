@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import TaskServices from "../../Appwrite/Task";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { Loader } from "../../export";
+import {  Loader } from "../../export";
 import { addNewTask } from "../../Store/authSlice";
+import conf from "../../config/config";
+import { updateTask } from "../../Store/adminSlice";
+import { Task } from "twilio/lib/twiml/VoiceResponse";
+
 
 const SetNewTask = ({ task }) => {
+  const {adminTask}  = useSelector(state => state.adminSlice)
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const subscriptionRef = useRef(null);
   const {
     register,
     handleSubmit,
@@ -54,74 +60,88 @@ const SetNewTask = ({ task }) => {
     },
   ];
 
-  const setNewTask = async (data) => {
+  useEffect(() => {
+    subscriptionRef.current = TaskServices.client.subscribe(
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteAllTaskCollectionId}.documents`,
+      (res) => {
+        if(res.events.includes("databases.*.collections.*.documents.*.create")){
+         console.log(res.payload  , "respayload");
+          
+          if (res.payload) {
+            dispatch(addNewTask(res.payload))
+            toast.success("Task created successfully");
+            navigate("/home");
+          } else {
+            toast.error(`not found`);
+          }
+        }
+
+        else if(res.events.includes("databases.*.collections.*.documents.*.update")){
+          if(res.payload){  
+            dispatch(updateTask(res.payload))
+              toast.success("task is updated sucessfully");
+              navigate(`/id/${res.payload.$id}`);
+          }else {
+              toast.error("failed to update task");
+            }
+          }
+           
+
+      })
+      
+      
+     return () => {
+       TaskServices.unsubscribeFromTasks(subscriptionRef)
+     }
+    
+      
+  }, [dispatch, adminTask])
+
+  const handleUpdateTask = async (task, data) => {
+    const updatedTask = await TaskServices.updateTask(task.$id, data);
+  
+  };
+
+  const handleReassignTask = async (data) => {
+    const confirm = window.confirm("Reassign task to another employee?");
+    if (!confirm) return;
+
+    const newTask = await TaskServices.setTask(data);
+
+    if (newTask) {
+      const deleted = await TaskServices.deleteTask(task.$id);
+      if (deleted) {
+        toast.success(`Task reassigned to ${newTask.AssignTo}`);
+        navigate(`/id/${newTask.$id}`);
+      } else {
+        // Rollback if deletion fails
+        await TaskServices.deleteTask(newTask.$id);
+        toast.error(
+          `Failed to delete previous task. Assignment to ${data.AssignTo} cancelled.`
+        );
+      }
+    } else {
+      toast.error(`User Not Found ${data.AssignTo}`);
+    }
+  };
+
+  const handleCreateTask = async (data) => {
+    const newTask = await TaskServices.setTask(data);
+
+  };
+
+  const onSubmit = async (data) => {
     setLoader(true);
     if (task) {
       if (task.AssignTo === data.AssignTo) {
-        // update the task 
-        const updatedTask = await TaskServices.updateTask(task.$id, data);
-        if (updatedTask) {
-          toast.success("task is updated sucessfully");
-          navigate(`/id/${updatedTask.$id}`);
-        } else {
-          toast.error("failed to update task");
-        }
+        // update the task
+        handleUpdateTask(task, data);
       } else {
-
-        // confirm to assing the task to another employee
-        const confirmToAssign = confirm("do you want assign this task to another empolyee");
-        if (confirmToAssign) {
-
-          // set the task to the new employee
-
-          const addTaskToEmployee = await TaskServices.setTask(data);
-
-          // if the task is sucessfully assignn to other employee then delete this task from previos empolyee
-          if (addTaskToEmployee) {
-            const deleteTaskFromEmployee = await TaskServices.deleteTask(task.$id);
-            
-           
-            // if the task sucessfully deleted or assign to another employee then navigate it to previos page
-            if (deleteTaskFromEmployee) {
-              toast.success(
-                `task sucessfully updated or assign to ${addTaskToEmployee.AssignTo}`
-              );
-              navigate(`/id/${addTaskToEmployee.$id}`);
-
-            } else {
-
-              // if the task is assign to new Employee but not deleted from previous employee so give an error 
-              const deleteAddTaskToEmployee = await TaskServices.deleteTask(
-                addTaskToEmployee.$id
-              );
-               
-              if (deleteAddTaskToEmployee) {
-                toast.error(`failed to assign this task to ${data.AssignTo} `);
-              }
-            }
-          } else {
-            toast.error(`${data.AssignTo} employee is not found`);
-          }
-        }
+        handleReassignTask(data);
       }
     } else {
-      try {
-
-        // add new task
-        const userTask = await TaskServices.setTask(data);
-        console.log(userTask);
-        if (userTask) {
-          dispatch(addNewTask(userTask));
-          navigate("/home");
-          toast.success("Task Set Sucessfully");
-        } else {
-          toast.error(`${data.AssignTo}  not found`);
-        }
-      } catch (error) {
-        toast.error(error);
-      }
+      handleCreateTask(data);
     }
-
     setLoader(false);
   };
   if (loader) {
@@ -130,7 +150,7 @@ const SetNewTask = ({ task }) => {
   return (
     <div className="w-11/12 min-h-96 m-auto p-5 flex flex-col justify-center    bg-[#1C1C1C] rounded-lg mt-10">
       <form
-        onSubmit={handleSubmit(setNewTask)}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex max-sm:flex-col  py-5 "
         action=""
       >

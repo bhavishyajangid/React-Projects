@@ -11,28 +11,28 @@ const Home = () => {
     const{currentUserDetails} = useSelector(state => state.authSlice)
     const{fetched} = useSelector(state => state.chatBoxSlice)
 
-    useEffect(() => {
-      const fetchUnseenMessage = async() => {
-        try {
-          const messageValue = await messageServices.unseenMessage ( currentUserDetails.admin ? "admin" :  currentUserDetails.userName)
-          console.log(messageValue , messageValue.length , "message");
+    // useEffect(() => {
+    //   const fetchUnseenMessage = async() => {
+    //     try {
+    //       const messageValue = await messageServices.unseenMessage ( currentUserDetails.admin ? "admin" :  currentUserDetails.userName)
+    //       console.log(messageValue , messageValue.length , "message");
           
-          if (Array.isArray(messageValue)) {
-            dispatch(setUnseenMessage(messageValue));
-          } else {
-            console.error("Unseen message data is not an array", messageValue);
-            dispatch(setUnseenMessage([])); // Fallback to empty array
-          }
-        } catch (error) {
-            toast.error("faild to fetch unseen message")
-        }
-      }
+    //       if (Array.isArray(messageValue)) {
+    //         dispatch(setUnseenMessage(messageValue));
+    //       } else {
+    //         console.error("Unseen message data is not an array", messageValue);
+    //         dispatch(setUnseenMessage([])); // Fallback to empty array
+    //       }
+    //     } catch (error) {
+    //         toast.error("faild to fetch unseen message")
+    //     }
+    //   }
 
-      if(fetched){
-        fetchUnseenMessage()
-        dispatch(setFetched(false))
-      }
-    } , [])
+    //   if(fetched){
+    //     fetchUnseenMessage()
+    //     dispatch(setFetched(false))
+    //   }
+    // } , [])
     
   return (
     <div>
