@@ -66,59 +66,30 @@ export class authService {
         try {
             const isUserLogin =  await this.account.get();
               if(isUserLogin){
+                console.log(isUserLogin);
+                
                 return  await this.getUserAllDetails(isUserLogin, isUserLogin.$id)
               }
-              return null
+              return []
         } catch (error) {
-           console.log(error);
+           return error
           
             
         }
 
-        return null;
+       
     }
 
     
-    async getUserAllDetails(user, id){
-      console.log(user , id , 'user or id');
-      
+    async getUserAllDetails(user , id){   
       try {
 
       const userDetails = await dataBaseServices.getUser(id , "userId")
-      console.log(userDetails , id);
-            
-            if(userDetails){ 
-               if(userDetails.admin){
-
-                try {
-                  const adminTaskData = await TaskServices.getAllTask()
-                        return { ...userDetails, tasks: adminTaskData.
-                           documents || [] } 
-                    
-                } catch (error) {
-                   console.error("Error fetching admin tasks:", error);
-                   return { ...userDetails, tasks: [] };
-                }
-                    
-               }else{
-                try {
-                  const userTaskData = await TaskServices.getUserTask(id) 
-                       return { ...userDetails, tasks: userTaskData || []}
-                   
-                } catch (error) {
-                  console.error("Error fetching user tasks:", error);
-                  return {...userDetails , tasks : []}
-                }
-                   
-               }
-                
-            }else{
-                 return { ...user, tasks: [] };
-            }
+              return userDetails ? userDetails : []
           } 
             catch (error) {
               console.error("Error in getUserAllDetails:", error);
-              return { ...user, tasks: [] };
+              return []
             }
    }
     

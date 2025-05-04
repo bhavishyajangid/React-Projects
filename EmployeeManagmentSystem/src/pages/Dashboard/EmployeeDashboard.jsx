@@ -9,7 +9,7 @@ const EmployeeDashboard = () => {
     return (
         <>
         <PastTaskInfo/>
-        <AllTask tasks={currentUserDetails.tasks}/>
+        <AllTask />
         </>
     );
 };

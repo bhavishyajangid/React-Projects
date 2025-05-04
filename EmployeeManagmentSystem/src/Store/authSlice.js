@@ -19,15 +19,6 @@ const authSlice = createSlice({
             state.isLogin = false
             state.currentUserDetails = null
         },
-        addNewTask : (state , action) => {
-            state.currentUserDetails.tasks = [...state.currentUserDetails.tasks , action.payload ]
-        },
-        deleteTheTask : (state , action) => {
-               const updatedTask  =  state.currentUserDetails.tasks.filter((task) => task.$id !== action.payload)
-            
-            state.currentUserDetails.tasks = updatedTask
-            
-        },
         isEmailAlreadyInUse : (state , action) => {
             try {
         
@@ -48,5 +39,5 @@ const authSlice = createSlice({
 
   
 
-export const {login , logout , addNewTask , deleteTheTask} = authSlice.actions
+export const {login , logout } = authSlice.actions
 export default authSlice

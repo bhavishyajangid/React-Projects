@@ -8,6 +8,7 @@ import Input from '../../components/Input';
 import { Button, Loader, VerifyOtp } from '../../export';
 import { login } from '../../Store/authSlice';
 import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from '../../Store/otpSendSlice';
+import { fetchTask } from '../../Store/TaskSlice';
 const Login = () => {
 
    const { otpSend , generatedOtp , loader, resend , userEmailVerify} = useSelector(state => state.otpSendSlice)
@@ -32,6 +33,7 @@ const Login = () => {
           if(loginUser){
              navigate("/home")
             dispatch(login(loginUser))
+            await dispatch(fetchTask(loginUser)).unwrap()
             toast.success("Login sucessfully");
           }
         } catch (error) {

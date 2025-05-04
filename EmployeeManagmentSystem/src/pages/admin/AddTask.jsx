@@ -7,18 +7,13 @@ import TaskServices from "../../Appwrite/Task";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import {  Loader } from "../../export";
-import { addNewTask } from "../../Store/authSlice";
-import conf from "../../config/config";
-import { updateTask } from "../../Store/adminSlice";
-import { Task } from "twilio/lib/twiml/VoiceResponse";
 
 
 const SetNewTask = ({ task }) => {
-  const {adminTask}  = useSelector(state => state.adminSlice)
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const subscriptionRef = useRef(null);
+  const {currentUserDetails} = useSelector(state => state.authSlice)
   const {
     register,
     handleSubmit,
@@ -60,73 +55,67 @@ const SetNewTask = ({ task }) => {
     },
   ];
 
-  useEffect(() => {
-    subscriptionRef.current = TaskServices.client.subscribe(
-      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteAllTaskCollectionId}.documents`,
-      (res) => {
-        if(res.events.includes("databases.*.collections.*.documents.*.create")){
-         console.log(res.payload  , "respayload");
-          
-          if (res.payload) {
-            dispatch(addNewTask(res.payload))
-            toast.success("Task created successfully");
-            navigate("/home");
-          } else {
-            toast.error(`not found`);
-          }
-        }
-
-        else if(res.events.includes("databases.*.collections.*.documents.*.update")){
-          if(res.payload){  
-            dispatch(updateTask(res.payload))
-              toast.success("task is updated sucessfully");
-              navigate(`/id/${res.payload.$id}`);
-          }else {
-              toast.error("failed to update task");
-            }
-          }
-           
-
-      })
-      
-      
-     return () => {
-       TaskServices.unsubscribeFromTasks(subscriptionRef)
-     }
-    
-      
-  }, [dispatch, adminTask])
 
   const handleUpdateTask = async (task, data) => {
-    const updatedTask = await TaskServices.updateTask(task.$id, data);
-  
+    try {
+      await TaskServices.updateTask(task.$id, data);
+      toast.success("Task updated sucessfully");
+      navigate(`/id/${task.$id}`);
+    } catch (error) {
+      console.log(error);
+      
+       toast.error("Something Went Wrong !! Try Again After Some Time")
+    }
   };
 
   const handleReassignTask = async (data) => {
     const confirm = window.confirm("Reassign task to another employee?");
     if (!confirm) return;
-
-    const newTask = await TaskServices.setTask(data);
-
-    if (newTask) {
+  
+    if (data.AssignTo === currentUserDetails.userName) {
+      toast.warn("Cannot assign  to self.");
+      return;
+    }
+  
+    try {
+      // 1. Create new task
+      const newTask = await TaskServices.setTask(data);
+  
+      if (!newTask) {
+        toast.error(`Employee Not Found ${data.AssignTo}`);
+        return;
+      }
+  
+      // 2. Delete old task
       const deleted = await TaskServices.deleteTask(task.$id);
+  
       if (deleted) {
-        toast.success(`Task reassigned to ${newTask.AssignTo}`);
+        toast.success(`Task assigned to ${newTask.AssignTo}`);
         navigate(`/id/${newTask.$id}`);
       } else {
-        // Rollback if deletion fails
+        // If deletion of old task fails, rollback new task
         await TaskServices.deleteTask(newTask.$id);
-        toast.error(
-          `Failed to delete previous task. Assignment to ${data.AssignTo} cancelled.`
-        );
+        toast.error("Failed to delete old task. Reassignment rolled back.");
       }
-    } else {
-      toast.error(`User Not Found ${data.AssignTo}`);
+  
+    } catch (error) {
+      toast.error(`Failed to Reassign Task To: ${error.message || error}`);
     }
   };
+  
 
   const handleCreateTask = async (data) => {
-    const newTask = await TaskServices.setTask(data);
+    try {
+      await TaskServices.setTask(data);
+      toast.success("Task created successfully");
+      navigate("/home")
+      
+    } catch (error) {
+      toast.error("Something Went Wrong !! Try Again After Some Time")
+    }
+    
+
+    
 
   };
 
@@ -134,7 +123,6 @@ const SetNewTask = ({ task }) => {
     setLoader(true);
     if (task) {
       if (task.AssignTo === data.AssignTo) {
-        // update the task
         handleUpdateTask(task, data);
       } else {
         handleReassignTask(data);

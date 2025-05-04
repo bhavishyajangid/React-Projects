@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router'
 import TaskServices from '../../Appwrite/Task'
 import { toast } from 'react-toastify'
-import { deleteTheTask } from '../../Store/authSlice'
 import { ChatBox, Loader } from '../../export'
-import { LuMessageSquareText } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
-import { setChatOpen } from '../../Store/chatBoxSlice'
 import MessageIcon from '../../components/MessageIcon'
 
 
@@ -16,8 +13,7 @@ const TaskFullPage = () => {
   const {currentUserDetails} = useSelector(state => state.authSlice)
   const [taskDetails , setTaskDetails] = useState(null)
   const {TaskId} = useParams()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+
  
 
   useEffect(() => {
@@ -27,10 +23,7 @@ const TaskFullPage = () => {
       let res =  await TaskServices.getSingleTask(TaskId)
       setTaskDetails(res);
       } catch (error) {
-        
         toast.error("Enable To Fetch Task Details")
-      }finally{
-
       }
 
     }
@@ -45,16 +38,11 @@ const deleteTask = async(id) => {
    const confirmToDelete =  confirm("do you want to delete this task")
     if(confirmToDelete){
       try {
-        const deletingTask = await TaskServices.deleteTask(id)
-          if(deletingTask){ 
-            dispatch(deleteTheTask(id))
-            toast.success("Task deleted successfully")
-            navigate("/home")
-          }else{
-            toast.error("failed to delete task")
-          }
+         await TaskServices.deleteTask(id)
+         toast.success("Task deleted successfully");
+         navigate("/home")
       } catch (error) {
-        toast.error('SomeThing Went Wrong Try after Some Time')
+        toast.error('Task Not Deleted Try Again After Some Time')
       }   
     }
    
