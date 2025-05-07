@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './components/Navbar'
 import Home from './Pages/Home/Home'
+import Referall from './Pages/Referall'
 
 const App = () => {
   return (
@@ -9,7 +10,9 @@ const App = () => {
     
     <div className='max-w-md  min-h-screen m-auto overflow-hidden relative'>
       <Navbar/>
+      <Referall/>
      <Home/>
+     
       
     </div>
     </div>

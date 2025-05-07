@@ -7,42 +7,42 @@ const scrollItems = [
   title: "Stake & Earn",
   text: "Earn passive income by staking your crypto directly on BEPJET. Let your assets grow while you hold.",
   badge: "Passive",
-  image: "../../../public/img1.png",
+  image: "/img1.png",
   },
   {
   id: 2,
   title: "Auto Staking",
   text: "Enable automatic staking and compounding to maximize returns without manual effort.",
   badge: "Smart",
-  image: "../../../public/img2.png",
+  image: "/img2.png",
   },
   {
   id: 3,
   title: "Flexible Lock",
   text: "Choose between flexible or fixed staking terms. Unlock anytime or stake long-term for higher rewards.",
   badge: "Flexible",
-  image: "../../../public/img3.png",
+  image: "/img3.png",
   },
   {
   id: 4,
   title: "Multi-Token Staking",
   text: "Stake a variety of tokens including BEPJET, ETH, USDT, and more—all from one dashboard.",
   badge: "Diverse",
-  image: "../../../public/img4.png",
+  image: "/img4.png",
   },
   {
   id: 5,
   title: "Tiered Rewards",
   text: "The more you stake, the more you earn. Unlock exclusive tiers with enhanced APY and perks.",
   badge: "Premium",
-  image: "../../../public/img5.png",
+  image: "/img5.png",
   },
   {
   id: 6,
   title: "Secure Protocols",
   text: "All staking operations are secured by audited smart contracts, ensuring transparency and trust.",
   badge: "Secure",
-  image: "../../../public/img6.png",
+  image: "/img6.png",
   }
   ];
 

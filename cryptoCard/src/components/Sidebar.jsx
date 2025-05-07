@@ -39,24 +39,24 @@ const Sidebar = ({isOpen}) => {
       subOption : [
         { 
           name : "Twitter",
-          image : '../../public/twitter.png',
+          image : '/twitter.png',
           Link : "/twitter"
         },
         { 
           name : "Telegram",
-          image : '../../public/telegram.png',
+          image : '/telegram.png',
           Link : "/telegram"
         },{ 
           name : "Discord",
-          image : '../../public/discord.png',
+          image : '/discord.png',
           Link : "/discord"
         },{ 
           name : "Facebook",
-          image : '../../public/facebook.png',
+          image : 'facebook.png',
           Link : "/facebook"
         },{ 
           name : "Instagram",
-          image : '../../public/instagram.png',
+          image : '/instagram.png',
           Link : "/instgram"
         },
 
@@ -81,7 +81,7 @@ const Sidebar = ({isOpen}) => {
     },
     {
          name : 'Language' ,
-         image : "../../public/language.png" , 
+         image : "/language.png" , 
          subOption : [
           {
             name : 'English',

@@ -1,5 +1,5 @@
 import React from 'react'
-import video from '../../public/hero-video.mp4'
+import video from '/hero-video.mp4'
 const Header = () => {
   return (
     <>

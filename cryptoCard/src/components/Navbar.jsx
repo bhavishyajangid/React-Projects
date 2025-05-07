@@ -8,7 +8,7 @@ const Navbar = () => {
     <>
     
     <nav className='w-full h-20  bg-black px-5 flex justify-between items-center  '>
-        <img src="../../public/logo.png" alt="Tangam" className='h-auto w-28' />
+        <img src="/logo.png" alt="Tangam" className='h-auto w-28' />
 
         <div className='flex items-center gap-3'>
         <button className="bg-[linear-gradient(to_right,_#66ccffb3,_#09f)] text-white px-5 py-1.5 font-semibold rounded-lg">

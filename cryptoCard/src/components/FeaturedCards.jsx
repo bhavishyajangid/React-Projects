@@ -7,21 +7,21 @@ const cards = [
     title: "Instant Crypto Payments",
     text: "Spend your crypto directly at any POS terminal or online platform—BEPJET handles the conversion with best rates.",
     badge: "New",
-    image: "../../public/swap.png",
+    image: "/swap.png",
   },
   {
     id: 2,
     title: "Earn BEPPOINTS on Every Swipe",
     text: "Our powerful rewards engine lets you earn points that convert into tokens, NFTs, and partner perks.",
     badge: "Featured",
-    image: "../../public/optimise.png",
+    image: "/optimise.png",
   },
   {
     id: 3,
     title: "Choose Your Card Tier",
     text: "From Jet Lite to Jet Black—each card offers exclusive limits, cashback, lounge access, and NFT airdrops.",
     badge: "Premium",
-    image: "../../public/opt.png",
+    image: "/opt.png",
   },
  
 ];

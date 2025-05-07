@@ -1,5 +1,4 @@
 import React from 'react';
-import img from '../../public/stone.png'
 const PrivateKey = () => {
   return (
     <>
@@ -14,7 +13,7 @@ const PrivateKey = () => {
 
 
       <div className="flex gap-3 ">
-        <img className='w-16 h-14 ' src="../../public/one.jpg" alt="img" />
+        <img className='w-16 h-14 ' src="/one.jpg" alt="img" />
 
         <p className="text-sm text-[#6c6c70] leading-relaxed">
         Each device <span className="font-semibold text-[#fff]"> creates a unique, non-recoverable.</span>. cryptographic key
@@ -22,7 +21,7 @@ const PrivateKey = () => {
       </div>
 
       <div className="flex gap-3">
-      <img className='w-16 h-14 ' src="../../public/two.jpg" alt="img" />
+      <img className='w-16 h-14 ' src="/two.jpg" alt="img" />
         <p className="text-sm leading-relaxed text-[#6c6c70]">
         A secure channel is
           <span className="font-semibold text-[#fff]">  established to transmit your encrypted </span> credentials.
@@ -30,7 +29,7 @@ const PrivateKey = () => {
       </div>
 
       <div className="flex  gap-3">
-      <img className='w-16 scale-110 h-14 ml-2' src="../../public/three.jpg" alt="img" />
+      <img className='w-16 scale-110 h-14 ml-2' src="/three.jpg" alt="img" />
         <p className="text-sm leading-relaxed text-[#6c6c70]">
         Keys remain solely on the chip, <span className="font-semibold text-[#fff]">with zero backups or cloud storage no other copies</span> exist across space and time.
         </p>
@@ -39,7 +38,7 @@ const PrivateKey = () => {
     </div>
 <div className='w-full h-60 relative  mb-12'>
 <hr className="h-[1.5px] w-full bg-gradient-to-r from-black via-gray-500  to-black border-0 transform scale-y-[0.5]" />
-    <img className='w-full h-full' src="../../public/stone.png" alt="" />
+    <img className='w-full h-full' src="/stone.png" alt="" />
     <div className='w-full h-full  absolute bg-transparent top-0 flex flex-col justify-center items-center text-center '>
         <h1 className='text-3xl text-[#fff] font-semibold'>Zero Out Of 
           <br />
