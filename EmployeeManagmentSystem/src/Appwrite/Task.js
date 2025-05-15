@@ -8,7 +8,6 @@ export class taskService{
 
     constructor(){
         this.client
-
         .setEndpoint(conf.appwriteUrl)
         .setProject(conf.appwriteProjectId)
         this.Task = new Databases(this.client)
@@ -41,19 +40,15 @@ export class taskService{
                     Description: String(Description),
                     isCompleted : false,
                     Urgent : Urgent,
-                    TaskId : employee.userId
+                    TaskId : employee.userId,
                 }  
             )
 
-            if(userPersonalData){
-              return userPersonalData
-            }else{
-              return null
-            }
+            return userPersonalData || null;
             
         } catch (error) {
             console.log("error occure in setTask" , error);
-            
+            throw new Error("Appwrite internal error");
         }
          }else{
            return false
@@ -69,6 +64,8 @@ export class taskService{
            conf.appwriteDatabaseId,
            conf.appwriteAllTaskCollectionId
         );
+        console.log(allTask , "alltask");
+        
         if(allTask){
           
           return allTask
@@ -79,6 +76,7 @@ export class taskService{
    }
 
     async getUserTask(TaskId) { 
+      console.log(TaskId , "taskid");
       
         try {
           const userDetails = await this.Task.listDocuments(
@@ -135,7 +133,7 @@ async deleteTask(documentId) {
  }
 
  async updateTask (documentId , task){
-  console.log(documentId , task);
+
   
   try {
     const updatedTask = this.Task.updateDocument(
@@ -151,11 +149,8 @@ async deleteTask(documentId) {
     }
     
   } catch (error) {
-     console.log('Error when updating the task' , error);
+    throw new Error(error)
   }
-      
-
-
  }
 }
 

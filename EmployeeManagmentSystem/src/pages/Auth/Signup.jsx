@@ -7,10 +7,11 @@ import authServices from "../../Appwrite/Auth";
 import { Button, Input, Loader, VerifyOtp } from "../../export";
 import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from "../../Store/otpSendSlice";
 import dataBaseServices from "../../Appwrite/Database";
+import { login } from "../../Store/authSlice";
 
 const Signup = () => {
 
-  const { otpSend , generatedOtp ,resend , loader , userEmailVerify} = useSelector(state => state.otpSendSlice)
+  const { otpSend , generatedOtp ,resend , loader , isEmailExist ,  userEmailVerify} = useSelector(state => state.otpSendSlice)
   const [second, setSecond] = useState(60);
   const [userData , setUserData] = useState("")
   const emailOtp = useRef(null);
@@ -27,16 +28,28 @@ const Signup = () => {
   // Submit handler function
   const handleSignup = async (data) => {
 
-       
+      
 
     // if user is login they do dont able to create account
     
     setUserData(data);
+
+    try {
+        
+                const verifyEmailExist = await dataBaseServices.emailIsExists(data.email) 
+        
+                console.log(verifyEmailExist);
+                
+                if(verifyEmailExist){
+                    return toast.error("Email Already In Use !! Try Another Email")
+                }
+               } catch (error) {
+                   console.log(error , "SomeThing Went Wrong");  
+               }
+
       if (!userEmailVerify) { 
         // if email not verify first verify for create a account
-        // dispatch(setOtpSend(true))
-        alert('otp send')
-        
+        dispatch(setOtpSend(true))
       } else {
         try {
           dispatch(setLoader(true))
@@ -46,8 +59,8 @@ const Signup = () => {
           console.log(newUser , "new user foud");
           
           if(newUser){
-                    navigate("/");
-                   dispatch(setLoader(false))
+            dispatch(login(newUser))
+                    newUser.admim ? navigate("/admin") : navigate("/employee")
                     toast.success("Account created succesfully");
           }
 

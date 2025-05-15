@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from './components/Navbar'
 import Home from './Pages/Home/Home'
-import Referall from './Pages/Referall'
+import Referall from './Pages/referall/Referall'
 
 const App = () => {
   return (

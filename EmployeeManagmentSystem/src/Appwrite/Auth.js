@@ -1,6 +1,6 @@
 import { Client, Account, ID, Databases } from "appwrite";
 import conf from '../config/config.js'
-import dataBaseServices from "./Database.js";
+import dataBaseServices, { databaseServices } from "./Database.js";
 import TaskServices from "./Task.js";
 import emailjs from "emailjs-com";
 
@@ -25,8 +25,18 @@ export class authService {
 
             
             if (userAccount) {
-
-              const setData =  await dataBaseServices.setUserProfileData({username , number, isEmailVerify, email, id : userAccount.targets[0].userId})
+              const setData =  await dataBaseServices.setUserProfileData(
+                {
+                  username ,
+                  number, 
+                  isEmailVerify,
+                  email, 
+                  id : userAccount.targets[0].userId,
+                  newTask : 0,
+                  completedTask : 0,
+                  acceptedTask : 0,
+                  failedTask : 0
+                })
               
                
               if(setData){
@@ -37,8 +47,7 @@ export class authService {
                return null;
             }
         } catch (error) {
-            console.error(error)
-            return null
+            throw new Error(error)
         }
     }
 
@@ -50,7 +59,7 @@ export class authService {
             console.log(loginUser , 'LOGINUSER');
             
             if(loginUser){
-                return  await this.getUserAllDetails(loginUser , loginUser.userId)
+                return  await this.getUserAllDetails(loginUser.userId)
             }
 
             return null
@@ -63,29 +72,28 @@ export class authService {
 
 
     async getCurrentUser() {
-        try {
-            const isUserLogin =  await this.account.get();
-              if(isUserLogin){
-                console.log(isUserLogin);
-                
-                return  await this.getUserAllDetails(isUserLogin, isUserLogin.$id)
-              }
-              return []
-        } catch (error) {
-           return error
+      try {
+        const isUserLogin = await this.account.get();
+          console.log(isUserLogin , "currentuser");
           
-            
+        if (isUserLogin) {
+          return await this.getUserAllDetails(isUserLogin.$id);
         }
-
-       
+  
+        return [];
+    
+      } catch (error) {
+        console.error("Error in getCurrentUser:", error.message);
+        return null;
+      }
     }
 
     
-    async getUserAllDetails(user , id){   
+    async getUserAllDetails(id , queary){   
       try {
 
-      const userDetails = await dataBaseServices.getUser(id , "userId")
-              return userDetails ? userDetails : []
+      const userDetails = await dataBaseServices.getUser(id , queary)
+              return userDetails ? userDetails : false
           } 
             catch (error) {
               console.error("Error in getUserAllDetails:", error);
@@ -93,7 +101,8 @@ export class authService {
             }
    }
     
-
+ 
+   
     async logout() {
 
         try {
@@ -108,17 +117,7 @@ export class authService {
 
     
 
-    async deleteUser(userId) {
-      try {
-          // Call the Appwrite API to delete the user
-          const response = await users.delete(userId);
-          console.log('User deleted successfully:', response);
-          return true
-      } catch (error) {
-          console.error('Error deleting user:', error.message);
-          return false
-      }
-  }
+
 
    async getAllUser(){
      try {

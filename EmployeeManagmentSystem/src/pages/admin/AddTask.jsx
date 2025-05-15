@@ -7,6 +7,7 @@ import TaskServices from "../../Appwrite/Task";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import {  Loader } from "../../export";
+import authServices from "../../Appwrite/Auth";
 
 
 const SetNewTask = ({ task }) => {
@@ -40,6 +41,7 @@ const SetNewTask = ({ task }) => {
       label: "Date",
       type: "date",
       placeholder: "Make a UI design",
+      maxlenght : 4
     },
 
     {
@@ -93,7 +95,6 @@ const SetNewTask = ({ task }) => {
         toast.success(`Task assigned to ${newTask.AssignTo}`);
         navigate(`/id/${newTask.$id}`);
       } else {
-        // If deletion of old task fails, rollback new task
         await TaskServices.deleteTask(newTask.$id);
         toast.error("Failed to delete old task. Reassignment rolled back.");
       }
@@ -106,12 +107,20 @@ const SetNewTask = ({ task }) => {
 
   const handleCreateTask = async (data) => {
     try {
-      await TaskServices.setTask(data);
-      toast.success("Task created successfully");
-      navigate("/home")
+     const task =  await TaskServices.setTask(data);
+     console.log(task , typeof(task) , 'task');
+     
+     if (task) {
+      toast.success("Task created successfully.");
+      navigate("/home");
       
+    } else if (task == false) {
+      toast.error(`${data.AssignTo} Employee not found.`);
+    } else {
+      toast.error("Failed to create task. Please try again later.");
+    }
     } catch (error) {
-      toast.error("Something Went Wrong !! Try Again After Some Time")
+      toast.error(`Something went wrong! ${error.message || "Please try again later."}`);
     }
     
 
@@ -123,12 +132,16 @@ const SetNewTask = ({ task }) => {
     setLoader(true);
     if (task) {
       if (task.AssignTo === data.AssignTo) {
-        handleUpdateTask(task, data);
+       await handleUpdateTask(task, data);
       } else {
-        handleReassignTask(data);
+       await handleReassignTask(data);
       }
     } else {
-      handleCreateTask(data);
+
+      await handleCreateTask(data);
+    
+     
+
     }
     setLoader(false);
   };
@@ -143,17 +156,18 @@ const SetNewTask = ({ task }) => {
         action=""
       >
         <div className="w-1/2  max-sm:w-full max-sm:pr-0 pr-10 flex flex-col gap-8 ">
-          {input.map((item) => (
-            <Input
-              label={item.label}
-              type={item.type}
-              placeholder={item.placeholder}
-              className="w-full h-9  border border-gray-500 border-solid rounded-lg text-white px-2 bg-transparent outline-none placeholder:text-sm "
-              {...register(`${item.label}`, {
-                required: `${item.label} is required `,
-              })}
-            />
-          ))}
+       {input.map((item) => (
+  <Input
+    key={item.label}
+    label={item.label}
+    type={item.type}
+    placeholder={item.placeholder}
+    className="w-full h-9 border border-gray-500 border-solid rounded-lg text-white px-2 bg-transparent outline-none placeholder:text-sm"
+    {...register(`${item.label}`, {
+      required: `${item.label} is required`,
+    })}
+  />
+))}
         </div>
 
         <div className="w-1/2 max-sm:w-full max-sm:pl-0 max-sm:mt-5 pl-10 flex flex-col max-sm:gap-5  ">

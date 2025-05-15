@@ -28,6 +28,7 @@ const Navbar = () => {
     }
    
   }
+
   const navbarOpiton = [
     {
       tittle : "Add task",
@@ -74,9 +75,9 @@ const Navbar = () => {
         <div className='flex gap-5'>
         {
             navbarOpiton.map((item) => (
-              <Link to={item.link}>
+              <Link key={item.tittle} to={item.link}>
                 {
-                  item.isVisible &&  <Button key={item.tittle} type={item.type} btn={item.tittle} logout={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600 max-sm:hidden"/>
+                  item.isVisible &&  <Button  type={item.type} btn={item.tittle} logout={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600 max-sm:hidden"/>
                 }
                
               </Link>

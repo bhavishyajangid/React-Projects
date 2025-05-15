@@ -9,6 +9,7 @@ const otpSendSlice =createSlice({
         resend : false,
         loader : false,
         userEmailVerify : false,
+        isEmailExist : false 
     },
     reducers : {
         setOtpSend : (state , action) => {
@@ -31,11 +32,26 @@ const otpSendSlice =createSlice({
             state.generatedOtp = null;
             state.loader = false;
             state.otpSend = false
-        }
+        },
+        isEmailAlreadyInUse : (state , action) => {
+            try {
+        
+                const verifyEmailExist = dataBaseServices.emailIsExists(action.payload) 
+        
+                console.log(verifyEmailExist);
+                
+                if(verifyEmailExist){
+                    state.isEmailExist = verifyEmailExist
+                }
+        
+               } catch (error) {
+                   console.log(error , "when the reponse is coming in the email check");  
+               }
+        },
 
     }
 })
 
-export const {setOtpSend,setGeneratedOtp, setResend,setLoader,setUserEmailVerify , resetState} = otpSendSlice.actions
+export const {setOtpSend,setGeneratedOtp, setResend,setLoader,setUserEmailVerify , resetState , isEmailAlreadyInUse} = otpSendSlice.actions
 
 export default otpSendSlice

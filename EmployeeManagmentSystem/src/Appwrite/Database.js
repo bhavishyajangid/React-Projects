@@ -1,6 +1,7 @@
 import { Client , Databases, ID , Query} from "appwrite";
 import conf from "../config/config";
 import { Identity } from "twilio/lib/twiml/VoiceResponse";
+import TaskServices, { taskService } from "./Task";
 export class databaseServices{
     client = new Client();
     database;
@@ -36,6 +37,36 @@ export class databaseServices{
 
     }
 
+    async updateUser(documentId , value , name , task){
+
+        try {
+          const res = await this.database.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteAuthCollectionId,
+            documentId,
+            {
+               [name] : value + 1,
+            }
+          )
+
+          console.log(res , "updateUser");
+
+          const res2 = await TaskServices.updateTask(task.$id , {isCompleted : true})
+          
+          console.log(res2 , 'taskupdate');
+
+             if(res && res2){
+                   return { newTask : res.newTask,
+              taskId : res2.$id}
+             }
+          
+          
+        } catch (error) {
+          throw new Error(error)
+          
+        }
+    }
+
      async setUserProfileData({username ,number , isEmailVerify, email , id}){
         console.log(username ,number , isEmailVerify, email , id);
         
@@ -54,12 +85,13 @@ export class databaseServices{
             )
             return userPersonalData
         } catch (error) {
-            console.log(error);
+          throw new Error(error)
             
         }
      }
 
      async getUser(indentifier , queryType = "userId") {
+        console.log(indentifier , queryType , "kahdfg");
         
       if (!["userId", "userName"].includes(queryType)) {
         throw new Error("Invalid query type. Must be 'userId' or 'userName'.");
@@ -94,6 +126,21 @@ export class databaseServices{
           
          } 
       }
+      async deleteUserFromDatabase(userId) {
+        try {
+            // Assuming you have a "users" collection and the userId is the document ID
+            const response = await this.database.deleteDocument(
+                conf.appwriteDatabaseId, // Replace with your database ID
+                conf.appwriteAuthCollectionId, // Replace with your collection ID
+                userId // User document ID to delete
+            );
+            console.log('User deleted from database:', response);
+            return true; // Return true on success
+        } catch (error) {
+            console.error('Error deleting user from database:', error);
+            throw new Error(error);
+        }
+    }
 }
 
 const dataBaseServices = new databaseServices();

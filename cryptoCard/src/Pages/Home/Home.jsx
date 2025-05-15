@@ -10,8 +10,8 @@ import Header from '../../components/Header';
 
 const Home = () => (
   <div className="w-full min-h-screen flex flex-col bg-black">
-     <Header/>
-    <FeatureCards />
+  <Header/>
+  <FeatureCards />
   <ScrollWithImage />
   <PrivateKey />
   <AllCards />

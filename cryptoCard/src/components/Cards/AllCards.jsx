@@ -3,12 +3,12 @@ import MiniCards from './MiniCards'
 const AllCards = () => {
     const cards = [
         {
-          miniImg: "../../../public/minicardgold.png",
-          fullImg: "../../../public/cardgold.png",
+          miniImg: "minicardgold.png",
+          fullImg: "public/cardgold.png",
         },
         {
-          miniImg: "../../../public/minicardau.png",
-          fullImg: "../../../public/cardau.png",
+          miniImg: "public/minicardau.png",
+          fullImg: "public/cardau.png",
         },
     ]
 

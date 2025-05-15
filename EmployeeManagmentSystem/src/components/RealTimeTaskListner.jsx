@@ -1,47 +1,43 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { addNewTask, deleteTaskRealtime, updateTaskRealtime } from '../Store/TaskSlice';
 import TaskServices from '../Appwrite/Task';
 import conf from '../config/config';
-import { addNewTask , deleteTaskRealtime , updateTaskRealtime } from '../Store/TaskSlice';
-import { useNavigate } from 'react-router';
-
 
 const RealTimeTaskListner = () => {
   const dispatch = useDispatch();
+  const { currentUserDetails } = useSelector(state => state.authSlice);
   const subscriptionRef = useRef(null);
-  const navigate = useNavigate()
-  const {currentUserDetails} = useSelector(state => state.authSlice)
 
   useEffect(() => {
+    if (!currentUserDetails) return;
+
     subscriptionRef.current = TaskServices.client.subscribe(
       `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteAllTaskCollectionId}.documents`,
       (res) => {
         const payload = res.payload;
+        const isAdmin = currentUserDetails.admin;
+        const isAssignedToUser = payload.AssignTo === currentUserDetails.userName;
 
+        // Admin sees all, employee sees only own assigned tasks
         if (res.events.includes("databases.*.collections.*.documents.*.create")) {
-         
+          if (isAdmin || isAssignedToUser) dispatch(addNewTask(payload));
+        }
 
-          dispatch(addNewTask(payload))
-          
-        } else if (res.events.includes("databases.*.collections.*.documents.*.update")) {
-          dispatch(updateTaskRealtime(payload));
-         
-         
-        } else if (res.events.includes("databases.*.collections.*.documents.*.delete")) {
+        if (res.events.includes("databases.*.collections.*.documents.*.update")) {
+          if (isAdmin || isAssignedToUser) dispatch(updateTaskRealtime(payload));
+        }
 
-          dispatch(deleteTaskRealtime(payload.$id)); // make sure to use $id
-         
-        } else {
-          console.warn("Unhandled real-time event", res.events);
+        if (res.events.includes("databases.*.collections.*.documents.*.delete")) {
+          if (isAdmin || isAssignedToUser) dispatch(deleteTaskRealtime(payload.$id));
         }
       }
     );
 
     return () => {
-      if (subscriptionRef.current) subscriptionRef.current(); // unsubscribe
+      if (subscriptionRef.current) subscriptionRef.current(); // unsubscribe on unmount
     };
-  }, [dispatch , currentUserDetails]); // ✅ Removed navigate
+  }, [currentUserDetails, dispatch]);
 
   return null;
 };

@@ -30,9 +30,9 @@ const Sidebar = ({isOpen , toggleSidebar , navbarOpiton}) => {
           {
             navbarOpiton.map((item) => (
                 
-              <Link to={item.link}>
+              <Link key={item.tittle} to={item.link}>
                 {
-                  item.isVisible &&  <Button key={item.tittle} type={item.type} btn={item.tittle} logout={item.logout} />
+                  item.isVisible &&  <Button  type={item.type} btn={item.tittle} logout={item.logout} />
                   
                 }
                

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import TaskServices from "../Appwrite/Task";
+import { toast } from "react-toastify";
 
 
 export const fetchTask = createAsyncThunk(
@@ -7,6 +8,9 @@ export const fetchTask = createAsyncThunk(
     
     
     async(user, {rejectWithValue}) => {
+       console.log(user , "userId");
+       
+        
         try {
             if(user.admin){
                 const res = await TaskServices.getAllTask()
@@ -18,19 +22,23 @@ export const fetchTask = createAsyncThunk(
                  return res
             }
         } catch (error) {
-            return rejectWithValue(error.message)
+            return toast.error(error)
         }
     },
 )
 
+export const updateTheTaskInfo = createAsyncThunk(
+    "task/update" , 
  
-
-
-
-
-
-
-
+    async(taskId, ) => {
+          console.log(taskId , "working");
+             
+        
+        const newValue = value + 1
+        console.log(taskId , newValue , name);
+     
+    }
+)
 
 const taskSlice = createSlice({
     name : "task" ,
@@ -38,7 +46,7 @@ const taskSlice = createSlice({
         tasks : [],
         loaderForSkeleton : false ,
         loading : false , 
-        error : null
+        error : null,
     }, 
     reducers : {
         addNewTask: (state, action) => {
@@ -51,6 +59,16 @@ const taskSlice = createSlice({
           deleteTaskRealtime: (state, action) => {
             state.tasks = state.tasks.filter((task) => task.$id !== action.payload);
           },
+          setComplete : () => {
+             state.tasks = state.task.filter((item) => {
+                    if(item.$id == action.payload.$id) item.isCompleted = true
+                    return item
+             })
+          },
+
+          setLoader : (state , action) => {
+            state.loading = action.payload
+          }
     } , 
 
     extraReducers : (builder) => {
@@ -68,55 +86,11 @@ const taskSlice = createSlice({
              state.error = action.payload
         })
 
-
-
-        // .addCase(createTask.pending , (state) => {
-        //     state.loading = true
-        // })
-        // .addCase(createTask.fulfilled , (state , action) => {
-        //      state.tasks = [...state.tasks , action.payload]
-        // })
-        // .addCase(createTask.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload;
-        //   })
-
-
-        // .addCase(updateTask.pending , (state) => {
-        //     state.loading = true
-        // })
-
-        // .addCase(updateTask.fulfilled , (state , action) => {
-        //     const index = state.tasks.findIndex(task => task.$id === action.payload.$id)
-
-        //     if(index !== -1 ){
-        //        state.tasks[index] = action.payload
-        //     }
-        // })
-
-        // .addCase(updateTask.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload;
-        //   })
-
-
-
-
-        // .addCase(deleteTask.pending , (state) => {
-        //     state.loading = true
-        // })
-        // .addCase(deleteTask.fulfilled , (state , action) => {
-        //     state.loading = false;
-        //     state.tasks = state.tasks.filter((task) => task.$id !== action.payload);
-        // })
-        // .addCase(deleteTask.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload;
-        //   })
+       
 
     }
 })
 
-export const {deleteTaskRealtime , addNewTask , updateTaskRealtime} = taskSlice.actions
+export const {deleteTaskRealtime , addNewTask , updateTaskRealtime , setComplete , setLoader} = taskSlice.actions
 
  export default taskSlice

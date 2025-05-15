@@ -1,15 +1,14 @@
 
 import './App.css'
 import { useState , useEffect } from 'react';
-import {  CardSkeleton, Navbar} from './export.js'
+import {  Navbar} from './export.js'
 import { Outlet, useNavigate} from 'react-router'
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import authServices from './Appwrite/Auth.js'
-import dataBaseServices from './Appwrite/Database.js'
 import { Loader } from './export.js';
-import { Suspense , lazy } from 'react';
-import authSlice, { login } from './Store/authSlice.js';
+import { Suspense } from 'react';
+import  { login } from './Store/authSlice.js';
 import RealTimeTaskListner from './components/RealTimeTaskListner.jsx';
 import { fetchTask } from './Store/TaskSlice.js';
 
@@ -25,9 +24,13 @@ function App() {
        const checkLogin = async () => {
          try {
           const userData  = await authServices.getCurrentUser()
-            dispatch(login(userData))
-            dispatch(fetchTask(userData))
-            userData.admin ? navigate("/admin") :  navigate("/employee")
+          if(userData){
+              dispatch(login(userData))
+              await dispatch(fetchTask(userData)).unwrap()
+              userData.admin ? navigate("/admin") :  navigate("/employee")
+            }else{
+              navigate("/")
+            }
          } catch (error) {
            toast.error("Something Went Wrong")
            navigate("/")
