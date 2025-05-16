@@ -76,6 +76,8 @@ export class taskService{
    }
 
     async getUserTask(TaskId) { 
+      console.log("working");
+      
       console.log(TaskId , "taskid");
       
         try {
@@ -140,9 +142,7 @@ async deleteTask(documentId) {
       conf.appwriteDatabaseId,
       conf.appwriteAllTaskCollectionId,
       documentId,
-      {
-        ...task
-      } 
+      task
     )
     if(updatedTask){
        return updatedTask

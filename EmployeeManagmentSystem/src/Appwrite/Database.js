@@ -49,15 +49,13 @@ export class databaseServices{
             }
           )
 
-          console.log(res , "updateUser");
 
           const res2 = await TaskServices.updateTask(task.$id , {isCompleted : true})
           
-          console.log(res2 , 'taskupdate');
 
              if(res && res2){
                    return { newTask : res.newTask,
-              taskId : res2.$id}
+              task : res2}
              }
           
           

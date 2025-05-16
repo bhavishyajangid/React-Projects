@@ -1,44 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import TaskServices from "../Appwrite/Task";
 import { toast } from "react-toastify";
+import dataBaseServices from "../Appwrite/Database";
+import { deleteTask, fetchTask , taskAllDetails, updateTheTaskInfo } from "./thunks/taskThunk";
 
-
-export const fetchTask = createAsyncThunk(
-    "task/fetchTask" ,
-    
-    
-    async(user, {rejectWithValue}) => {
-       console.log(user , "userId");
-       
-        
-        try {
-            if(user.admin){
-                const res = await TaskServices.getAllTask()
-                return res.documents;
-            }else{
-                 const res = await TaskServices.getUserTask(user.userId)
-                 console.log(res , 'response');
-                 
-                 return res
-            }
-        } catch (error) {
-            return toast.error(error)
-        }
-    },
-)
-
-export const updateTheTaskInfo = createAsyncThunk(
-    "task/update" , 
- 
-    async(taskId, ) => {
-          console.log(taskId , "working");
-             
-        
-        const newValue = value + 1
-        console.log(taskId , newValue , name);
-     
-    }
-)
 
 const taskSlice = createSlice({
     name : "task" ,
@@ -47,6 +12,8 @@ const taskSlice = createSlice({
         loaderForSkeleton : false ,
         loading : false , 
         error : null,
+        completeTask : [],
+        singleTask : {}
     }, 
     reducers : {
         addNewTask: (state, action) => {
@@ -59,11 +26,15 @@ const taskSlice = createSlice({
           deleteTaskRealtime: (state, action) => {
             state.tasks = state.tasks.filter((task) => task.$id !== action.payload);
           },
-          setComplete : () => {
-             state.tasks = state.task.filter((item) => {
-                    if(item.$id == action.payload.$id) item.isCompleted = true
-                    return item
-             })
+          setUpdateTask : (state , action) => {
+            //  console.log(action.payload , "payload");
+             
+            //  state.tasks = state.tasks.filter((item) => {
+            //         if(item.$id == action.payload.$id) item.isCompleted = true
+            //         return item
+            //  })
+
+            //  state.completeTask = [...state.completeTask , action.payload]   
           },
 
           setLoader : (state , action) => {
@@ -86,11 +57,58 @@ const taskSlice = createSlice({
              state.error = action.payload
         })
 
+        .addCase(updateTheTaskInfo.pending , (state) => {
+            state.loading = true
+
+        })
+        .addCase(updateTheTaskInfo.fulfilled , (state , action) => {
+            state.loading = false,
+             state.tasks = state.tasks.filter((item) => {
+                    if(item.$id == action.payload.task.$id) item.isCompleted = true
+                    return item
+             })
+
+            state.completeTask = [...state.completeTask , action.payload.task]
+        })
+        .addCase(updateTheTaskInfo.rejected , (state , action) => {
+             state.loading = false,
+             state.error = action.payload
+        })
+
+      
+       .addCase(taskAllDetails.pending , (state) => {
+            state.loading = true
+
+        })
+        .addCase(taskAllDetails.fulfilled , (state , action) => {
+         state.singleTask = action.payload
+         state.loading = false
+            
+        })
+        .addCase(taskAllDetails.rejected , (state , action) => {
+             state.loading = false,
+             state.error = action.payload
+        })
+
+
+         .addCase(deleteTask.pending , (state) => {
+            state.loading = true
+
+        })
+        .addCase(deleteTask.fulfilled , (state) => {
+         state.loading = false
+            
+        })
+        .addCase(deleteTask.rejected , (state , action) => {
+             state.loading = false,
+             state.error = action.payload
+        })
+
        
 
     }
 })
 
-export const {deleteTaskRealtime , addNewTask , updateTaskRealtime , setComplete , setLoader} = taskSlice.actions
+export const {deleteTaskRealtime , addNewTask , updateTaskRealtime , setUpdateTask , setLoader} = taskSlice.actions
 
  export default taskSlice

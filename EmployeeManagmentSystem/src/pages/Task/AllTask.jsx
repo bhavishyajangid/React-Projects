@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 const EmployeeTask = () => {
   const { tasks, loading } = useSelector(state => state.taskSlice);
+  const {currentUserDetails} = useSelector(state => state.authSlice)
 
   if (loading) {
     return <CardSkeleton />;
@@ -18,11 +19,13 @@ const EmployeeTask = () => {
         ) : (
           tasks.map((item) => {
 
-          if(!item.isCompleted){
-            return  <Link key={item.$id} to={`/id/${item.$id}`}>
+         if(!currentUserDetails.admin && !item.isCompleted || currentUserDetails.admin){
+          return  <Link key={item.$id} to={`/id/${item.$id}`}>
                   <AdminTask item={item} />
             </Link>
-          }
+         }
+           
+          
           })
         )}
       </div>

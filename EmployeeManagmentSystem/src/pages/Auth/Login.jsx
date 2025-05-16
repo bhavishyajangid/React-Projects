@@ -8,7 +8,8 @@ import Input from '../../components/Input';
 import { Button, Loader, VerifyOtp } from '../../export';
 import { login } from '../../Store/authSlice';
 import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from '../../Store/otpSendSlice';
-import { fetchTask } from '../../Store/TaskSlice';
+import { fetchTask } from '../../Store/thunks/taskThunk';
+
 const Login = () => {
 
    const { otpSend , generatedOtp , loader, resend , userEmailVerify} = useSelector(state => state.otpSendSlice)

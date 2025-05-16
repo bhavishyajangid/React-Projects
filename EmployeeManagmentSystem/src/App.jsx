@@ -10,7 +10,8 @@ import { Loader } from './export.js';
 import { Suspense } from 'react';
 import  { login } from './Store/authSlice.js';
 import RealTimeTaskListner from './components/RealTimeTaskListner.jsx';
-import { fetchTask } from './Store/TaskSlice.js';
+import { fetchTask } from './Store/thunks/taskThunk.js';
+
 
 
 function App() {
@@ -26,13 +27,14 @@ function App() {
           const userData  = await authServices.getCurrentUser()
           if(userData){
               dispatch(login(userData))
-              await dispatch(fetchTask(userData)).unwrap()
+               dispatch(fetchTask(userData))
               userData.admin ? navigate("/admin") :  navigate("/employee")
             }else{
               navigate("/")
             }
          } catch (error) {
-           toast.error("Something Went Wrong")
+          console.log(error);
+           toast.error(error)
            navigate("/")
          }finally{
           setLoader(false)
