@@ -1,86 +1,140 @@
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import TaskServices from "../../Appwrite/Task";
-import dataBaseServices from "../../Appwrite/Database";
+import dataBaseServices, { databaseServices } from "../../Appwrite/Database";
 import { updatenewTaskValue } from "../authSlice";
-import { Navigate } from "react-router";
+import { getTaskStatus } from "../../utlity/getTaskStatus";
+
+//  1. Fetch Task
 export const fetchTask = createAsyncThunk(
-    "task/fetchTask" ,
-    
-    async(user, {rejectWithValue}) => {
-       console.log(user , "userId");
-        try {
-            if(user.admin){
-                const res = await TaskServices.getAllTask()
-                return res.documents;
-            }else{
-                 const res = await TaskServices.getUserTask(user.userId)
-                 console.log(res , 'response');
-                 return res
-            }
-        } catch (error) {
-            toast.error(error)
-        }
-    },
-)
-
-export const updateTheTaskInfo = createAsyncThunk(
-  "task/update",
-  async ({ task, name , navigate}, { getState, rejectWithValue, dispatch }) => {
+  "task/fetchTask",
+  async (user, { rejectWithValue }) => {
     try {
-
-      const state = getState();
-      const user = state.authSlice.currentUserDetails;  
-
-      // Prepare update fields depending on 'name' action
-      const res = await dataBaseServices.updateUser(user.$id , user.completedTask , name , task)
-
-      if(res){ 
-        dispatch(updatenewTaskValue(res.newTask))
-        navigate("/employee")
-        toast.success("task completed sucessfully")
-            return res
-        }
-      
-
-      
+      if (user.admin) {
+        const res = await TaskServices.getAllTask();
+        return {res : res , 
+                admin : true}
+      } else {
+        const res = await TaskServices.getUserTask(user.userId);
+  
+        console.log(res , "res");
+        
+        return {res : res , 
+                admin : false}
+      }
     } catch (error) {
-      toast.error("Error updating task: " + error.message);
-      return rejectWithValue(error.message);
+      console.log(error);
+      
+      return rejectWithValue("Failed to fetch tasks");
     }
   }
 );
 
-export const taskAllDetails = createAsyncThunk(
-    "task/alldetails",
+// ✅ 2. Update Task Info (mark complete)
+export const updateTheTaskInfo = createAsyncThunk(
+  "task/update",
+  async ({ task, name }, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState();
+      const user = state.authSlice.currentUserDetails;
 
-    async(taskId , {rejectWithValue}) => {
-            try {
-        let res = await TaskServices.getSingleTask(taskId);
-        if(res){
-            return res
-        }
-      } catch (error) {
-        toast.error('Unable to Fetch Task Details');
-          return rejectWithValue(error.message);
+      const res = await dataBaseServices.updateUser(user.$id, user.completedTask, name, task);
+
+      if (res) {
+        
+        dispatch(updatenewTaskValue(res.completedTask));
+        return {
+          message: "Task completed successfully",
+          data: res.task
+        };
+      } else {
+        return rejectWithValue("Failed to update task");
       }
+    } catch (error) {
+      return rejectWithValue(error.message || "Error updating task");
     }
-) 
+  }
+);
 
-export const deleteTask = createAsyncThunk(
-     "task/delete", 
+// ✅ 3. Get Single Task Details
+export const taskAllDetails = createAsyncThunk(
+  "task/alldetails",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const res = await TaskServices.getSingleTask(taskId);
+      if (res) return res;
+      return rejectWithValue("Task not found");
+    } catch (error) {
+      return rejectWithValue("Unable to fetch task details");
+    }
+  }
+);
 
-     async({ taskId , navigate} ,{rejectWithValue}) => {
-        try {
-        const deleteUser = await TaskServices.deleteTask(taskId);
-        if (deleteUser) {
-          toast.success('Task deleted successfully');
-          navigate('/home');
-        }
-      } catch (error) {
-        toast.error('Task Not Deleted. Try Again After Some Time');
-        return rejectWithValue(error.message)
+// ✅ 4. Delete Task
+export const deleteTaskThunk = createAsyncThunk(
+  "task/delete",
+  async ( taskId , { rejectWithValue }) => {
+    try {
+      console.log(taskId , "taskid");
+      
+      const deleteTask = await TaskServices.deleteTask(taskId);
+      console.log(deleteTask , "deletetask");
+      
+      if (deleteTask) {
+        return {
+          message: "Task deleted successfully",
+          data: deleteTask.$id
+        };
       }
-     }
+    } catch (error) {
+      console.log(error);
+      
+      return rejectWithValue(error.message || "Error deleting task");
+    }
+  }
+);
+
+
+export const handleCompletedTask = createAsyncThunk(
+   'task/completed',
+
+   async( _ ,{rejectWithValue}) => {
+    try {
+        const result = await dataBaseServices.fetchCompletedTask()
+        if(result){
+           return result
+        }
+    } catch (error) {
+      console.log(error);
+      
+       return rejectWithValue(error)
+    }
+   }
 )
+
+export const handleUserTaskAction = createAsyncThunk(
+  "task/userAction",
+  async ({ taskId, taskAction, message = "none", adminAction= "pending" }, { rejectWithValue }) => {
+    console.log(taskId ,taskAction , message , adminAction);
+    
+    
+
+    try {
+      const { status, rejectedBy } = getTaskStatus(taskAction, adminAction);
+
+      const updatePayload = {
+        userAction: taskAction,
+        status,
+        rejectedBy,
+        userRejectReason: taskAction === "rejected" ? message || "" : 'none',
+      };
+
+      const response = await TaskServices.updateTask(taskId, updatePayload);
+      console.log(response , 'response after update');
+      
+      return response;
+    } catch (error) {
+      return rejectWithValue("Something went wrong");
+    }
+  }
+);
+

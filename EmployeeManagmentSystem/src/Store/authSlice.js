@@ -37,7 +37,7 @@ const authSlice = createSlice({
         },
         
         updatenewTaskValue : (state , action) => {
-            state.currentUserDetails.newTask += action.payload
+            state.currentUserDetails.completedTask += action.payload
         }
     },
 

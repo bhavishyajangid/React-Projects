@@ -32,12 +32,14 @@ const Login = () => {
           dispatch(setLoader(true))
           const loginUser = await authServices.login(data)
           if(loginUser){
-             navigate("/home")
+             loginUser.admin ? navigate("/admin") : navigate("/employee")
             dispatch(login(loginUser))
             await dispatch(fetchTask(loginUser)).unwrap()
             toast.success("Login sucessfully");
           }
         } catch (error) {
+          console.log(error);
+          
           toast.error(`${error}`)
         }finally{
           dispatch(setLoader(false))

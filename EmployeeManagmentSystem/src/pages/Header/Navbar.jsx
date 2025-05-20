@@ -34,7 +34,7 @@ const Navbar = () => {
       tittle : "Add task",
       isVisible : currentUserDetails.admin || false,
       type : "button" ,
-      link : "/newTask"
+      link : "/addTask"
     },
     {
       tittle : "Users",

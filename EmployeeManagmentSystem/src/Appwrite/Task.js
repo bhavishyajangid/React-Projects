@@ -41,6 +41,7 @@ export class taskService{
                     isCompleted : false,
                     Urgent : Urgent,
                     TaskId : employee.userId,
+                    status : "new"
                 }  
             )
 
@@ -86,10 +87,11 @@ export class taskService{
             conf.appwriteAllTaskCollectionId,  // Your collection ID
             [Query.equal("TaskId", TaskId )]  // Query to find the user by userId
           );
+          
           return userDetails.documents;  // Return the first document (user)
         } catch (error) {
           console.log(error);
-          return null;  // In case of error or no user found
+          throw new Error(error)  // In case of error or no user found
         }
       }
    

@@ -3,9 +3,12 @@ import { useSelector } from 'react-redux';
 import { AllTask } from '../../export';
 
 const AdminDashboard = () => {
+  const {allTask } = useSelector(state => state.taskSlice)
+  console.log(allTask ,'task');
+  
   return (
     <div>
-      <AllTask/>
+      <AllTask tasks={allTask}/>
     </div>
   )
 }

@@ -112,7 +112,7 @@ const SetNewTask = ({ task }) => {
      
      if (task) {
       toast.success("Task created successfully.");
-      navigate("/home");
+      navigate("/admin");
       
     } else if (task == false) {
       toast.error(`${data.AssignTo} Employee not found.`);

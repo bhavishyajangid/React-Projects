@@ -21,7 +21,9 @@ const RealTimeTaskListner = () => {
 
         // Admin sees all, employee sees only own assigned tasks
         if (res.events.includes("databases.*.collections.*.documents.*.create")) {
-          if (isAdmin || isAssignedToUser) dispatch(addNewTask(payload));
+          if (isAdmin || isAssignedToUser){
+             dispatch(addNewTask(payload));
+          } 
         }
 
         if (res.events.includes("databases.*.collections.*.documents.*.update")) {

@@ -27,7 +27,7 @@ function App() {
           const userData  = await authServices.getCurrentUser()
           if(userData){
               dispatch(login(userData))
-               dispatch(fetchTask(userData))
+              await dispatch(fetchTask(userData)).unwrap()
               userData.admin ? navigate("/admin") :  navigate("/employee")
             }else{
               navigate("/")
