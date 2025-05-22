@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router';
 import { Tasks, CardSkeleton } from '../../export';
 import { useSelector } from 'react-redux';
 
 const AllTask = ({tasks , heading}) => {
+  console.log(tasks);
+  
   const { loading } = useSelector(state => state.taskSlice);
   const {currentUserDetails} = useSelector(state => state.authSlice)
 
@@ -19,20 +21,17 @@ const AllTask = ({tasks , heading}) => {
         {tasks && tasks.length === 0 ? (
           <p className="text-sm text-center mt-10">There are no tasks</p>
         ) : (
-          tasks.map((item) => {
+          tasks.map((item) => 
 
-         if(!currentUserDetails.admin && !item.isCompleted || currentUserDetails.admin){
-          return  <Link key={item.$id} to={`/id/${item.$id}`}>
+            <Link key={item.$id} to={`/id/${item.$id}`}>
                   <Tasks item={item} />
             </Link>
-         }
-           
-          
-          })
+
+          )
         )}
       </div>
     </div>
   );
 };
 
-export default AllTask;
+export default memo(AllTask)

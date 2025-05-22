@@ -5,7 +5,9 @@ import {  PastTaskInfo , AllTask } from '../../export';
 const EmployeeDashboard = () => {
 
  const {currentUserDetails} = useSelector(state => state.authSlice)
- const {acceptedTask , allTask} = useSelector(state => state.taskSlice)
+ const {allTask} = useSelector(state => state.taskSlice)
+ console.log(allTask , 'alltask');
+ 
     return (
         <>
         <PastTaskInfo/>

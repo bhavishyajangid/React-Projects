@@ -37,35 +37,6 @@ export class databaseServices{
 
     }
 
-    async updateUser(documentId , value , name , task){
-        
-           
-        try {
-          const res = await this.database.updateDocument(
-            conf.appwriteDatabaseId,
-            conf.appwriteAuthCollectionId,
-            documentId,
-            {
-               [name] : value + 1,
-            }
-          )
-
- console.log(res , 'response');
- 
-          const res2 = await TaskServices.updateTask(task.$id , {isCompleted : true})
-          
-
-             if(res && res2){
-                   return { completedTask : res.completedTask,
-              task : res2}
-             }
-          
-          
-        } catch (error) {
-          throw new Error(error)
-          
-        }
-    }
 
      async setUserProfileData({username ,number , isEmailVerify, email , id}){
         console.log(username ,number , isEmailVerify, email , id);
@@ -141,22 +112,6 @@ export class databaseServices{
             throw new Error(error);
         }
     }
-
-    async fetchCompletedTask() {
-  try {
-    const result = await this.database.listDocuments(
-      conf.appwriteDatabaseId,
-      conf.appwriteAllTaskCollectionId,
-      [
-        Query.equal("isCompleted", true)  // ✅ Make sure this matches your DB field name
-      ]
-    );
-    return result.documents; // ✅ return the fetched documents
-  } catch (error) {
-    console.error("Error fetching completed tasks:", error);
-    throw error;
-  }
-}
 
 
 

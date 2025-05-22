@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteTaskThunk , fetchTask, handleCompletedTask, handleUserTaskAction ,taskAllDetails, updateTheTaskInfo } from "./thunks/taskThunk";
+import { deleteTaskThunk , fetchTask, handleCompleteTask, handleUserTaskAction ,taskAllDetails} from "./thunks/taskThunk";
 import { AllTask } from "../export";
 import { categorizeAndUpdateState } from "../utlity/categorizeAndUpdateState ";
+import { resetTaskCategory } from "../utlity/resetTaskCategory";
+
 
 const taskSlice = createSlice({
   name: "task",
@@ -38,6 +40,8 @@ const taskSlice = createSlice({
       state.newTask.value += 1
     },
     updateTaskRealtime: (state, action) => {
+      // console.log(action.payload , 'update');
+      
 //       if(action.payload.admin){
 // const index = state.allTask.findIndex(task => task.$id === action.payload.$id);
 //       if (index !== -1) state.allTask[index] = action.payload;
@@ -48,6 +52,9 @@ const taskSlice = createSlice({
   if (index !== -1) {
     state.allTask[index] = task;
   } else {
+    
+    
+    console.log("working" , task);
     categorizeAndUpdateState(task, state);
   }
 
@@ -72,14 +79,16 @@ const taskSlice = createSlice({
       .addCase(fetchTask.fulfilled, (state, action) => {
         
         state.loaderForSkeleton = false;
-          if(action.payload.admin){
-              state.allTask= action.payload.res.documents
-          }else{
-             action.payload.res.forEach(task => {
-          categorizeAndUpdateState(task, state);
+        resetTaskCategory(state)
+      
+           action.payload.res.forEach(task => {
+                categorizeAndUpdateState(task, state);
             });
+       
+         
+            
         
-          }
+          
  
       })
       .addCase(fetchTask.rejected, (state, action) => {
@@ -88,23 +97,14 @@ const taskSlice = createSlice({
       })
 
       // Update Task
-      .addCase(updateTheTaskInfo.pending, state => {
+      .addCase(handleCompleteTask.pending, state => {
         state.loading = true;
       })
-      .addCase(updateTheTaskInfo.fulfilled, (state, action) => {
+      .addCase(handleCompleteTask.fulfilled, (state, action) => {
         state.loading = false;
-
-        // Update task in list
-        state.tasks = state.tasks.map(task =>
-          task.$id === action.payload.data.$id
-            ? { ...task, isCompleted: true }
-            : task
-        );
-
-        // Add to completeTask
-        state.completedTask.push(action.payload.data);
+        state.allTask = state.allTask.filter(task => task.$id !== action.payload.$id)
       })
-      .addCase(updateTheTaskInfo.rejected, (state, action) => {
+      .addCase(handleCompleteTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -134,31 +134,14 @@ const taskSlice = createSlice({
         state.error = action.payload;
       })
 
-      .addCase(handleCompletedTask.pending, state => {
-        state.loading = true;
-      })
-      .addCase(handleCompletedTask.fulfilled, (state, action) => {
-        console.log(action.payload , "action");
-        
-        state.loading = false;
-        // state.completedTask =  action.payload
-      })
-      .addCase(handleCompletedTask.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
       
       .addCase(handleUserTaskAction.pending, state => {
         state.loading = true;
       })
       .addCase(handleUserTaskAction.fulfilled, (state, action) => { 
         state.loading = false;
-       state.newTask.task = state.newTask.task.filter((item) => item.$id !== action.payload)
+       state.newTask.task = state.newTask.task.filter(item => item.$id !== action.payload.$id)
        state.newTask.value -= state.newTask.value > 0 ? 1 : 0
-       if(action.payload.status == "rejected"){
-          state.rejectedTask.task = [...state.rejectedTask.task , action.payload]
-          state.rejectedTask.value += 1
-       }
       })
       .addCase(handleUserTaskAction.rejected, (state, action) => {
         state.loading = false;

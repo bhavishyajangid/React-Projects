@@ -11,7 +11,7 @@ export const fetchTask = createAsyncThunk(
     try {
       if (user.admin) {
         const res = await TaskServices.getAllTask();
-        return {res : res , 
+        return {res : res.documents , 
                 admin : true}
       } else {
         const res = await TaskServices.getUserTask(user.userId);
@@ -30,22 +30,14 @@ export const fetchTask = createAsyncThunk(
 );
 
 // ✅ 2. Update Task Info (mark complete)
-export const updateTheTaskInfo = createAsyncThunk(
+export const handleCompleteTask = createAsyncThunk(
   "task/update",
-  async ({ task, name }, { getState, rejectWithValue, dispatch }) => {
+  async ( taskId , {  rejectWithValue }) => {
     try {
-      const state = getState();
-      const user = state.authSlice.currentUserDetails;
-
-      const res = await dataBaseServices.updateUser(user.$id, user.completedTask, name, task);
-
+    
+       const res = await TaskServices.updateTask(taskId , {isCompleted : true})
       if (res) {
-        
-        dispatch(updatenewTaskValue(res.completedTask));
-        return {
-          message: "Task completed successfully",
-          data: res.task
-        };
+        return res
       } else {
         return rejectWithValue("Failed to update task");
       }
@@ -94,38 +86,24 @@ export const deleteTaskThunk = createAsyncThunk(
 );
 
 
-export const handleCompletedTask = createAsyncThunk(
-   'task/completed',
-
-   async( _ ,{rejectWithValue}) => {
-    try {
-        const result = await dataBaseServices.fetchCompletedTask()
-        if(result){
-           return result
-        }
-    } catch (error) {
-      console.log(error);
-      
-       return rejectWithValue(error)
-    }
-   }
-)
 
 export const handleUserTaskAction = createAsyncThunk(
   "task/userAction",
-  async ({ taskId, taskAction, message = "none", adminAction= "pending" }, { rejectWithValue }) => {
-    console.log(taskId ,taskAction , message , adminAction);
+  async (params, { rejectWithValue }) => {
+    const {taskId , userAction , message , adminAction} = params
     
     
 
     try {
-      const { status, rejectedBy } = getTaskStatus(taskAction, adminAction);
+      const { status, rejectedBy } = getTaskStatus(userAction, adminAction);
+console.log(status , userAction , adminAction , 'action');
 
       const updatePayload = {
-        userAction: taskAction,
+       userAction,
         status,
         rejectedBy,
-        userRejectReason: taskAction === "rejected" ? message || "" : 'none',
+        adminAction,
+        userRejectReason: status === "rejected" ? message || "" : 'none',
       };
 
       const response = await TaskServices.updateTask(taskId, updatePayload);

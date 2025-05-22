@@ -8,7 +8,7 @@ export const categorizeAndUpdateState = (task, state) => {
   } else if (task.status === "rejected") {
     state.rejectedTask.task.push(task);
     state.rejectedTask.value++;
-  } else if (task.isCompleted && task.status === "pending") {
+  } else if (task.isCompleted && task.pending === "Accepted") {
     state.completedTask.task = [...state.completedTask.task , task]
     state.completedTask.value += 1
   } else {

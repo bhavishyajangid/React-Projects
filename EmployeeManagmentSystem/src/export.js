@@ -25,6 +25,11 @@ import Message from "./components/Message.jsx";
 import AllTask from './pages/Task/AllTask.jsx'
 import CompletedTask from "./pages/Task/CompletedTask.jsx";
 import NewTask from "./pages/Task/NewTask.jsx";
+import AcceptedTask from "./pages/Task/AcceptedTask.jsx";
+import RejectedTask from "./pages/Task/RejectedTask.jsx";
+import AcceptOrReject from "./components/AcceptOrReject.jsx";
+import Status from "./components/Status.jsx";
+import AdminOption from "./components/AdminOption.jsx";
 export  {
     Login, 
     Signup,
@@ -51,5 +56,10 @@ export  {
     ChatBox,
     Message,
     CompletedTask, 
-    NewTask
+    NewTask,
+    AcceptedTask,
+    RejectedTask,
+    AcceptOrReject,
+    Status,
+    AdminOption
 }

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { AllTask } from '../../export';
+import { AllTask, PastTaskInfo } from '../../export';
 
 const AdminDashboard = () => {
   const {allTask } = useSelector(state => state.taskSlice)
@@ -8,6 +8,7 @@ const AdminDashboard = () => {
   
   return (
     <div>
+      <PastTaskInfo/>
       <AllTask tasks={allTask}/>
     </div>
   )

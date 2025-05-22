@@ -15,20 +15,20 @@ const PastTaskInfo = () => {
          {
           color : "bg-yellow-400",
           value : completedTask.value,
-          name : "Completed Task",
+          name : currentUserDetails.admin ? "Submitted Task" : "Completed Task",
           link : '/completedTask'
          },
          {
             color : "bg-green-400",
             value :  acceptedTask.value,
             name : "Accepted Task",
-            link : ""
+            link : "/acceptedTask"
          },
          {
            color : "bg-red-400",
            value : rejectedTask.value,
            name : "Rejected Task",
-           link : ""
+           link : "/rejectedTask"
          }
      ];
   return (
