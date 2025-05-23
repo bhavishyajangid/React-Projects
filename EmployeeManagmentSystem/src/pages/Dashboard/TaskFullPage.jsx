@@ -68,7 +68,8 @@ const TaskFullPage = () => {
   if (loading || !singleTask) {
     return <Loader />;
   }
-
+   console.log("running taskfullpage components");
+   
   return (
     <div className="w-full calc(100vh - 30px) bg-[#111111] flex flex-col gap-8 px-10 py-12 rounded-xl shadow-xl">
       {/* Task Header */}
@@ -104,12 +105,13 @@ const TaskFullPage = () => {
 
       {/* Complete / Delete Button */}
       <div className="flex gap-8 mt-8 items-center">
-        {(singleTask.status == "new" && !currentUserDetails.admin) ||
-        (singleTask.status == "pending" && currentUserDetails.admin) ? (
-          <AcceptOrReject task={singleTask} isAdmin={currentUserDetails.admin} />
-        ) : (
-          !currentUserDetails.admin &&
-          !singleTask.isCompleted && (
+        
+        {((singleTask.status == "new" && !currentUserDetails.admin) ||
+                (singleTask.status == "pending" && singleTask.isCompleted && currentUserDetails.admin)) ? (
+                <AcceptOrReject task={singleTask} isAdmin={currentUserDetails.admin} />
+              ): (
+          (!currentUserDetails.admin &&
+          !singleTask.isCompleted) && (
             <button
               onClick={() => {
                 completeTask();

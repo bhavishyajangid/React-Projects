@@ -5,13 +5,13 @@ const Status = ({task , isAdmin , type}) => {
 <>
     {type === "card" && (
         <>
-          {(task.isCompleted && !isAdmin) || task.status === "accepted" ? (
+          {/* {(task.isCompleted && !isAdmin) || task.status === "accepted" ? (
             <span className="text-xs px-3 py-1 font-semibold rounded-lg capitalize bg-red-500 text-white">
               {task.status === "accepted" ? "Approved" : "Pending for approval"}
             </span>
-          ) : null}
+          ) : null} */}
 
-          {!task.isCompleted && isAdmin && task.userAction === 'accepted' ? (
+          {!task.isCompleted && isAdmin && task.userAction === 'accepted' && !task.status == 'rejected' ? (
             <span className="text-xs px-3 py-1 rounded-lg capitalize bg-blue-500 font-semibold text-white">
               Accepted
             </span>
@@ -19,24 +19,33 @@ const Status = ({task , isAdmin , type}) => {
         </>
       )}
                <span
-className={`text-sm px-6 py-1  font-semibold flex justify-center items-center rounded text-white 
-    ${task.status === 'rejected'  
-      ? 'bg-red-500' 
-      : task.isCompleted 
-      ? 'bg-green-500' 
-      : task.status == 'new' && isAdmin 
-      ? "bg-blue-500" 
-      : "text-orange-500"
-      
+className={`text-xs px-3 py-1  font-semibold flex justify-center items-center rounded  
+    ${
+      task.status === 'rejected'
+    ? 'bg-red-400'
+    : task.status == "accepted"
+    ? 'bg-green-500' 
+    : task.status == "pending" && !isAdmin && task.isCompleted 
+    ? "bg-red-400"
+    : task.status == 'new' && isAdmin 
+    ? "bg-blue-500" 
+    : !task.isCompleted 
+    ? "text-orange-400" 
+    :"hidden"
       }
   `}>
   {task.status === 'rejected'
     ? 'Rejected'
-    : task.isCompleted 
-    ? 'Completed'
+    : task.status == "accepted"
+    ? 'Approved' 
+    : task.status == "pending" && !isAdmin && task.isCompleted 
+    ? "Pending For approval"
     : task.status == 'new' && isAdmin 
     ? "Not Accepted" 
-    : 'Uncompleted'}
+    : !task.isCompleted 
+    ? "Uncompleted" 
+    :""
+    }
 </span>
 </>
   )

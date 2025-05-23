@@ -2,7 +2,7 @@
 import './App.css'
 import { useState , useEffect } from 'react';
 import {  Navbar} from './export.js'
-import { Outlet, useNavigate} from 'react-router'
+import { Outlet, useNavigate} from 'react-router-dom'
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
 import authServices from './Appwrite/Auth.js'
@@ -51,11 +51,9 @@ function App() {
   return (
     <>
     { isLogin  && <Navbar /> } 
-     <Suspense fallback={<Loader/>}>
      <Outlet/>
-     <RealTimeTaskListner/>
+  <RealTimeTaskListner/>
     <ToastContainer/>
-     </Suspense>
   
     </>
   )

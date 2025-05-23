@@ -1,24 +1,22 @@
-import React from "react";
-import {
-  FaCheckCircle,
-  FaTrashAlt,
-  FaEdit,
-  FaCommentAlt,
-} from "react-icons/fa";
+
 import { useSelector } from "react-redux";
 import AcceptOrReject from "./AcceptOrReject";
 import Status from "./Status";
 import AdminOption from "./AdminOption";
+import { Link } from "react-router";
 
 const Tasks = ({ item, onComplete, onEdit, onDelete, onChat }) => {
   const ControleDescriptionText = (text, maxLength) => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
+  
   const { currentUserDetails } = useSelector((state) => state.authSlice);
 
   return (
+    <>
     <div className="bg-gray-800 text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all relative min-w-[280px] min-h-[200px] flex flex-col ">
+    <Link  to={`/id/${item.$id}`}>
       {/* Urgency & Status */}
       <div className="flex justify-between items-center mb-2">
         <span
@@ -52,7 +50,10 @@ const Tasks = ({ item, onComplete, onEdit, onDelete, onChat }) => {
             Assigned To: {item.AssignTo}
           </span>
         </div>
+
       )}
+</Link>
+   
 
       {((item.status == "new" && !currentUserDetails.admin) ||
         (item.status == "pending" && item.isCompleted && currentUserDetails.admin)) && (
@@ -60,7 +61,8 @@ const Tasks = ({ item, onComplete, onEdit, onDelete, onChat }) => {
       )}
 
         <AdminOption task={item}/>
-    </div>
+</div>
+    </>
   );
 };
 

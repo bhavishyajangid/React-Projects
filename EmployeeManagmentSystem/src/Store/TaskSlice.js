@@ -36,7 +36,7 @@ const taskSlice = createSlice({
   },
   reducers: {
     addNewTask: (state, action) => {
-      state.newTask.task = [...state.newTask.task , action.payload]
+      state.newTask.task.push(action.payload)
       state.newTask.value += 1
     },
     updateTaskRealtime: (state, action) => {
@@ -47,16 +47,17 @@ const taskSlice = createSlice({
 //       if (index !== -1) state.allTask[index] = action.payload;
 //       }else{
 //       }
-           const task = action.payload;
-  const index = state.allTask.findIndex(t => t.$id === task.$id);
-  if (index !== -1) {
-    state.allTask[index] = task;
-  } else {
+  //          const task = action.payload;
+  // const index = state.allTask.findIndex(t => t.$id === task.$id);
+  // if (index !== -1) {
+  //   state.allTask[index] = task;
+  // } else {
     
-    
+  
+
     console.log("working" , task);
-    categorizeAndUpdateState(task, state);
-  }
+    categorizeAndUpdateState(task, state , true);
+  // }
 
       
     },
@@ -82,14 +83,9 @@ const taskSlice = createSlice({
         resetTaskCategory(state)
       
            action.payload.res.forEach(task => {
-                categorizeAndUpdateState(task, state);
+                categorizeAndUpdateState(task, state , false );
             });
        
-         
-            
-        
-          
- 
       })
       .addCase(fetchTask.rejected, (state, action) => {
         state.loaderForSkeleton = false;
@@ -102,6 +98,7 @@ const taskSlice = createSlice({
       })
       .addCase(handleCompleteTask.fulfilled, (state, action) => {
         state.loading = false;
+        state.allTask
         state.allTask = state.allTask.filter(task => task.$id !== action.payload.$id)
       })
       .addCase(handleCompleteTask.rejected, (state, action) => {
@@ -140,8 +137,8 @@ const taskSlice = createSlice({
       })
       .addCase(handleUserTaskAction.fulfilled, (state, action) => { 
         state.loading = false;
-       state.newTask.task = state.newTask.task.filter(item => item.$id !== action.payload.$id)
-       state.newTask.value -= state.newTask.value > 0 ? 1 : 0
+        console.log('running ');
+        
       })
       .addCase(handleUserTaskAction.rejected, (state, action) => {
         state.loading = false;

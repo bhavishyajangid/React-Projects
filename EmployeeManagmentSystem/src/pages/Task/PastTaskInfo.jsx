@@ -21,7 +21,7 @@ const PastTaskInfo = () => {
          {
             color : "bg-green-400",
             value :  acceptedTask.value,
-            name : "Accepted Task",
+            name : currentUserDetails.admin ? "Approved Task" : "Accepted Task",
             link : "/acceptedTask"
          },
          {

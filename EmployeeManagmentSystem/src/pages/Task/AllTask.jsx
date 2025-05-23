@@ -23,9 +23,9 @@ const AllTask = ({tasks , heading}) => {
         ) : (
           tasks.map((item) => 
 
-            <Link key={item.$id} to={`/id/${item.$id}`}>
-                  <Tasks item={item} />
-            </Link>
+            
+                  <Tasks key={item.$id} item={item} />
+            
 
           )
         )}
