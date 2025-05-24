@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { handleUserTaskAction } from '../Store/thunks/taskThunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Input, Button } from '../export';
 import { showError, showSuccess } from '../utlity/Error&Sucess';
@@ -18,7 +18,7 @@ const AcceptOrReject = ({ task, isAdmin }) => {
 
       const payload = {
         taskId: task.$id,
-        userAction: 'accepted',
+        userAction: isAdmin ? task.userAction : "accepted" ,
         adminAction: isAdmin ? 'accepted' : 'pending',
       };
       try {
@@ -38,8 +38,8 @@ const AcceptOrReject = ({ task, isAdmin }) => {
     async (data) => {
       const payload = {
         taskId: task.$id,
-        userAction: 'rejected',
-        adminAction: isAdmin ? task.adminAction : 'rejected',
+        userAction: isAdmin ? task.userAction : "rejected" ,
+        adminAction: isAdmin ? 'rejected' : task.adminAction,
         message: data.reasonForReject || 'none',
       };
       try {

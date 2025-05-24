@@ -1,16 +1,42 @@
 import React from 'react';
 import { FaEdit, FaTrashAlt, FaCommentAlt, FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-
-const AdminOption = ({ task, onEdit, onDelete, onChat, type = "card" }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { showError , showSuccess } from '../utlity/Error&Sucess';
+import { deleteTaskThunk } from '../Store/thunks/taskThunk';
+const AdminOption = ({ task,type = "card" }) => {
+  console.log(task , "task");
+  const {currentUserDetails} = useSelector(state => state.authSlice)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const isCompleted = task.isCompleted;
   const isRejected = task.status === 'rejected';
   const isNew = task.status === 'new';
 
   const showOnlyMessage = !isCompleted && isNew;
-  const showAllOptions = !isCompleted && !isRejected && !isNew;
+  const showAllOptions = !isCompleted && !isRejected &&currentUserDetails.admin ;
 
   if (!showOnlyMessage && !showAllOptions) return null;
+
+
+   const handleDeleteTask = async (id) => {
+    try {
+      const confirmToDelete = confirm("Do you want to delete this task?");
+      if (!confirmToDelete) return;
+
+      const deletedTask = await dispatch(deleteTaskThunk(id)).unwrap();
+      console.log(deletedTask);
+      
+      if(deletedTask){
+        showSuccess("Task deleted Sucessfully");
+        navigate("/admin");
+      }
+    } catch (error) {
+      console.log(error);
+      
+      showError(error);
+    }
+  };
 
   return (
     <div className="flex items-center gap-3">
@@ -18,15 +44,16 @@ const AdminOption = ({ task, onEdit, onDelete, onChat, type = "card" }) => {
         <>
           {type === "card" ? (
             <>
+            <Link to={`/editTask/${task.$id}`}>
               <button
-                onClick={() => onEdit(task)}
                 className="text-blue-400 hover:text-blue-300"
                 title="Edit Task"
               >
                 <FaEdit size={20} />
               </button>
+            </Link>
               <button
-                onClick={() => onDelete(task.$id)}
+                onClick={() => {handleDeleteTask(task.$id)}}
                 className="text-red-400 hover:text-red-300"
                 title="Delete Task"
               >
@@ -39,7 +66,7 @@ const AdminOption = ({ task, onEdit, onDelete, onChat, type = "card" }) => {
                 <FaRegEdit className="w-10 h-10 p-2 rounded-lg text-white bg-blue-600 hover:bg-blue-500 transition duration-200" />
               </Link>
               <button
-                onClick={() => onDelete(task.$id)}
+               onClick={() => {handleDeleteTask(task.$id)}}
                 className="w-10 h-10 p-2 rounded-lg text-white bg-red-600 hover:bg-red-500 transition duration-200"
                 title="Delete Task"
               >
@@ -52,7 +79,7 @@ const AdminOption = ({ task, onEdit, onDelete, onChat, type = "card" }) => {
 
       {(showOnlyMessage || showAllOptions) && (
         <button
-          onClick={() => onChat(task)}
+          // onClick={() => onChat(task)}
           className={`${type === "card" ? "ml-auto text-gray-400 hover:text-gray-200" : ""}`}
           title="Chat"
         >

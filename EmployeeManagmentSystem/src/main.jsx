@@ -39,7 +39,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <Suspense fallback={<Loader/>}>
-  <RouterProvider router={router}/>x
+  <RouterProvider router={router}/>
     </Suspense>
   </Provider>
 )

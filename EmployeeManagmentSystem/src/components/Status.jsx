@@ -11,7 +11,7 @@ const Status = ({task , isAdmin , type}) => {
             </span>
           ) : null} */}
 
-          {!task.isCompleted && isAdmin && task.userAction === 'accepted' && !task.status == 'rejected' ? (
+          {!task.isCompleted && isAdmin && task.userAction === 'accepted' && task.status == 'pending' ? (
             <span className="text-xs px-3 py-1 rounded-lg capitalize bg-blue-500 font-semibold text-white">
               Accepted
             </span>
@@ -42,7 +42,7 @@ className={`text-xs px-3 py-1  font-semibold flex justify-center items-center ro
     ? "Pending For approval"
     : task.status == 'new' && isAdmin 
     ? "Not Accepted" 
-    : !task.isCompleted 
+    : !task.isCompleted && !isAdmin && task.status == 'pending'
     ? "Uncompleted" 
     :""
     }

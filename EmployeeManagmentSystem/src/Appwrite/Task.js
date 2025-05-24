@@ -107,6 +107,8 @@ async deleteTask(documentId) {
 
     // Check if deletion was successful
     if (deletedTask) {
+      console.log(deletedTask, 'core');
+      
       return deletedTask;
     } else {
       return false;  

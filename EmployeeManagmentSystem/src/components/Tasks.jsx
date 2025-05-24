@@ -52,6 +52,16 @@ const Tasks = ({ item, onComplete, onEdit, onDelete, onChat }) => {
         </div>
 
       )}
+
+      {
+        item.status == "rejected" && 
+         <div className="mb-3">
+          <span className="text-xs bg-red-500 capitalize px-2 py-1 rounded-full">
+            Rejected By : {(item.rejectedBy == "user" && !currentUserDetails.admin ? "You" : (item.rejectedBy == 'admin' && currentUserDetails.admin ? "You" : currentUserDetails.admin ? "User" : "Admin") 
+            )}
+          </span>
+        </div>
+      }
 </Link>
    
 

@@ -52,18 +52,7 @@ const TaskFullPage = () => {
     }
   };
 
-  const handleDeleteTask = async (id) => {
-    try {
-      const confirmToDelete = confirm("Do you want to delete this task?");
-      if (!confirmToDelete) return;
-
-      const deletedTask = await dispatch(deleteTaskThunk(id)).unwrap();
-      showSuccess(deletedTask.message);
-      navigate("/admin");
-    } catch (error) {
-      showError(error);
-    }
-  };
+ 
 
   if (loading || !singleTask) {
     return <Loader />;
@@ -97,10 +86,29 @@ const TaskFullPage = () => {
         <h1 className="text-2xl font-bold text-white">{singleTask.Tittle}</h1>
         <span className="text-sm text-gray-300">{singleTask.Category}</span>
         {currentUserDetails.admin && (
-          <span className="text-sm text-gray-300">{singleTask.AssignTo}</span>
-        )}
+        <div className="mb-3">
+          <span className="text-xs bg-indigo-600 px-2 py-1 rounded-full">
+            Assigned To: {singleTask.AssignTo}
+          </span>
+        </div>
+
+      )}
+
+      {
+        singleTask.status == "rejected" && 
+         <div className="mb-3">
+          <span className="text-xs bg-red-500 capitalize px-2 py-1 rounded-full">
+            Rejected By : {(singleTask.rejectedBy == "user" && !currentUserDetails.admin ? "You" : (singleTask.rejectedBy == 'admin' && currentUserDetails.admin ? "You" : currentUserDetails.admin ? "User" : "Admin") 
+            )}
+          </span>
+        </div>
+      }
 
         <p className="text-sm text-gray-300">{singleTask.Description}</p>
+        {
+          singleTask.reasonForReject &&   <p className="text-sm text-gray-300">{singleTask.reasonForReject}</p>
+        }
+      
       </div>
 
       {/* Complete / Delete Button */}

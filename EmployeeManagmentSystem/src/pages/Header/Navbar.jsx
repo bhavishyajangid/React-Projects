@@ -63,7 +63,7 @@ const Navbar = () => {
     <>
       <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8 '>
         <div>
-          <Link to="/home">
+          <Link to={`${currentUserDetails.admin ? "/admin" : "/employee"}`}>
             {
                isLogin &&  <h1 className='text-xl font-medium  max-sm:lg'>Hello <br /> <span className='text-2xl font-medium max-md:text-xl max-sm:lg '>{currentUserDetails.userName} 👋</span>
                </h1>

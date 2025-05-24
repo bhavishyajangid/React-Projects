@@ -40,34 +40,24 @@ const taskSlice = createSlice({
       state.newTask.value += 1
     },
     updateTaskRealtime: (state, action) => {
-      // console.log(action.payload , 'update');
-      
-//       if(action.payload.admin){
-// const index = state.allTask.findIndex(task => task.$id === action.payload.$id);
-//       if (index !== -1) state.allTask[index] = action.payload;
-//       }else{
-//       }
-  //          const task = action.payload;
-  // const index = state.allTask.findIndex(t => t.$id === task.$id);
-  // if (index !== -1) {
-  //   state.allTask[index] = task;
-  // } else {
+     
     
   
 
-    console.log("working" , task);
-    categorizeAndUpdateState(task, state , true);
-  // }
+    console.log("working" , action.payload);
+    categorizeAndUpdateState(action.payload, state , true);
 
       
     },
     deleteTaskRealtime: (state, action) => {
-      state.tasks = state.tasks.filter(task => task.$id !== action.payload);
+      console.log("delete is working" , action.payload);
+      
+     
+          state.newTask.task = state.newTask.task.filter(task => task.$id !== action.payload); 
+          state.newTask.value -= state.newTask.value > 0 ? 1 : 0
+          state.allTask = state.allTask.filter(task => task.$id !== action.payload)
     },
-    setUpdateTask: (state, action) => {
-      // unused reducer – consider removing or implement if needed
-    },
-    setLoader: (state, action) => {
+    setLoader: (state, action) => { 
       state.loading = action.payload;
     }
   },
@@ -124,7 +114,6 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTaskThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = state.tasks.filter(task => task.$id !== action.payload.data);
       })
       .addCase(deleteTaskThunk.rejected, (state, action) => {
         state.loading = false;
@@ -151,7 +140,6 @@ export const {
   deleteTaskRealtime,
   addNewTask,
   updateTaskRealtime,
-  setUpdateTask,
   setLoader
 } = taskSlice.actions;
 

@@ -72,10 +72,7 @@ export const deleteTaskThunk = createAsyncThunk(
       console.log(deleteTask , "deletetask");
       
       if (deleteTask) {
-        return {
-          message: "Task deleted successfully",
-          data: deleteTask.$id
-        };
+        return deleteTask
       }
     } catch (error) {
       console.log(error);
@@ -92,7 +89,7 @@ export const handleUserTaskAction = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     const {taskId , userAction , message , adminAction} = params
     
-    
+     console.log(userAction , adminAction , 'rejectedBy');
 
     try {
       const { status, rejectedBy } = getTaskStatus(userAction, adminAction);
@@ -103,8 +100,10 @@ console.log(status , userAction , adminAction , 'action');
         status,
         rejectedBy,
         adminAction,
-        userRejectReason: status === "rejected" ? message || "" : 'none',
+        reasonForReject: status === "rejected" ? message || "" : 'none',
       };
+     
+      
 
       const response = await TaskServices.updateTask(taskId, updatePayload);
       console.log(response , 'response after update');
