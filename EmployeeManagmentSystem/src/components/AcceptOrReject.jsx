@@ -8,10 +8,13 @@ import { showError, showSuccess } from '../utlity/Error&Sucess';
 
 const AcceptOrReject = ({ task, isAdmin }) => {
   const [reject, setReject] = useState(false);
+  const [sendBack , setSendBack] = useState(false)
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
+  
   const handleAccept = useCallback(
     async (e) => {
       e.preventDefault();
@@ -34,29 +37,41 @@ const AcceptOrReject = ({ task, isAdmin }) => {
     [dispatch, task, isAdmin, navigate]
   );
 
-  const handleReject = useCallback(
+  const onSubmit = useCallback(
+    
     async (data) => {
+      console.log(data);
+      
       const payload = {
         taskId: task.$id,
         userAction: isAdmin ? task.userAction : "rejected" ,
-        adminAction: isAdmin ? 'rejected' : task.adminAction,
+        adminAction: sendBack ? "pending" : isAdmin ? 'rejected' : task.adminAction,
         message: data.reasonForReject || 'none',
+        sendBack : sendBack,
+        isCompleted : sendBack ? false : true
       };
+
       try {
         const result = await dispatch(handleUserTaskAction(payload)).unwrap();
         if (result) {
-          showSuccess('Task rejected successfully');
-          navigate('/rejectedTask');
+          if(result.status == "rejected"){
+            showSuccess('Task rejected successfully');
+            navigate('/rejectedTask');
+          }else{
+            showSuccess("Task SendBack To User")
+            navigate("/admin")
+          }
         }
       } catch (error) {
         showError(error);
       }
     },
-    [dispatch, task, isAdmin, navigate]
+    [dispatch, task, isAdmin, navigate , sendBack]
   );
 
+
   return (
-    <div className="flex flex-col gap-5 mb-5">
+    <div className="flex flex-col gap-5  mt-3">
       <div className="flex items-center justify-end gap-3">
         <button
           onClick={handleAccept}
@@ -66,6 +81,7 @@ const AcceptOrReject = ({ task, isAdmin }) => {
         >
           Accept
         </button>
+      
         <button
           type="button"
           onClick={() => setReject((prev) => !prev)}
@@ -74,11 +90,22 @@ const AcceptOrReject = ({ task, isAdmin }) => {
         >
           Reject
         </button>
+        {
+          ( isAdmin && task.isCompleted) && <button
+          onClick={() => setSendBack((prev) => !prev)}
+          className="bg-teal-500 px-3 py-1 rounded-lg text-sm capitalize"
+          type="button"
+          title="Complete Task"
+        >
+          Send Back
+        </button>
+        }
+          
       </div>
 
-      {reject && (
+      {( reject || sendBack) && (
         <div>
-          <form onSubmit={handleSubmit(handleReject)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               label="Reason for Reject"
               type="text"

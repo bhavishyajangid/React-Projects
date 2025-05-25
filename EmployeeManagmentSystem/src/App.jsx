@@ -28,7 +28,7 @@ function App() {
           if(userData){
               dispatch(login(userData))
               await dispatch(fetchTask(userData)).unwrap()
-              userData.admin ? navigate("/admin") :  navigate("/employee")
+              userData.admin ? navigate("/admin" , {replace : true}) :  navigate("/employee" , {replace : true})
             }else{
               navigate("/")
             }
@@ -50,9 +50,11 @@ function App() {
 
   return (
     <>
-    { isLogin  && <Navbar /> } 
+    { isLogin   && <Navbar /> } 
+    <Suspense fallback={<Loader/>}>
      <Outlet/>
-  <RealTimeTaskListner/>
+    </Suspense>
+     <RealTimeTaskListner/>
     <ToastContainer/>
   
     </>

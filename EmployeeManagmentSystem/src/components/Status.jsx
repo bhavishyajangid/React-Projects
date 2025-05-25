@@ -5,15 +5,9 @@ const Status = ({task , isAdmin , type}) => {
 <>
     {type === "card" && (
         <>
-          {/* {(task.isCompleted && !isAdmin) || task.status === "accepted" ? (
-            <span className="text-xs px-3 py-1 font-semibold rounded-lg capitalize bg-red-500 text-white">
-              {task.status === "accepted" ? "Approved" : "Pending for approval"}
-            </span>
-          ) : null} */}
-
-          {!task.isCompleted && isAdmin && task.userAction === 'accepted' && task.status == 'pending' ? (
-            <span className="text-xs px-3 py-1 rounded-lg capitalize bg-blue-500 font-semibold text-white">
-              Accepted
+          {!task.isCompleted &&  task.userAction === 'accepted' && task.status == 'pending' ? (
+            <span className={`text-xs px-3 py-1 rounded-lg capitalize  font-semibold text-white ${task.sendBack ? "bg-red-500" : "bg-blue-500"}`}>
+             {task.sendBack ? "send Back" : isAdmin ? "Accepted" : null}
             </span>
           ) : null}
         </>
@@ -29,7 +23,7 @@ className={`text-xs px-3 py-1  font-semibold flex justify-center items-center ro
     ? "bg-red-400"
     : task.status == 'new' && isAdmin 
     ? "bg-blue-500" 
-    : !task.isCompleted 
+    : !task.isCompleted && !isAdmin && task.status == 'pending'
     ? "text-orange-400" 
     :"hidden"
       }

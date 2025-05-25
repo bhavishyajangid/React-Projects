@@ -1,7 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import TaskServices from "../../Appwrite/Task";
-import dataBaseServices, { databaseServices } from "../../Appwrite/Database";
-import { updatenewTaskValue } from "../authSlice";
 import { getTaskStatus } from "../../utlity/getTaskStatus";
 
 //  1. Fetch Task
@@ -35,7 +33,7 @@ export const handleCompleteTask = createAsyncThunk(
   async ( taskId , {  rejectWithValue }) => {
     try {
     
-       const res = await TaskServices.updateTask(taskId , {isCompleted : true})
+       const res = await TaskServices.updateTask(taskId , {isCompleted : true , sendBack : false})
       if (res) {
         return res
       } else {
@@ -87,21 +85,23 @@ export const deleteTaskThunk = createAsyncThunk(
 export const handleUserTaskAction = createAsyncThunk(
   "task/userAction",
   async (params, { rejectWithValue }) => {
-    const {taskId , userAction , message , adminAction} = params
+    const {taskId , userAction , message , adminAction , sendBack , isCompleted} = params
     
      console.log(userAction , adminAction , 'rejectedBy');
 
     try {
-      const { status, rejectedBy } = getTaskStatus(userAction, adminAction);
-console.log(status , userAction , adminAction , 'action');
-
+      const { status, rejectedBy } = getTaskStatus(userAction, adminAction , sendBack);
+      
       const updatePayload = {
-       userAction,
+        userAction,
         status,
         rejectedBy,
         adminAction,
-        reasonForReject: status === "rejected" ? message || "" : 'none',
+        reasonForReject: message,
+        sendBack,
+        isCompleted
       };
+      console.log(updatePayload , 'updatepayload');
      
       
 
@@ -110,8 +110,12 @@ console.log(status , userAction , adminAction , 'action');
       
       return response;
     } catch (error) {
+      console.log(error);
+      
       return rejectWithValue("Something went wrong");
     }
   }
 );
+
+
 

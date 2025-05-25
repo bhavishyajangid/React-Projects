@@ -5,6 +5,8 @@ import TaskServices from '../../Appwrite/Task';
 import { toast } from 'react-toastify';
 
 const EditTask = () => {
+  console.log('running edit task');
+  
   const [task, setTask] = useState(null);
   const { taskId } = useParams();
 

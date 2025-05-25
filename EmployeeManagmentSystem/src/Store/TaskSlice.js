@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteTaskThunk , fetchTask, handleCompleteTask, handleUserTaskAction ,taskAllDetails} from "./thunks/taskThunk";
-import { AllTask } from "../export";
 import { categorizeAndUpdateState } from "../utlity/categorizeAndUpdateState ";
 import { resetTaskCategory } from "../utlity/resetTaskCategory";
-
+import {
+  deleteTaskThunk,
+  fetchTask,
+  handleCompleteTask,
+  handleUserTaskAction,
+  taskAllDetails,
+} from "./thunks/taskThunk";
 
 const taskSlice = createSlice({
   name: "task",
@@ -13,69 +17,60 @@ const taskSlice = createSlice({
     loading: false,
     error: null,
     completedTask: {
-       value : 0,
-       task : [],
-       name : "completed"
+      value: 0,
+      task: [],
+      name: "completed",
     },
-    newTask : {
-       value : 0,
-       task : [],
-       name : 'new'
+    newTask: {
+      value: 0,
+      task: [],
+      name: "new",
     },
-    acceptedTask : {
-       value : 0, 
-       task : [],
-       name : 'accepted'
+    acceptedTask: {
+      value: 0,
+      task: [],
+      name: "accepted",
     },
-    rejectedTask : {
-        value : 0,
-        task : [],
-        name : "rejected"
-    }
-
+    rejectedTask: {
+      value: 0,
+      task: [],
+      name: "rejected",
+    },
   },
   reducers: {
     addNewTask: (state, action) => {
-      state.newTask.task.push(action.payload)
-      state.newTask.value += 1
+      state.newTask.task.push(action.payload);
+      state.newTask.value += 1;
     },
     updateTaskRealtime: (state, action) => {
-     
-    
-  
-
-    console.log("working" , action.payload);
-    categorizeAndUpdateState(action.payload, state , true);
-
-      
+      categorizeAndUpdateState(action.payload, state, true);
     },
     deleteTaskRealtime: (state, action) => {
-      console.log("delete is working" , action.payload);
-      
-     
-          state.newTask.task = state.newTask.task.filter(task => task.$id !== action.payload); 
-          state.newTask.value -= state.newTask.value > 0 ? 1 : 0
-          state.allTask = state.allTask.filter(task => task.$id !== action.payload)
+      state.newTask.task = state.newTask.task.filter(
+        (task) => task.$id !== action.payload
+      );
+      state.newTask.value -= state.newTask.value > 0 ? 1 : 0;
+      state.allTask = state.allTask.filter(
+        (task) => task.$id !== action.payload
+      );
     },
-    setLoader: (state, action) => { 
+    setLoader: (state, action) => {
       state.loading = action.payload;
-    }
+    },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       // Fetch Task
-      .addCase(fetchTask.pending, state => {
+      .addCase(fetchTask.pending, (state) => {
         state.loaderForSkeleton = true;
       })
       .addCase(fetchTask.fulfilled, (state, action) => {
-        
         state.loaderForSkeleton = false;
-        resetTaskCategory(state)
-      
-           action.payload.res.forEach(task => {
-                categorizeAndUpdateState(task, state , false );
-            });
-       
+        resetTaskCategory(state);
+
+        action.payload.res.forEach((task) => {
+          categorizeAndUpdateState(task, state, false);
+        });
       })
       .addCase(fetchTask.rejected, (state, action) => {
         state.loaderForSkeleton = false;
@@ -83,13 +78,15 @@ const taskSlice = createSlice({
       })
 
       // Update Task
-      .addCase(handleCompleteTask.pending, state => {
+      .addCase(handleCompleteTask.pending, (state) => {
         state.loading = true;
       })
       .addCase(handleCompleteTask.fulfilled, (state, action) => {
         state.loading = false;
-        state.allTask
-        state.allTask = state.allTask.filter(task => task.$id !== action.payload.$id)
+        state.allTask;
+        state.allTask = state.allTask.filter(
+          (task) => task.$id !== action.payload.$id
+        );
       })
       .addCase(handleCompleteTask.rejected, (state, action) => {
         state.loading = false;
@@ -97,7 +94,7 @@ const taskSlice = createSlice({
       })
 
       // Get Single Task
-      .addCase(taskAllDetails.pending, state => {
+      .addCase(taskAllDetails.pending, (state) => {
         state.loading = true;
       })
       .addCase(taskAllDetails.fulfilled, (state, action) => {
@@ -109,7 +106,7 @@ const taskSlice = createSlice({
       })
 
       // Delete Task
-      .addCase(deleteTaskThunk.pending, state => {
+      .addCase(deleteTaskThunk.pending, (state) => {
         state.loading = true;
       })
       .addCase(deleteTaskThunk.fulfilled, (state, action) => {
@@ -120,27 +117,21 @@ const taskSlice = createSlice({
         state.error = action.payload;
       })
 
-      
-      .addCase(handleUserTaskAction.pending, state => {
+      .addCase(handleUserTaskAction.pending, (state) => {
         state.loading = true;
       })
-      .addCase(handleUserTaskAction.fulfilled, (state, action) => { 
+      .addCase(handleUserTaskAction.fulfilled, (state, action) => {
         state.loading = false;
-        console.log('running ');
-        
+        console.log("running ");
       })
       .addCase(handleUserTaskAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-  }
+      });
+  },
 });
 
-export const {
-  deleteTaskRealtime,
-  addNewTask,
-  updateTaskRealtime,
-  setLoader
-} = taskSlice.actions;
+export const { deleteTaskRealtime, addNewTask, updateTaskRealtime, setLoader } =
+  taskSlice.actions;
 
 export default taskSlice;

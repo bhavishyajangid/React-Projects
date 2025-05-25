@@ -8,6 +8,5 @@ export const getTaskStatus = (userAction, adminAction) => {
   if (userAction === "accepted" && adminAction === "accepted") {
     return { status: "accepted", rejectedBy: null };
   }
-
   return { status: "pending", rejectedBy: null };
 };

@@ -62,7 +62,7 @@ const SetNewTask = ({ task }) => {
     try {
       await TaskServices.updateTask(task.$id, data);
       toast.success("Task updated sucessfully");
-      navigate(`/id/${task.$id}`);
+      navigate(`/id/${task.$id}` , {replace : true});
     } catch (error) {
       console.log(error);
       

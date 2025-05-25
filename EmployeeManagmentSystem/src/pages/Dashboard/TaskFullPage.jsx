@@ -1,20 +1,18 @@
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../components/Loader";
+import { AcceptOrReject, AdminOption, Status } from "../../export";
 import {
-  taskAllDetails,
-  deleteTaskThunk,
-  handleUserTaskAction,
   handleCompleteTask,
+  taskAllDetails
 } from "../../Store/thunks/taskThunk";
 import { showError, showSuccess } from "../../utlity/Error&Sucess";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import MessageIcon from "../../components/MessageIcon";
-import Loader from "../../components/Loader";
 import ChatBox from "../admin/ChatBox";
-import { AcceptOrReject, AdminOption, Button, Input, Status } from "../../export";
 
 const TaskFullPage = () => {
+  console.log('running taskfullpage');
+  
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const { loading } = useSelector((state) => state.taskSlice);
   const [singleTask, setSingleTask] = useState();
@@ -124,9 +122,10 @@ const TaskFullPage = () => {
               onClick={() => {
                 completeTask();
               }}
-              className="w-44 h-8 bg-sky-400 text-gray-900 font-medium text-md rounded-lg hover:bg-gray-900 hover:text-white transition duration-300"
+              className={`w-44 h-8  text-gray-900 font-semibold text-md rounded-lg hover:bg-gray-900 hover:text-white transition duration-300 ${singleTask.sendBack ? "bg-green-500 text-white" : "bg-sky-500"}`}
             >
-              Complete Task
+              {singleTask.sendBack ? "Re-submitted" : "Complete Task"}
+
             </button>
           )
         )}

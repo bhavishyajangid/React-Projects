@@ -1,6 +1,8 @@
 export const categorizeAndUpdateState = (task, state , update = false ) => {
 
 const removeTaskFromCategory = (category, task) => {
+
+  
   if (Array.isArray(category)) {
     // allTask: direct array
     const index = category.findIndex(t => t.$id === task.$id);
@@ -57,21 +59,23 @@ console.log(task , "in the new");
     state.completedTask.value += 1
     if(update) removeTaskFromCategory(state.allTask , task)
   } else if (!task.isCompleted && task.state == "pending") {
-    console.log(task, "in the alltask");
+    console.log("in the alltask");
     let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
     if (index !== -1) {
       state.allTask[index] = task;
     } else {
       state.allTask.push(task);
-      if (update) removeTaskFromCategory(state.newTask, task);
+      if (update) removeTaskFromCategory(task.sendBack ? state.completedTask : state.newTask, task);
     }
   } else {
+    console.log("else");
+    
     let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
     if (index !== -1) {
       state.allTask[index] = task;
     } else {
       state.allTask.push(task);
-      if (update) removeTaskFromCategory(state.newTask, task);
+      if (update) removeTaskFromCategory(task.sendBack ? state.completedTask : state.newTask, task);
     }
   }
 }
