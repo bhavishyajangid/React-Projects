@@ -4,7 +4,7 @@ const UserSkeleton = () => {
   return (
     <div className='w-full px-14 mt-10 flex flex-col gap-5 max-sm:px-5'>
         {
-            Array.from({length : 20}).map((item , index) => (
+            Array.from({length : 10}).map((item , index) => (
 
     <div key={index} class='w-full px-5 py-3 bg-gray-300 rounded-md flex justify-between items-center animate-pulse'>
   <div class='flex flex-col'>

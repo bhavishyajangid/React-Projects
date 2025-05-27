@@ -1,7 +1,7 @@
 
 import './App.css'
 import { useState , useEffect } from 'react';
-import {  Navbar} from './export.js'
+import {  CardSkeleton, Navbar} from './export.js'
 import { Outlet, useNavigate} from 'react-router-dom'
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,8 @@ import { Suspense } from 'react';
 import  { login } from './Store/authSlice.js';
 import RealTimeTaskListner from './components/RealTimeTaskListner.jsx';
 import { fetchTask } from './Store/thunks/taskThunk.js';
+import { FaLeaf } from 'react-icons/fa';
+import { showError } from './utlity/Error&Sucess.js';
 
 
 
@@ -27,25 +29,26 @@ function App() {
           const userData  = await authServices.getCurrentUser()
           if(userData){
               dispatch(login(userData))
+              userData.admin ? navigate("/admin" , {replace : true}) :  navigate
+              ("/employee" , {replace : true})
               await dispatch(fetchTask(userData)).unwrap()
-              userData.admin ? navigate("/admin" , {replace : true}) :  navigate("/employee" , {replace : true})
             }else{
               navigate("/")
             }
          } catch (error) {
           console.log(error);
-           toast.error(error)
+           showError(error)
            navigate("/")
          }finally{
-          setLoader(false)
+           setLoader(false)
          }
        }
    
        checkLogin()
-     },[dispatch , navigate])
+     },[dispatch ])
    
      if(loader){
-      return <Loader/>
+      return <CardSkeleton/>
      }
 
   return (

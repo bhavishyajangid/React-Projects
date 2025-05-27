@@ -2,8 +2,19 @@ import React from 'react'
 
 const CardSkeleton = () => {
   return (
-<>
-{/* // cards  */}
+<div>
+ <div class="w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8 animate-pulse">
+  <div class="h-6 w-1/2 bg-gray-200 rounded"></div>
+  <div class="flex gap-5">
+    <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+    <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+    <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+    <div class="h-6 w-1/4 bg-gray-200 rounded"></div>
+  </div>
+</div>
+<div class="w-full h-10 bg-gray-200 rounded mt-5 animate-pulse">
+  </div>
+
 <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-5 max-md:justify-items-center mt-10 px-10">
 {
    Array.from({length : 20}).map((item , index) => (
@@ -19,10 +30,10 @@ const CardSkeleton = () => {
 
 </div>
 
-  ))
-}
+  ))}
 </div>
-</>
+
+</div>
 
   )
 }
