@@ -1,35 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toast } from "react-toastify";
 import authServices from '../../Appwrite/Auth';
 import Input from '../../components/Input';
-import { Button, Loader, VerifyOtp } from '../../export';
+import { Button, CardSkeleton } from '../../export';
 import { login } from '../../Store/authSlice';
-import { resetState, setGeneratedOtp, setLoader, setOtpSend, setResend, setUserEmailVerify } from '../../Store/otpSendSlice';
 import { fetchTask } from '../../Store/thunks/taskThunk';
 
 const Login = () => {
-
-   const { otpSend , generatedOtp , loader, resend , userEmailVerify} = useSelector(state => state.otpSendSlice)
     const { register, handleSubmit } = useForm();
-    const [second, setSecond] = useState(60);
-    const [userData , setUserData] = useState("")
-    const emailOtp = useRef(null);
-    const firstRender = useRef(true)
+    const [loader, setLoader] = useState(false);;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const location = useLocation()
 
 
     const LoginDetails = async(data) => {
-      setUserData(data)
-      if(userEmailVerify){
-         dispatch(setOtpSend(true))
-      }else{
+      setLoader(true)
         try {
-          dispatch(setLoader(true))
           const loginUser = await authServices.login(data)
           if(loginUser){
              loginUser.admin ? navigate("/admin" , {replace : true}) : navigate("/employee" , {replace : true})
@@ -46,84 +35,11 @@ const Login = () => {
         }
           
       }
-      }
     
-      useEffect(() => {
-        if (firstRender.current) {
-          return;
-        }
-      
-        // Asynchronous function to send OTP
-        const handleSendOtp = async () => {
-          if (otpSend) {
-            try {
-              dispatch(setLoader(true))
-              const otp = await authServices.sendOtp(userData);  // Wait for OTP to be sent
-              console.log(otp);
-              
-              
-              // Check if the OTP was successfully generated and sent
-              if (otp) {
-                console.log("Generated OTP:", otp);  // Logs the OTP value
-                dispatch(setGeneratedOtp(otp));  // Set OTP in Redux store (dispatch the resolved OTP)
-                toast.success("OTP sent successfully!");
-              } else {
-                toast.error("Failed to send OTP.");
-              }
-            } catch (error) {
-              toast.error("Error sending OTP.");
-            }finally{
-               dispatch(setLoader(false))
-            }
-          }
-        };
-      
-        handleSendOtp();  // Invoke the OTP sending function
-      
-      }, [otpSend, resend]);  // Run the effect when otpSend or resend changes
-      
-
-
-    useEffect(() => {
-        if (firstRender.current) {
-          firstRender.current = false;
-          return;
-        }
-    
-        if (second == 0) return;
-        // change the timer
-        const timer = setInterval(() => {
-          setSecond((prev) => (prev > 0 ? prev - 1 : prev));
-        }, 1000);
-    
-        return () => clearInterval(timer);
-      }, [otpSend , resend]);
-
-      useEffect(() => {
-        setSecond(60)
-         dispatch(resetState())
-      },[location , dispatch])
-
-      const verifyEmailOtp = () => {
-    
-        const otpVerify = authServices.verifyOtp(emailOtp.current.value , generatedOtp)
-        if(otpVerify){
-          dispatch(setUserEmailVerify(true))
-          toast.success("OTP Verified!");
-        }else{
-          toast.error("Invalid OTP, please try again.");
-        }
-        
-      };
-
-      
-  const resendOtp = () => {
-    setSecond(60);
-    dispatch(setResend(!resend))
-}
+     
      
     if(loader){
-      return <Loader/>
+      return <CardSkeleton/>
     }
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#111111]">
@@ -140,13 +56,10 @@ const Login = () => {
         
        
         <Input type='password' label='Password'
-        
          {...register("password" , {required : true})} 
         />
 
-       {
-          !userEmailVerify && generatedOtp !== null && <VerifyOtp second={second} emailOtp={emailOtp} verifyEmailOtp = {verifyEmailOtp} resendOtp ={resendOtp}  />
-        }
+ 
 
 
 

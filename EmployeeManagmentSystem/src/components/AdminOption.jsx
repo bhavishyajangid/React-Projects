@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { showError , showSuccess } from '../utlity/Error&Sucess';
 import { deleteTaskThunk } from '../Store/thunks/taskThunk';
+import { setChatOpen } from '../Store/chatBoxSlice';
 const AdminOption = ({ task,type = "card" }) => {
   console.log(task , "task");
   const {currentUserDetails} = useSelector(state => state.authSlice)
@@ -79,7 +80,7 @@ const AdminOption = ({ task,type = "card" }) => {
 
       {(showOnlyMessage || showAllOptions) && (
         <button
-          // onClick={() => onChat(task)}
+          onClick={() => dispatch(setChatOpen({isOpen : true , user : currentUserDetails}))}
           className={`${type === "card" ? "ml-auto text-gray-400 hover:text-gray-200" : ""}`}
           title="Chat"
         >

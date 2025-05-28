@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Button = ({type , className, btn ,logout = () => {} }) => {
+const Button = ({type , className, btn ,onClick = () => {} }) => {
   return (
     <button
-    onClick={() => {logout()}}
+    onClick={() => {onClick()}}
     type={type}
     className={`${className}`}
   >

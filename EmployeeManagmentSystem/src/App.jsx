@@ -1,7 +1,7 @@
 
 import './App.css'
 import { useState , useEffect } from 'react';
-import {  CardSkeleton, Navbar} from './export.js'
+import {  CardSkeleton, ChatBox, Navbar} from './export.js'
 import { Outlet, useNavigate} from 'react-router-dom'
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,8 +19,9 @@ import { showError } from './utlity/Error&Sucess.js';
 function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [loader , setLoader] = useState(true)
     const{isLogin} = useSelector(state => state.authSlice)
+    const { loaderForSkeleton} = useSelector(state => state.taskSlice)
+    const [loader , setLoader]  = useState(true)
 
 
      useEffect(() => {
@@ -40,7 +41,7 @@ function App() {
            showError(error)
            navigate("/")
          }finally{
-           setLoader(false)
+          setLoader(false)
          }
        }
    
@@ -48,12 +49,16 @@ function App() {
      },[dispatch ])
    
      if(loader){
+      return <Loader/>
+     }
+     if(isLogin && loaderForSkeleton){
       return <CardSkeleton/>
      }
 
   return (
     <>
-    { isLogin   && <Navbar /> } 
+    { isLogin   && <Navbar /> }
+    <ChatBox/> 
     <Suspense fallback={<Loader/>}>
      <Outlet/>
     </Suspense>

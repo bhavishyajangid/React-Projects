@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from '../../export'
+import { FaCommentAlt} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../Store/authSlice'
@@ -45,9 +46,10 @@ const Navbar = () => {
     {
      tittle : "Logout",
      isVisible : true,
-     logout : handleLogout,
+     onClick : handleLogout,
      type : "button"
     },
+   
     
 
 
@@ -77,13 +79,20 @@ const Navbar = () => {
             navbarOpiton.map((item) => (
               <Link key={item.tittle} to={item.link}>
                 {
-                  item.isVisible &&  <Button  type={item.type} btn={item.tittle} logout={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600 max-sm:hidden"/>
+                  item.isVisible &&  <Button  type={item.type} btn={item.tittle} onClick={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600 max-sm:hidden"/>
                 }
                
               </Link>
             ))
 
         }
+         <button
+                  onClick={() => dispatch(setChatOpen({isOpen : true , user : currentUserDetails}))}
+                  className={`"ml-auto text-gray-400 hover:text-gray-200"}`}
+                  title="Chat"
+                >
+                  <FaCommentAlt size={20} />
+          </button>
         <button onClick={() => {toggleSidebar()}} className='text-3xl max-sm:block hidden'><IoMenu /></button>
         
         </div>
