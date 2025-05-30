@@ -1,6 +1,6 @@
 
 import { useSelector } from 'react-redux'
-import { AllTask, Loader, Tasks } from '../../export'
+import { AllTask, Loader } from '../../export'
 
 const CompletedTask = () => {
     const {completedTask , loading} = useSelector(state => state.taskSlice)

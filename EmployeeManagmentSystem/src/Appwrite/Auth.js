@@ -84,7 +84,7 @@ export class authService {
     
       } catch (error) {
         console.error("Error in getCurrentUser:", error.message);
-        return null;
+        return false;
       }
     }
 

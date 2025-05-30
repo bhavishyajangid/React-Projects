@@ -1,46 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import AdminDashboard from './AdminDashboard'
-import EmployeeDashboard from './EmployeeDashboard'
-import messageServices from '../../Appwrite/Message'
-import { toast } from 'react-toastify'
-import { setFetched, setUnseenMessage} from '../../Store/chatBoxSlice'
+import { memo, Suspense, useState } from "react";
+import { FaBuilding, FaMoneyBill, FaUsers } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Outlet } from "react-router";
+import { ToastContainer } from "react-toastify";
+import RealTimeTaskListner from "../../components/RealTimeTaskListner";
+import Sidebar from "../../components/Sidebar";
+import { ChatBox, Navbar, Loader } from "../../export";
 
 const Home = () => {
-   const dispatch = useDispatch()
-    const{currentUserDetails} = useSelector(state => state.authSlice)
-    const{fetched} = useSelector(state => state.chatBoxSlice)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // useEffect(() => {
-    //   const fetchUnseenMessage = async() => {
-    //     try {
-    //       const messageValue = await messageServices.unseenMessage ( currentUserDetails.admin ? "admin" :  currentUserDetails.userName)
-    //       console.log(messageValue , messageValue.length , "message");
-          
-    //       if (Array.isArray(messageValue)) {
-    //         dispatch(setUnseenMessage(messageValue));
-    //       } else {
-    //         console.error("Unseen message data is not an array", messageValue);
-    //         dispatch(setUnseenMessage([])); // Fallback to empty array
-    //       }
-    //     } catch (error) {
-    //         toast.error("faild to fetch unseen message")
-    //     }
-    //   }
-
-    //   if(fetched){
-    //     fetchUnseenMessage()
-    //     dispatch(setFetched(false))
-    //   }
-    // } , [])
-    
   return (
-    <div>
-        {
-           currentUserDetails?.admin ? <AdminDashboard/> : <EmployeeDashboard/>
-        }
-    </div>
-  )
-}
+    <>
+      <div className="min-h-screen bg-gray-100 text-gray-800 font-sans flex flex-col">
+        <Navbar onClose={() => setSidebarOpen((prev) => !prev)} />
+        <div className="flex flex-1 flex-col md:flex-row relative">
+          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-export default Home
+          <main className="flex-1 p-4 overflow-y-auto">
+            <ChatBox />
+            <Suspense fallback={<Loader />}>
+              <Outlet />
+            </Suspense>
+            <RealTimeTaskListner />
+            <ToastContainer />
+          </main>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default memo(Home);

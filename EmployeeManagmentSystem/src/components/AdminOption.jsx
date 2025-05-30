@@ -47,7 +47,7 @@ const AdminOption = ({ task,type = "card" }) => {
             <>
             <Link to={`/editTask/${task.$id}`}>
               <button
-                className="text-blue-400 hover:text-blue-300"
+                className="text-blue-500 hover:text-blue-300 mt-1"
                 title="Edit Task"
               >
                 <FaEdit size={20} />
@@ -55,7 +55,7 @@ const AdminOption = ({ task,type = "card" }) => {
             </Link>
               <button
                 onClick={() => {handleDeleteTask(task.$id)}}
-                className="text-red-400 hover:text-red-300"
+                className="text-red-500 hover:text-red-300"
                 title="Delete Task"
               >
                 <FaTrashAlt size={20} />
@@ -64,7 +64,7 @@ const AdminOption = ({ task,type = "card" }) => {
           ) : (
             <>
               <Link to={`/editTask/${task.$id}`}>
-                <FaRegEdit className="w-10 h-10 p-2 rounded-lg text-white bg-blue-600 hover:bg-blue-500 transition duration-200" />
+                <FaRegEdit />
               </Link>
               <button
                onClick={() => {handleDeleteTask(task.$id)}}

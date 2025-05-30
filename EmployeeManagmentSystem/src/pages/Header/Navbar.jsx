@@ -1,20 +1,12 @@
-import React from 'react'
-import { Button } from '../../export'
-import { FaCommentAlt} from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../Store/authSlice'
-import { toast } from "react-toastify"
-import authServices from '../../Appwrite/Auth'
-import { IoMenu } from "react-icons/io5";
-import { useState } from 'react'
-import Sidebar from '../../components/Sidebar'
-import { setChatOpen } from '../../Store/chatBoxSlice'
-import { LuMessageSquareMore } from "react-icons/lu";
-const Navbar = () => {
+import { FaBars } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { toast } from "react-toastify";
+import authServices from '../../Appwrite/Auth';
+import { logout } from '../../Store/authSlice';
+const Navbar = ({onClose}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [isOpen, setIsOpen] = useState(false);
   const {currentUserDetails , isLogin} = useSelector(state => state.authSlice)
   
   
@@ -57,47 +49,21 @@ const Navbar = () => {
 
 
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+ 
 
   return (
     <>
-      <nav className='w-full h-20 flex justify-between items-center px-14 mt-5 max-md:px-8 '>
-        <div>
-          <Link to={`${currentUserDetails.admin ? "/admin" : "/employee"}`}>
-            {
-               isLogin &&  <h1 className='text-xl font-medium  max-sm:lg'>Hello <br /> <span className='text-2xl font-medium max-md:text-xl max-sm:lg '>{currentUserDetails.userName} 👋</span>
-               </h1>
-           } 
-           </Link>
-           
-        </div>
-        
-        <div className='flex gap-5'>
-        {
-            navbarOpiton.map((item) => (
-              <Link key={item.tittle} to={item.link}>
-                {
-                  item.isVisible &&  <Button  type={item.type} btn={item.tittle} onClick={item.logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm font-medium border-none hover:bg-red-600 max-sm:hidden"/>
-                }
-               
-              </Link>
-            ))
-
-        }
-         <button
-                  onClick={() => dispatch(setChatOpen({isOpen : true , user : currentUserDetails}))}
-                  className={`"ml-auto text-gray-400 hover:text-gray-200"}`}
-                  title="Chat"
-                >
-                  <FaCommentAlt size={20} />
+       <div className="bg-teal-600 text-white flex justify-between items-center px-6 py-4 shadow-md">
+        <div className="text-xl md:text-2xl font-bold tracking-wider">Welcome, Admin</div>
+        <div className="md:hidden">
+          <button onClick={() => onClose()}>
+            <FaBars className="text-2xl" />
           </button>
-        <button onClick={() => {toggleSidebar()}} className='text-3xl max-sm:block hidden'><IoMenu /></button>
-        
         </div>
-      </nav>
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} navbarOpiton={navbarOpiton}/>
+        <button 
+        onClick={() => {handleLogout()}} 
+        className="hidden text-sm font-medium md:block bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow">Logout</button>
+      </div>
         </>
 )
 }

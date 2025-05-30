@@ -1,7 +1,7 @@
 
 import './App.css'
 import { useState , useEffect } from 'react';
-import {  CardSkeleton, ChatBox, Navbar} from './export.js'
+import {  AdminDashboardSkeleton, CardSkeleton, ChatBox, Home, Login, Navbar} from './export.js'
 import { Outlet, useNavigate} from 'react-router-dom'
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +34,7 @@ function App() {
               ("/employee" , {replace : true})
               await dispatch(fetchTask(userData)).unwrap()
             }else{
-              navigate("/")
+              navigate("/login")
             }
          } catch (error) {
           console.log(error);
@@ -47,24 +47,22 @@ function App() {
    
        checkLogin()
      },[dispatch ])
-   
-     if(loader){
-      return <Loader/>
+
+
+     if(loader && !isLogin){
+       return <Loader/>
      }
-     if(isLogin && loaderForSkeleton){
-      return <CardSkeleton/>
+
+      if(isLogin && loaderForSkeleton){
+      return <AdminDashboardSkeleton/>
      }
+
+    
+    
 
   return (
     <>
-    { isLogin   && <Navbar /> }
-    <ChatBox/> 
-    <Suspense fallback={<Loader/>}>
-     <Outlet/>
-    </Suspense>
-     <RealTimeTaskListner/>
-    <ToastContainer/>
-  
+    <Outlet/>
     </>
   )
 }
