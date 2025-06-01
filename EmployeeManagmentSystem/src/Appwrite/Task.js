@@ -156,6 +156,46 @@ async deleteTask(documentId) {
     throw new Error(error)
   }
  }
+
+ async filterAllTask({employeeId ,startDate , endDate}){
+  console.log(startDate , endDate , employeeId, );
+  
+         let query = [
+              Query.equal('isCompleted', false),               
+              Query.equal('status', 'pending'), 
+         ]
+
+         if(employeeId){
+            query.push(Query.equal('TaskId' , employeeId))
+         }
+
+         if(startDate){
+            query.push(Query.greaterThanEqual('Date' , startDate))
+         }
+
+         if (endDate) {
+            query.push(Query.lessThanEqual('Date', endDate));
+  }
+   
+
+
+  try {
+    const res = await this.Task.listDocuments(
+       conf.appwriteDatabaseId,
+       conf.appwriteAllTaskCollectionId,
+       query
+    )
+
+    return res.documents || []
+    
+  } catch (error) {
+    console.log(error);
+    throw new Error()
+    
+    
+  }
+
+ }
 }
 
 const TaskServices = new taskService();

@@ -23,7 +23,8 @@ const authSlice = createSlice({
     initialState: {
        currentUserDetails : [],
        isLogin : false ,
-       isEmailExist : false
+       isEmailExist : false,
+        allEmployee : [],
     },
     reducers : {
         login : (state , action) => {
@@ -38,7 +39,10 @@ const authSlice = createSlice({
         
         updatenewTaskValue : (state , action) => {
             state.currentUserDetails.completedTask += action.payload
-        }
+        },
+        setAllEmployee : (state , action) => {
+                 state.allEmployee = action.payload
+           }
     },
 
    
@@ -47,5 +51,5 @@ const authSlice = createSlice({
 
   
 
-export const {login , logout , updatenewTaskValue } = authSlice.actions
+export const {login , logout , updatenewTaskValue , setAllEmployee} = authSlice.actions
 export default authSlice

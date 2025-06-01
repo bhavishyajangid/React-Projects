@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
-import { AcceptOrReject, AdminOption, Status } from "../../export";
+import { AcceptOrReject, AdminOption, Status, TaskFullPageSkeleton } from "../../export";
 import {
   handleCompleteTask,
   taskAllDetails,
@@ -47,7 +47,7 @@ const TaskFullPage = () => {
   };
 
   if (loading || !singleTask) {
-    return <Loader />;
+    return <TaskFullPageSkeleton/>
   }
 
   return (
@@ -90,7 +90,7 @@ const TaskFullPage = () => {
         {currentUserDetails.admin && (
           <div>
             <label className="text-sm font-medium text-gray-600">Assigned To :  </label>
-            <p className="inline-block bg-indigo-300 text-indigo-800 text-xs px-3 py-1 rounded-full font-medium">
+            <p className="inline-block bg-indigo-300 text-indigo-800 text-sm px-3 py-1 rounded-full font-medium">
               {singleTask.AssignTo}
             </p>
           </div>
@@ -145,7 +145,7 @@ const TaskFullPage = () => {
               onClick={completeTask}
               className={`px-6 py-2 rounded-lg font-medium text-sm transition duration-300 ${
                 singleTask.sendBack
-                  ? "bg-green-100 text-green-800 hover:bg-green-200"
+                  ? "bg-green-200 text-green-800 hover:bg-green-200"
                   : "bg-blue-100 text-blue-800 hover:bg-blue-200"
               }`}
             >
@@ -153,11 +153,6 @@ const TaskFullPage = () => {
             </button>
           )
         )}
-      </div>
-
-      {/* Chat Box */}
-      <div className="pt-8">
-        <ChatBox />
       </div>
     </div>
   );

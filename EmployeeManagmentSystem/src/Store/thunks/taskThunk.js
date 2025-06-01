@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import TaskServices from "../../Appwrite/Task";
 import { getTaskStatus } from "../../utlity/getTaskStatus";
+import { data } from "react-router";
 
 //  1. Fetch Task
 export const fetchTask = createAsyncThunk(
@@ -115,7 +116,22 @@ export const handleUserTaskAction = createAsyncThunk(
       return rejectWithValue("Something went wrong");
     }
   }
+
+  
 );
+
+export const handleFilterTask = createAsyncThunk(
+  'task/filter' ,
+
+  async(data , {rejectWithValue}) => {
+     try {
+       const res =  TaskServices.filterAllTask(data)
+       return res
+     } catch (error) {
+        return rejectWithValue(error)
+     }
+  }
+)
 
 
 

@@ -5,8 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { showError , showSuccess } from '../utlity/Error&Sucess';
 import { deleteTaskThunk } from '../Store/thunks/taskThunk';
 import { setChatOpen } from '../Store/chatBoxSlice';
+import { Icons } from 'react-toastify';
 const AdminOption = ({ task,type = "card" }) => {
-  console.log(task , "task");
   const {currentUserDetails} = useSelector(state => state.authSlice)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -39,6 +39,8 @@ const AdminOption = ({ task,type = "card" }) => {
     }
   };
 
+ 
+
   return (
     <div className="flex items-center gap-3">
       {showAllOptions && (
@@ -47,10 +49,10 @@ const AdminOption = ({ task,type = "card" }) => {
             <>
             <Link to={`/editTask/${task.$id}`}>
               <button
-                className="text-blue-500 hover:text-blue-300 mt-1"
+                className="text-blue-500 hover:text-blue-300 text-2xl mt-1"
                 title="Edit Task"
               >
-                <FaEdit size={20} />
+                <FaEdit />
               </button>
             </Link>
               <button
@@ -64,11 +66,11 @@ const AdminOption = ({ task,type = "card" }) => {
           ) : (
             <>
               <Link to={`/editTask/${task.$id}`}>
-                <FaRegEdit />
+                <FaRegEdit className='text-2xl text-gray-600 hover:text-gray-900' />
               </Link>
               <button
                onClick={() => {handleDeleteTask(task.$id)}}
-                className="w-10 h-10 p-2 rounded-lg text-white bg-red-600 hover:bg-red-500 transition duration-200"
+                className='text-2xl text-gray-600 hover:text-red-500'
                 title="Delete Task"
               >
                 <FaRegTrashAlt size={20} />
@@ -81,7 +83,7 @@ const AdminOption = ({ task,type = "card" }) => {
       {(showOnlyMessage || showAllOptions) && (
         <button
           onClick={() => dispatch(setChatOpen({isOpen : true , user : currentUserDetails}))}
-          className={`${type === "card" ? "ml-auto text-gray-400 hover:text-gray-200" : ""}`}
+          className={`${type === "card" ? "ml-auto" : "" } text-gray-600 hover:text-gray-900 text-5xl`}
           title="Chat"
         >
           <FaCommentAlt size={20} />

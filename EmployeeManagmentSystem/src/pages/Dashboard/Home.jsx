@@ -17,7 +17,7 @@ const Home = () => {
         <div className="flex flex-1 flex-col md:flex-row relative">
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-          <main className="flex-1 p-4 overflow-y-auto">
+          <main className="flex-1  overflow-x-auto p-3">
             <ChatBox />
             <Suspense fallback={<Loader />}>
               <Outlet />

@@ -9,7 +9,7 @@ const TaskCard = ({ item }) => {
 
   
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col justify-between min-h-[200px] min-w-[320px]">
+    <div className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col justify-between min-h-[180px] min-w-[320px]">
       <Link to={`/id/${item.$id}`} className="flex flex-col gap-3 h-full">
 
         {/* Header: Urgent Badge + Status */}

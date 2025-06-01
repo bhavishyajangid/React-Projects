@@ -112,7 +112,7 @@ const SetNewTask = ({ task }) => {
      
      if (task) {
       toast.success("Task created successfully.");
-      navigate("/admin");
+      navigate("/task");
       
     } else if (task == false) {
       toast.error(`${data.AssignTo} Employee not found.`);
@@ -149,61 +149,66 @@ const SetNewTask = ({ task }) => {
     return <Loader />;
   }
   return (
-    <div className="w-11/12 min-h-96 m-auto p-5 flex flex-col justify-center    bg-[#1C1C1C] rounded-lg mt-10">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex max-sm:flex-col  py-5 "
-        action=""
-      >
-        <div className="w-1/2  max-sm:w-full max-sm:pr-0 pr-10 flex flex-col gap-8 ">
-       {input.map((item) => (
-  <Input
-    key={item.label}
-    label={item.label}
-    type={item.type}
-    placeholder={item.placeholder}
-    className="w-full h-9 border border-gray-500 border-solid rounded-lg text-white px-2 bg-transparent outline-none placeholder:text-sm"
-    {...register(`${item.label}`, {
-      required: `${item.label} is required`,
-    })}
-  />
-))}
-        </div>
-
-        <div className="w-1/2 max-sm:w-full max-sm:pl-0 max-sm:mt-5 pl-10 flex flex-col max-sm:gap-5  ">
-          <div>
-            <label
-              htmlFor="description"
-              className="block  text-white text-base"
-            >
-              Description
-            </label>
-            <textarea
-              className="w-full h-48 outline-none bg-transparent border border-solid border-gray-500 rounded-lg p-2 mt-1 overflow-y-scroll scroll-bar"
-              name=""
-              id="description"
-              {...register("Description", {
-                required: `Description is required `,
-              })}
-            ></textarea>
-
-            <div className="flex  gap-2 items-center">
-              <Input
-                className="w-5 h-4"
-                type="checkbox"
-                {...register("Urgent")}
-              />
-              <label htmlFor="">Urgent</label>
-            </div>
-          </div>
-          <Button
-            className="w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600 mt-9"
-            type="submit"
-            btn="Submit"
+    <div className="w-full max-w-5xl m-auto mt-10 bg-white rounded-xl shadow-lg p-8">
+  <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">Set New Task</h2>
+  <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="flex flex-wrap gap-8"
+  >
+    {/* Left Column */}
+    <div className="w-full md:w-[48%] flex flex-col gap-6">
+      {input.map((item) => (
+        <div key={item.label}>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {item.label}
+          </label>
+          <input
+            type={item.type}
+            placeholder={item.placeholder}
+            {...register(`${item.label}`, {
+              required: `${item.label} is required`,
+            })}
+            className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-800 placeholder:text-gray-400 text-sm"
           />
         </div>
-      </form>
+      ))}
     </div>
+
+    {/* Right Column */}
+    <div className="w-full md:w-[48%] flex flex-col gap-6">
+      {/* Description */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Description
+        </label>
+        <textarea
+          {...register("Description", {
+            required: `Description is required`,
+          })}
+          className="w-full h-32 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none text-gray-800 bg-white text-sm"
+        ></textarea>
+      </div>
+
+      {/* Urgent Checkbox */}
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          className="w-4 h-4 text-teal-600 border-gray-300 rounded"
+          {...register("Urgent")}
+        />
+        <label className="text-sm text-gray-700">Mark as Urgent</label>
+      </div>
+
+      {/* Submit Button */}
+      <Button
+        className="w-full h-10 bg-teal-600 text-white font-medium rounded-md hover:bg-teal-700 transition duration-200"
+        type="submit"
+        btn="Submit"
+      />
+    </div>
+  </form>
+</div>
+
   );
 };
 

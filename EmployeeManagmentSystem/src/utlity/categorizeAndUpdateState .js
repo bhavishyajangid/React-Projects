@@ -23,7 +23,6 @@ const removeTaskFromCategory = (category, task) => {
 
   
   if (task.status === "new") {
-console.log(task , "in the new");
 
  if(update){
  let index = state.newTask.task.findIndex(ind => ind.$id == task.$id)
@@ -58,18 +57,7 @@ console.log(task , "in the new");
     state.completedTask.task.push(task)
     state.completedTask.value += 1
     if(update) removeTaskFromCategory(state.allTask , task)
-  } else if (!task.isCompleted && task.state == "pending") {
-    console.log("in the alltask");
-    let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
-    if (index !== -1) {
-      state.allTask[index] = task;
-    } else {
-      state.allTask.push(task);
-      if (update) removeTaskFromCategory(task.sendBack ? state.completedTask : state.newTask, task);
-    }
-  } else {
-    console.log("else");
-    
+  } else {    
     let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
     if (index !== -1) {
       state.allTask[index] = task;

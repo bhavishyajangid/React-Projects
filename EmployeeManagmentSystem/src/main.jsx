@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route,  RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
-import {AllTask, Loader, ProtectedLayout} from './export.js'
+import {AllTask, Home, Loader, ProtectedLayout} from './export.js'
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
 const TaskFullPage = lazy(() => import("./pages/Dashboard/TaskFullPage.jsx"))
@@ -31,7 +31,7 @@ const router = createBrowserRouter(
     
     {/* Protected Route */}
       <Route element={<ProtectedLayout/>}>
-
+      <Route element={<Home/>}/>
       <Route path='/employee' element={<EmployeeDashboard/>}/>
       <Route path='/id/:TaskId' element={<TaskFullPage />}/>
       <Route path='/allTask' element={<AllTask/>} />
@@ -43,6 +43,7 @@ const router = createBrowserRouter(
 
         {/* private Route */}
       <Route element={<ProtectedLayout adminOnly={true}/>}>
+       <Route element={<Home/>}/>
       <Route path='/user' element={<AllEmployee/>}  /> 
       <Route path='/addTask' element={<AddTask/>} />
       <Route path='/admin' element={<AdminDashboard/>} />

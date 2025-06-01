@@ -5,9 +5,11 @@ import {
   deleteTaskThunk,
   fetchTask,
   handleCompleteTask,
+  handleFilterTask,
   handleUserTaskAction,
   taskAllDetails,
 } from "./thunks/taskThunk";
+import { AllEmployee } from "../export";
 
 const taskSlice = createSlice({
   name: "task",
@@ -57,6 +59,12 @@ const taskSlice = createSlice({
     setLoader: (state, action) => {
       state.loading = action.payload;
     },
+    filterAllTask : (state , action) => {
+      
+      state.allTask = state.allTask.filter((item) => item.AssignTo == action.payload.employee)
+      console.log(action.payload);
+    }
+    
   },
   extraReducers: (builder) => {
     builder
@@ -127,11 +135,21 @@ const taskSlice = createSlice({
       .addCase(handleUserTaskAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(handleFilterTask.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(handleFilterTask.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(handleFilterTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { deleteTaskRealtime, addNewTask, updateTaskRealtime, setLoader } =
+export const { deleteTaskRealtime, addNewTask, updateTaskRealtime, setLoader , filterAllTask} =
   taskSlice.actions;
 
 export default taskSlice;

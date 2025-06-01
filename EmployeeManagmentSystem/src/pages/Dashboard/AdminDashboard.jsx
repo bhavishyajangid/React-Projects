@@ -3,9 +3,17 @@ import {
   FaMoneyBill,
   FaUsers
 } from 'react-icons/fa';
-import { PastTaskInfo } from '../../export';
+import { GridCards } from '../../export';
+import { useEffect } from 'react';
+import dataBaseServices from '../../Appwrite/Database';
+import { showError } from '../../utlity/Error&Sucess';
+import { useDispatch } from 'react-redux';
+import { setAllEmployee } from '../../Store/authSlice';
 
 const AdminDashboard = () => {
+
+  const dispatch = useDispatch()
+
    const dashboardStats = [
   {
     id: 'employees',
@@ -30,14 +38,29 @@ const AdminDashboard = () => {
   },
 ]; 
 
- 
+   useEffect(() => {
+    const fetchAllEmployee = async() => {
+
+      try {
+        const res = await dataBaseServices.getAllUser()
+        if(res){
+          
+           dispatch(setAllEmployee(res.documents))
+        }
+      } catch (error) {
+        showError(error.message)
+      }
+    }
+
+    fetchAllEmployee()
+   } ,[dispatch])
 
    
 
   return (
     <>
-    <div className='flex flex-col gap-10'>
-    <PastTaskInfo option={dashboardStats} heading={"Dashboard Overview"}/>
+    <div className='flex flex-col gap-10 py-2 px-3'>
+    <GridCards option={dashboardStats} heading={"Dashboard Overview"}/>
     </div>
     </>
   )

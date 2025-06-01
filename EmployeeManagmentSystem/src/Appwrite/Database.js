@@ -86,7 +86,8 @@ export class databaseServices{
          try {
            const allUserList = this.database.listDocuments(
              conf.appwriteDatabaseId,
-             conf.appwriteAuthCollectionId
+             conf.appwriteAuthCollectionId,
+            [ Query.equal("admin" ,false)]
            )
 
            if(allUserList){
