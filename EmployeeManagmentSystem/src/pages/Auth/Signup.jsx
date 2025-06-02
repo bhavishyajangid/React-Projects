@@ -10,6 +10,7 @@ import dataBaseServices from "../../Appwrite/Database";
 import { login } from "../../Store/authSlice";
 
 const Signup = () => {
+console.log('signup');
 
   const { otpSend , generatedOtp ,resend , loader , isEmailExist ,  userEmailVerify} = useSelector(state => state.otpSendSlice)
   const [second, setSecond] = useState(60);

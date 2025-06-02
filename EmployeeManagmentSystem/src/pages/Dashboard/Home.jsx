@@ -1,5 +1,4 @@
 import { memo, Suspense, useState } from "react";
-import { FaBuilding, FaMoneyBill, FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
@@ -9,25 +8,28 @@ import { ChatBox, Navbar, Loader } from "../../export";
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <>
-      <div className="min-h-screen bg-gray-100 text-gray-800 font-sans flex flex-col">
-        <Navbar onClose={() => setSidebarOpen((prev) => !prev)} />
-        <div className="flex flex-1 flex-col md:flex-row relative">
-          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    
+    <div className="h-screen w-full overflow-hidden bg-gray-100 text-gray-800 font-sans flex flex-col">
+      {/* Navbar (fixed at top) */}
+      <Navbar onClose={() => setSidebarOpen((prev) => !prev)} />
 
-          <main className="flex-1  overflow-x-auto p-3">
-            <ChatBox />
-            <Suspense fallback={<Loader />}>
-              <Outlet />
-            </Suspense>
-            <RealTimeTaskListner />
-            <ToastContainer />
-          </main>
-        </div>
+      {/* Content area below navbar */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar (can be toggled) */}
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        {/* Main scrollable content area */}
+        <main className="flex-1 h-full overflow-y-auto p-4">
+          <ChatBox />
+          <Suspense fallback={<Loader />}>
+            <Outlet/>
+          </Suspense>
+          <RealTimeTaskListner />
+          <ToastContainer />
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

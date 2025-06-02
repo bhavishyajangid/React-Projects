@@ -30,8 +30,8 @@ import RejectedTask from "./pages/Task/RejectedTask.jsx";
 import AcceptOrReject from "./components/AcceptOrReject.jsx";
 import Status from "./components/Status.jsx";
 import AdminOption from "./components/AdminOption.jsx";
-import AdminDashboardSkeleton from './components/skeleton/AdminDashboardSkeleton.jsx'
-import ProtectedLayout from "./components/ProtectedLayout.jsx";
+import HomeSkeleton from "./components/skeleton/HomeSkeleton.jsx";
+import ProtectedLayout from "./Routes/ProtectedLayout.jsx";
 import Task from "./pages/admin/Task.jsx";
 import TaskFullPageSkeleton from "./components/skeleton/TaskFullPageSkeleton.jsx";
 import FilterBar from "./components/FilterBar.jsx";
@@ -67,7 +67,7 @@ export  {
     AcceptOrReject,
     Status,
     AdminOption,
-    AdminDashboardSkeleton,
+    HomeSkeleton,
     ProtectedLayout,
     Task,
     TaskFullPageSkeleton,

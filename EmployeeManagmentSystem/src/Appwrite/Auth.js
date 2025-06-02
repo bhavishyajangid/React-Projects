@@ -62,29 +62,37 @@ export class authService {
                 return  await this.getUserAllDetails(loginUser.userId)
             }
 
-            return null
+            return []
    
              
         } catch (error) {
-            throw error;
+            throw new Error(error) 
         }
     }
 
 
     async getCurrentUser() {
       try {
-        const isUserLogin = await this.account.get();
-          console.log(isUserLogin , "currentuser");
+        console.log('currnet user');
+        const session = await this.account.getSession('current');
+        if(session){
           
-        if (isUserLogin) {
+          const isUserLogin = await this.account.get();
           return await this.getUserAllDetails(isUserLogin.$id);
+
         }
+        
   
-        return [];
+        return null;
     
       } catch (error) {
+
+         if (error.code === 401) {
+      // Don't log anything, just return null silently
+             return null;
+          }
         console.error("Error in getCurrentUser:", error.message);
-        return false;
+        return null;
       }
     }
 
@@ -93,11 +101,10 @@ export class authService {
       try {
 
       const userDetails = await dataBaseServices.getUser(id , queary)
-              return userDetails ? userDetails : false
+              return userDetails ? userDetails : []
           } 
             catch (error) {
-              console.error("Error in getUserAllDetails:", error);
-              return []
+              throw new Error("failed to fetch user info" ,error)
             }
    }
     

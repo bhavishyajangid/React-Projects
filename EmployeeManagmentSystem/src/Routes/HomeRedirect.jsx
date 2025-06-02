@@ -5,6 +5,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import authSlice from '../Store/authSlice';
 
 const HomeRedirect = () => {
+  console.log("running");
+  
   const { isLogin, currentUserDetails } = useSelector(state => state.authSlice);
 
   if (!isLogin) {

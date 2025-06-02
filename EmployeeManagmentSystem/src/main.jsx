@@ -23,15 +23,15 @@ import HomeRedirect from './Routes/HomeRedirect.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App/>}>
-       <Route path=''  element={<HomeRedirect/>}/>
+      <Route path='' element={<HomeRedirect/>}/>
        
       {/* public route */}
-       <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     
     {/* Protected Route */}
-      <Route element={<ProtectedLayout/>}>
-      <Route element={<Home/>}/>
+    <Route  element={<ProtectedLayout/>}>
+    <Route element={<Home/>}>
       <Route path='/employee' element={<EmployeeDashboard/>}/>
       <Route path='/id/:TaskId' element={<TaskFullPage />}/>
       <Route path='/allTask' element={<AllTask/>} />
@@ -39,19 +39,19 @@ const router = createBrowserRouter(
       <Route path='/newTask' element={<NewTask/>} />
       <Route path='/acceptedTask' element={<AcceptedTask/>} />
       <Route path='/rejectedTask' element={<RejectedTask/>} />
+      </Route>
     </Route>
 
         {/* private Route */}
       <Route element={<ProtectedLayout adminOnly={true}/>}>
-       <Route element={<Home/>}/>
+      <Route element={<Home/>}>
       <Route path='/user' element={<AllEmployee/>}  /> 
       <Route path='/addTask' element={<AddTask/>} />
       <Route path='/admin' element={<AdminDashboard/>} />
       <Route path='/editTask/:taskId' element={<EditTask/>}/>
       <Route path='/task' element={<Task/>}/>
-
       </Route>
-
+ </Route>
     </Route>
   )
 )

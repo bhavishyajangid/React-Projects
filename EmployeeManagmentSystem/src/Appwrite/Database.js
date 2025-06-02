@@ -75,7 +75,7 @@ export class databaseServices{
           );
           console.log(userDetails , "userDetail");
           
-          return userDetails.documents[0];  // Return the first document (user)
+          return userDetails.documents[0] || [];  // Return the first document (user)
         } catch (error) {
           console.log("error occure in the getUser"  , error);
           return null;  // In case of error or no user found

@@ -1,3 +1,4 @@
+import { current } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import {
   FaTachometerAlt,
@@ -11,9 +12,10 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router';
 
+
 const sidebarOptions = [
-   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : '/' },
-  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "" },
+   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" },
+  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" },
   { id: 3, label: 'Departments', icon: <FaBuilding /> , link : "" },
   { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task'},
   { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link : "" },
@@ -30,7 +32,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   return (
     <>
       <div
-        className={`fixed md:static top-0 right-0 min-h-full w-64 bg-gray-900 text-white z-40 shadow-lg transform 
+        className={`fixed md:static top-0 right-0 h-screen w-64 bg-gray-900 text-white z-40 shadow-lg transform 
         ${isOpen ? 'translate-x-0' : 'translate-x-full'} 
         transition-transform duration-300 ease-in-out md:translate-x-0`}
       >
@@ -48,9 +50,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Sidebar Options */}
         <div className="px-4 md:px-6 py-2 md:py-4 space-y-3 w-full flex flex-col">
           {sidebarOptions.map((item, index) => (
-            <Link to={item.link}>
+            <Link to={item.link} key={index}>
             <div
-              key={index}
               onClick={() => {handleSelect(item.id)}}
               className={`px-4 py-2 rounded cursor-pointer flex items-center gap-3 font-medium transition-all w-full
                 ${activeOption === item.id ? 'bg-gray-800 text-white shadow-inner' : 'hover:bg-gray-700 text-gray-300'}`}
