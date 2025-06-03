@@ -9,7 +9,7 @@ const MiniCard = ({item}) => {
       {item.icon}
     </div>
     <div>
-      <p className="text-sm text-gray-500">{item.label}</p>
+      <p className="text-sm text-gray-500 font-semibold">{item.label}</p>
       <p className="text-xl font-bold text-gray-800">{item.value}</p>
     </div>
   </div>

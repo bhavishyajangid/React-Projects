@@ -146,7 +146,7 @@ const TaskFullPage = () => {
               className={`px-6 py-2 rounded-lg font-medium text-sm transition duration-300 ${
                 singleTask.sendBack
                   ? "bg-green-200 text-green-800 hover:bg-green-200"
-                  : "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                  : "bg-blue-200 text-blue-800 hover:bg-blue-300"
               }`}
             >
               {singleTask.sendBack ? "Re-submitted" : "Complete Task"}

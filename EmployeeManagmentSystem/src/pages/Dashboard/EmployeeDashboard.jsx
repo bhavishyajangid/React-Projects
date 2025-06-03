@@ -9,7 +9,7 @@ const EmployeeDashboard = () => {
     return (
         <>
         <GridCards/>
-        <AllTask tasks={allTask} />
+        <AllTask tasks={allTask}heading={"All task"} />
         </>
     );
 };

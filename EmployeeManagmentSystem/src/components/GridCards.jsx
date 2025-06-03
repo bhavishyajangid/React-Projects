@@ -28,14 +28,14 @@ const GridCards = ({option}) => {
          {
           color : "yellow-400",
           value : completedTask.value,
-          label : currentUserDetails?.admin ? 'Pending Task' : 'Completed Task',
+          label : currentUserDetails?.admin ? 'Unapproved Task' : 'Completed Task',
           link : '/completedTask',
           icon : currentUserDetails?.admin ? <MdOutlinePendingActions /> : <FaTasks />
          },
          {
             color : "green-400",
             value :  acceptedTask.value,
-            label : currentUserDetails?.admin ? "Approved Task" : "Accepted Task",
+            label : "Approved Task",
             link : "/acceptedTask",
             icon : <HiOutlineClipboardDocumentCheck />
          },

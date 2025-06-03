@@ -39,7 +39,7 @@ const AllTask = ({ tasks, heading }) => {
     <div className="px-5 py-5 flex flex-col gap-5  ">
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-5 ">
-          {heading}
+          Pending Task
         </h1>
 
         <div className="flex gap-5">
