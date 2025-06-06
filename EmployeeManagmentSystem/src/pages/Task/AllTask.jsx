@@ -1,21 +1,34 @@
-import React, { memo, useCallback } from "react";
-import { CardSkeleton, Loader, TaskCard } from "../../export";
+import React, { memo, useCallback, useEffect } from "react";
+import { CardSkeleton, Loader, RejectedTask, TaskCard } from "../../export";
 import { FilterBar } from "../../export"; // adjust path as needed
 import { useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
-import { Link, useLocation } from "react-router";
+import { Link, Navigate, useLocation } from "react-router";
 import { FiFilter } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import TaskServices from "../../Appwrite/Task";
 import { showError } from "../../utlity/Error&Sucess";
 import { handleFilterTask } from "../../Store/thunks/taskThunk";
+import {getCorrectTaskList} from '../../utlity/getCorrectTaskList'
+import { set } from "react-hook-form";
+
+
 const AllTask = ({ tasks, heading }) => {
+  console.log(tasks , 'tasks');
+  const taskSlice = useSelector(state => state.taskSlice)
+  const {currentUserDetails} = useSelector(state => state.authSlice)
   const location = useLocation();
   const currentPath = location.pathname;
   const [showFilters, setShowFilters] = useState(false);
-  const { loading } = useSelector((state) => state.taskSlice);
-  const [alltask, setAlltask] = useState(tasks);
+  const { loading  } = useSelector((state) => state.taskSlice);
+  const [allFilterTask, setAllFilterTask] = useState(tasks);
   const dispatch = useDispatch();
+  let you  = currentUserDetails.admin ? "admin" : "user"
+  let other = currentUserDetails.admin ? "user" : "admin"
+
+  useEffect(() => {
+    setAllFilterTask(tasks)
+  }, [tasks]) 
 
   const filterTask = useCallback(async (data) => {
     if (data.employeeId == "" && data.startDate == "" && data.endDate == "")
@@ -23,25 +36,52 @@ const AllTask = ({ tasks, heading }) => {
 
     try {
       const result = await dispatch(handleFilterTask(data)).unwrap();
-      setAlltask(result);
+      setAllFilterTask(result);
     } catch (error) {
       console.log(error);
 
       showError(error.message);
     }
-  }, []);
+  }, [Navigate]);
+
+  
 
   const resetTask = useCallback(() => {
-    setAlltask(tasks);
-  }, []);
+  let task = getCorrectTaskList(heading , taskSlice)
+  setAllFilterTask(task)
+  
+  }, [heading , taskSlice]);
+
+  const filterRejectedTask = (value) => {
+    let task = getCorrectTaskList(heading , taskSlice)
+
+       if(value == ""){
+          setAllFilterTask(task)
+       }else{
+          let filterTask = task.filter((item) => item.rejectedBy == value)
+          setAllFilterTask(filterTask)
+       }
+  }
 
   return (
     <div className="px-5 py-5 flex flex-col gap-5  ">
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-5 ">
-          Pending Task
+          {heading}
         </h1>
-
+        {currentPath == '/rejectedTask' &&  
+           <div>
+             <select
+             onChange={(e) => filterRejectedTask(e.target.value)}
+            className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="">Filter</option>
+              <option value="" > You </option>
+              <option value="admin"> {currentUserDetails.admin ? "User" : "Admin"} </option>
+            </select>
+          </div>
+          }
+     {currentPath == "/task" && (
         <div className="flex gap-5">
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -51,7 +91,7 @@ const AllTask = ({ tasks, heading }) => {
             Filter
           </button>
 
-          {currentPath == "/task" && (
+     
             <div className="flex justify-end items-center">
               <Link to="/addTask">
                 <button className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-1.5 rounded-lg shadow-sm transition duration-200 max-sm:text-sm">
@@ -60,8 +100,8 @@ const AllTask = ({ tasks, heading }) => {
                 </button>
               </Link>
             </div>
-          )}
         </div>
+          )}
       </div>
 
       {showFilters && (
@@ -72,12 +112,12 @@ const AllTask = ({ tasks, heading }) => {
         <CardSkeleton />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 ">
-          {alltask && alltask.length === 0 ? (
+          {allFilterTask && allFilterTask.length === 0 ? (
             <p className="text-center text-lg font-medium text-gray-500 col-span-full mt-10">
               There are no tasks
             </p>
           ) : (
-            alltask.map((item) => <TaskCard key={item.$id} item={item} />)
+            allFilterTask.map((item) => <TaskCard key={item.$id} item={item} />)
           )}
         </div>
       )}

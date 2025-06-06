@@ -39,7 +39,7 @@ const TaskFullPage = () => {
       const res = await dispatch(handleCompleteTask(singleTask.$id)).unwrap();
       if (res) {
         showSuccess("Task Updated Successfully");
-        navigate("/employee");
+        navigate("/completedTask");
       }
     } catch (error) {
       showError(error);
@@ -142,7 +142,7 @@ const TaskFullPage = () => {
           !currentUserDetails.admin &&
           !singleTask.isCompleted && (
             <button
-              onClick={completeTask}
+              onClick={() => {completeTask()}}
               className={`px-6 py-2 rounded-lg font-medium text-sm transition duration-300 ${
                 singleTask.sendBack
                   ? "bg-green-200 text-green-800 hover:bg-green-200"

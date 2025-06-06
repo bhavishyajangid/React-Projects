@@ -21,6 +21,7 @@ const Login = () => {
 
     try {
       const loginUser = await authServices.login(data);
+      
       if (loginUser) {
         await dispatch(fetchTask(loginUser)).unwrap();
         dispatch(login(loginUser));
@@ -32,7 +33,7 @@ const Login = () => {
         showSuccess("Login sucessfully");
       }
     } catch (error) {
-      showError(error);
+     showError(error.message)
     } finally {
       setLoader(false);
     }

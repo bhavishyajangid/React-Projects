@@ -45,10 +45,8 @@ const TaskCard = ({ item }) => {
         {item.status === "rejected" && (
           <div className="flex items-center gap-2 mt-1">
             <p className="text-sm font-semibold text-gray-500">Rejected By:</p>
-            <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full shadow-sm">
-              {(item.rejectedBy === "user" && !currentUserDetails.admin)
-                ? "You"
-                : (item.rejectedBy === "admin" && currentUserDetails.admin)
+            <span className="text-xs bg-red-200 text-red-700 px-2 py-1 rounded-full shadow-sm">
+              {(item.rejectedBy === "user" && !currentUserDetails.admin || item.rejectedBy === "admin" && currentUserDetails.admin)
                 ? "You"
                 : currentUserDetails.admin ? "User" : "Admin"}
             </span>

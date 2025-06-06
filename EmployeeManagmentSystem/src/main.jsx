@@ -39,6 +39,7 @@ const router = createBrowserRouter(
       <Route path='/newTask' element={<NewTask/>} />
       <Route path='/acceptedTask' element={<AcceptedTask/>} />
       <Route path='/rejectedTask' element={<RejectedTask/>} />
+       <Route path='/task' element={<Task/>}/>
       </Route>
     </Route>
 
@@ -49,7 +50,7 @@ const router = createBrowserRouter(
       <Route path='/addTask' element={<AddTask/>} />
       <Route path='/admin' element={<AdminDashboard/>} />
       <Route path='/editTask/:taskId' element={<EditTask/>}/>
-      <Route path='/task' element={<Task/>}/>
+     
       </Route>
  </Route>
     </Route>

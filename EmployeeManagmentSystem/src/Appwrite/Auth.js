@@ -3,6 +3,7 @@ import conf from '../config/config.js'
 import dataBaseServices, { databaseServices } from "./Database.js";
 import TaskServices from "./Task.js";
 import emailjs from "emailjs-com";
+import { showError } from "../utlity/Error&Sucess.js";
 
 
 export class authService {
@@ -47,7 +48,7 @@ export class authService {
                return null;
             }
         } catch (error) {
-            throw new Error(error)
+            throw  error
         }
     }
 
@@ -66,7 +67,7 @@ export class authService {
    
              
         } catch (error) {
-            throw new Error(error) 
+            throw error
         }
     }
 

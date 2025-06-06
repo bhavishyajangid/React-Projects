@@ -5,8 +5,9 @@ import { GridCards, AllTask } from "../../export";
 const Task = () => {
   const { allTask } = useSelector((state) => state.taskSlice);
 
+  console.log("running allTask" , allTask);
   return (
-    <div className="space-y-8 px-4 md:px-8 ">
+    <div>
     
       <GridCards />
 
@@ -14,7 +15,7 @@ const Task = () => {
     
 
       {/* Task List Section */}
-      <AllTask tasks={allTask} heading="All Tasks" />
+      <AllTask tasks={allTask} heading="Pending Task" />
     </div>
   );
 };

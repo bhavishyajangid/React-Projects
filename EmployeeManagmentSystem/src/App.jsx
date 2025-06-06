@@ -8,6 +8,7 @@ import { HomeSkeleton } from './export.js';
 import { login } from './Store/authSlice.js';
 import { fetchTask } from './Store/thunks/taskThunk.js';
 import { showError } from './utlity/Error&Sucess.js';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -49,6 +50,7 @@ function App() {
 
   return (
     <>
+    <ToastContainer />
      <Outlet/>
     </>
   )

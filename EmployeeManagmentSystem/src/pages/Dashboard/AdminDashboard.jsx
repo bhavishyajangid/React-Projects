@@ -7,18 +7,18 @@ import { GridCards } from '../../export';
 import { useEffect } from 'react';
 import dataBaseServices from '../../Appwrite/Database';
 import { showError } from '../../utlity/Error&Sucess';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAllEmployee } from '../../Store/authSlice';
 
 const AdminDashboard = () => {
-
+  const {allEmployee} = useSelector(state => state.authSlice)
   const dispatch = useDispatch()
 
    const dashboardStats = [
   {
     id: 'employees',
     label: 'Total Employees',
-    value: 4,
+    value: allEmployee.length,
     icon: <FaUsers/>,
     color: 'teal-500',
   },

@@ -28,7 +28,7 @@ const AcceptOrReject = ({ task, isAdmin }) => {
         const result = await dispatch(handleUserTaskAction(payload)).unwrap();
         if (result) {
           showSuccess('Task accepted successfully');
-          isAdmin ? navigate('/admin') : navigate('/employee');
+          isAdmin ? navigate('/task') : navigate('/employee');
         }
       } catch (error) {
         showError(error);
@@ -36,6 +36,8 @@ const AcceptOrReject = ({ task, isAdmin }) => {
     },
     [dispatch, task, isAdmin, navigate]
   );
+
+  
 
   const onSubmit = useCallback(
     
@@ -59,7 +61,7 @@ const AcceptOrReject = ({ task, isAdmin }) => {
             navigate('/rejectedTask');
           }else{
             showSuccess("Task SendBack To User")
-            navigate("/admin")
+            navigate("/task")
           }
         }
       } catch (error) {
@@ -108,6 +110,7 @@ const AcceptOrReject = ({ task, isAdmin }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               label="Reason for Reject"
+              className="border border-gray-500"
               type="text"
               {...register('reasonForReject', { required: true })}
             />

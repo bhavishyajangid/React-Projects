@@ -45,6 +45,8 @@ const taskSlice = createSlice({
       state.newTask.value += 1;
     },
     updateTaskRealtime: (state, action) => {
+      console.log(action.payload, 'taskslice');
+      
       categorizeAndUpdateState(action.payload, state, true);
     },
     deleteTaskRealtime: (state, action) => {

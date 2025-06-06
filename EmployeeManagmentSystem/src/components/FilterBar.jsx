@@ -6,6 +6,7 @@ import { memo } from 'react';
 
 const FilterBar = ({filterTask , resetTask}) => {
   const dispatch = useDispatch()
+  const {currentUserDetails} = useSelector(state=> state.authSlice)
   const {allEmployee} = useSelector(state => state.authSlice)
   const { register, handleSubmit, reset } = useForm();
 
@@ -22,7 +23,7 @@ const FilterBar = ({filterTask , resetTask}) => {
     >
       <div className="flex flex-col md:flex-row md:items-end gap-6">
         {/* Employee Dropdown */}
-        <div className="w-full md:w-1/4">
+       { currentUserDetails.admin &&  <div className="w-full md:w-1/4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Employee
           </label>
@@ -37,7 +38,7 @@ const FilterBar = ({filterTask , resetTask}) => {
               </option>
             ))}
           </select>
-        </div>
+        </div>}
 
         {/* Start Date */}
         <div className="w-full md:w-1/4">

@@ -26,7 +26,7 @@ const Home = () => {
             <Outlet/>
           </Suspense>
           <RealTimeTaskListner />
-          <ToastContainer />
+          
         </main>
       </div>
     </div>

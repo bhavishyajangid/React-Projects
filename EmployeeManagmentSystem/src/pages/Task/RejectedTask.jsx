@@ -6,8 +6,9 @@ const RejectedTask = () => {
     const {rejectedTask} = useSelector(state => state.taskSlice)
     console.log(rejectedTask , 'rejectedTaask');
     
-  return (
+  return (         
    <AllTask tasks={rejectedTask.task} heading="Rejected Task"/>
+  
   )
 }
 
