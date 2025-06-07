@@ -112,7 +112,7 @@ const SetNewTask = ({ task }) => {
      
      if (task) {
       toast.success("Task created successfully.");
-      navigate("/task");
+      navigate("/task" , {replace: true});
       
     } else if (task == false) {
       toast.error(`${data.AssignTo} Employee not found.`);
@@ -153,10 +153,10 @@ const SetNewTask = ({ task }) => {
   <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">Set New Task</h2>
   <form
     onSubmit={handleSubmit(onSubmit)}
-    className="flex flex-wrap gap-8"
+    className="flex max-lg:flex-col gap-8"
   >
     {/* Left Column */}
-    <div className="w-full md:w-[48%] flex flex-col gap-6">
+    <div className="w-full  flex flex-col gap-6">
       {input.map((item) => (
         <div key={item.label}>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -175,7 +175,7 @@ const SetNewTask = ({ task }) => {
     </div>
 
     {/* Right Column */}
-    <div className="w-full md:w-[48%] flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-6">
       {/* Description */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

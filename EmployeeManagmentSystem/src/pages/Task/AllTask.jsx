@@ -9,99 +9,99 @@ import { useDispatch, useSelector } from "react-redux";
 import TaskServices from "../../Appwrite/Task";
 import { showError } from "../../utlity/Error&Sucess";
 import { handleFilterTask } from "../../Store/thunks/taskThunk";
-import {getCorrectTaskList} from '../../utlity/getCorrectTaskList'
+import { getCorrectTaskList } from "../../utlity/getCorrectTaskList";
 import { set } from "react-hook-form";
 
-
 const AllTask = ({ tasks, heading }) => {
-  console.log(tasks , 'tasks');
-  const taskSlice = useSelector(state => state.taskSlice)
-  const {currentUserDetails} = useSelector(state => state.authSlice)
+  console.log(tasks, "tasks");
+  const taskSlice = useSelector((state) => state.taskSlice);
+  const { currentUserDetails } = useSelector((state) => state.authSlice);
   const location = useLocation();
   const currentPath = location.pathname;
   const [showFilters, setShowFilters] = useState(false);
-  const { loading  } = useSelector((state) => state.taskSlice);
+  const { loading } = useSelector((state) => state.taskSlice);
   const [allFilterTask, setAllFilterTask] = useState(tasks);
   const dispatch = useDispatch();
-  let you  = currentUserDetails.admin ? "admin" : "user"
-  let other = currentUserDetails.admin ? "user" : "admin"
+  let you = currentUserDetails.admin ? "admin" : "user";
+  let other = currentUserDetails.admin ? "user" : "admin";
 
   useEffect(() => {
-    setAllFilterTask(tasks)
-  }, [tasks]) 
+    setAllFilterTask(tasks);
+  }, [tasks]);
 
-  const filterTask = useCallback(async (data) => {
-    if (data.employeeId == "" && data.startDate == "" && data.endDate == "")
-      return;
+  const filterTask = useCallback(
+    async (data) => {
+      if (data.employeeId == "" && data.startDate == "" && data.endDate == "")
+        return;
 
-    try {
-      const result = await dispatch(handleFilterTask(data)).unwrap();
-      setAllFilterTask(result);
-    } catch (error) {
-      console.log(error);
+      try {
+        const result = await dispatch(handleFilterTask(data)).unwrap();
+        setAllFilterTask(result);
+      } catch (error) {
+        console.log(error);
 
-      showError(error.message);
-    }
-  }, [Navigate]);
-
-  
+        showError(error.message);
+      }
+    },
+    [Navigate]
+  );
 
   const resetTask = useCallback(() => {
-  let task = getCorrectTaskList(heading , taskSlice)
-  setAllFilterTask(task)
-  
-  }, [heading , taskSlice]);
+    let task = getCorrectTaskList(heading, taskSlice);
+    setAllFilterTask(task);
+  }, [heading, taskSlice]);
 
   const filterRejectedTask = (value) => {
-    let task = getCorrectTaskList(heading , taskSlice)
+    let task = getCorrectTaskList(heading, taskSlice);
 
-       if(value == ""){
-          setAllFilterTask(task)
-       }else{
-          let filterTask = task.filter((item) => item.rejectedBy == value)
-          setAllFilterTask(filterTask)
-       }
-  }
+    if (value == "") {
+      setAllFilterTask(task);
+    } else {
+      let filterTask = task.filter((item) => item.rejectedBy == value);
+      setAllFilterTask(filterTask);
+    }
+  };
 
   return (
-    <div className="px-5 py-5 flex flex-col gap-5  ">
+    <div className="px-5  flex flex-col gap-5  ">
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-5 ">
           {heading}
         </h1>
-        {currentPath == '/rejectedTask' &&  
-           <div>
-             <select
-             onChange={(e) => filterRejectedTask(e.target.value)}
-            className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">Filter</option>
-              <option value="" > You </option>
-              <option value="admin"> {currentUserDetails.admin ? "User" : "Admin"} </option>
+        {currentPath == "/rejectedTask" && (
+          <div>
+            <select
+              onChange={(e) => filterRejectedTask(e.target.value)}
+              className="w-full bg-white border border-gray-300 text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 capitalize"
+            >
+              <option value="">Rejected By</option>
+              <option value={you}> You </option>
+              <option value={other}> {other} </option>
             </select>
           </div>
-          }
-     {currentPath == "/task" && (
-        <div className="flex gap-5">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5  rounded-md flex items-center gap-2 "
-          >
-            <FiFilter />
-            Filter
-          </button>
+        )}
+        {(currentPath == "/task" && currentUserDetails.admin) && (
+          <div className="flex gap-5">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5  rounded-md flex items-center gap-2 "
+            >
+              <FiFilter />
+              Filter
+            </button>
 
-     
-            <div className="flex justify-end items-center">
-              <Link to="/addTask">
-                <button className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-1.5 rounded-lg shadow-sm transition duration-200 max-sm:text-sm">
-                  <FaCirclePlus className="text-lg max-sm:text-sm" />
-                  <span>Add Task</span>
-                </button>
-              </Link>
-            </div>
-        </div>
-          )}
+         
+              <div className="flex justify-end items-center">
+                <Link to="/addTask">
+                  <button className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-1.5 rounded-lg shadow-sm transition duration-200 max-sm:text-sm">
+                    <FaCirclePlus className="text-lg max-sm:text-sm" />
+                    <span>Add Task</span>
+                  </button>
+                </Link>
+              </div>
+          
+          </div>
+        )}
       </div>
 
       {showFilters && (

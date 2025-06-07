@@ -30,7 +30,7 @@ const AdminOption = ({ task,type = "card" }) => {
       
       if(deletedTask){
         showSuccess("Task deleted Sucessfully");
-        navigate("/admin");
+        navigate("/task");
       }
     } catch (error) {
       console.log(error);

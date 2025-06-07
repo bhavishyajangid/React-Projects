@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@reduxjs/toolkit": "^2.4.0",
+        "@sentry/react": "^9.27.0",
         "appwrite": "^16.0.2",
         "body-parser": "^1.20.3",
         "cors": "^2.8.5",
