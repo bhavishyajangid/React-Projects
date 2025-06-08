@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom'
 
 import App from './App.jsx'
-import { AllTask, Home, Loader, ProtectedLayout } from './export.js'
+import { AddEmployee, AllTask, Home, Loader, ProtectedLayout } from './export.js'
 import { Provider } from 'react-redux'
 import store from './Store/index.js'
 
@@ -59,6 +59,7 @@ const router = createBrowserRouter(
           <Route path="/user" element={<AllEmployee />} />
           <Route path="/addTask" element={<AddTask />} />
           <Route path="/editTask/:taskId" element={<EditTask />} />
+          <Route path="/addEmployee" element={<AddEmployee/>} />
         </Route>
       </Route>
     </Route>

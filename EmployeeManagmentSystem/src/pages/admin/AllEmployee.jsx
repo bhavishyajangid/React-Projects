@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import dataBaseServices from '../../Appwrite/Database';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import UserCard from '../../components/UserCard';
-import { ChatBox, UserSkeleton } from '../../export';
+import { Button, ChatBox, UserSkeleton } from '../../export';
 import { useSelector } from 'react-redux';
 
 const AllEmployee = () => {
@@ -35,9 +35,9 @@ const AllEmployee = () => {
    <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Manage Employees</h2>
-        <button className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 shadow">
-          Add New Employee
-        </button>
+        <Link to="/addEmployee">
+       <Button label='Add Employee' type=''/>
+        </Link>
       </div>
 
       <div className="mb-4">

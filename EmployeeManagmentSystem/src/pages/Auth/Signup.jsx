@@ -157,10 +157,10 @@ console.log('signup');
     <div className=" h-screen flex justify-center items-center  bg-[#111111]">
      
       <form
-        className=" px-5 py-2 flex flex-col  gap-3 rounded-lg shadow-lg w-96 bg-[#1C1C1C]"
+        className=" px-5 py-2 flex flex-col  gap-3 rounded-lg shadow-lg w-96 bg-[#e4e4e4] "
         onSubmit={handleSubmit(handleSignup)}
       >
-        <h2 className="text-2xl font-semibold text-center ">Sign Up</h2>
+        <h2 className="text-2xl font-semibold text-center text-black ">Sign Up</h2>
 
         {/* Username Input */}
         
@@ -213,7 +213,6 @@ console.log('signup');
         <Input
           type="tel"
           label="Phone Number"
-          maxLength="10"
           {...register("number", {
             required: "Phone number is required",
             pattern: {
@@ -224,10 +223,13 @@ console.log('signup');
         />
 
         {/* Submit Button */}
-        <Button type="submit" btn="Sign up" className="mt-2 w-full h-10 bg-green-500 text-white font-bold text-base rounded-md hover:bg-green-600 " />
+        <Button
+        className="justify-center"
+        label="Sign Up"
+         />
 
         {/* Already have an account? */}
-        <div className="text-center text-xs">
+        <div className="text-center text-xs mb-1">
           <p className=" text-gray-600">
             Already have an account?
             <Link to="/login">

@@ -14,7 +14,7 @@ const Home = () => {
   return (
     
     <div className="h-screen w-full overflow-hidden bg-gray-100 text-gray-800 font-sans flex flex-col">
-     
+    
       {/* Navbar (fixed at top) */}
       <Navbar onClose={() => setSidebarOpen((prev) => !prev)} />
 

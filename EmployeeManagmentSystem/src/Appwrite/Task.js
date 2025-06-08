@@ -65,7 +65,6 @@ export class taskService{
            conf.appwriteDatabaseId,
            conf.appwriteAllTaskCollectionId
         );
-        console.log(allTask , "alltask");
         
         if(allTask){
           
@@ -77,7 +76,6 @@ export class taskService{
    }
 
     async getUserTask(TaskId) { 
-      console.log("working");
       
       console.log(TaskId , "taskid");
       
@@ -107,7 +105,7 @@ async deleteTask(documentId) {
 
     // Check if deletion was successful
     if (deletedTask) {
-      console.log(deletedTask, 'core');
+  
       
       return deletedTask;
     } else {

@@ -20,23 +20,20 @@ export class authService {
         
     }
     
-    async createAccount({email, password, username , number , isEmailVerify}) {
+    async createAccount({data}) {
         try {
-            const userAccount = await this.account.create(ID.unique(), email, password, username , number);
+            const userAccount = await this.account.create(ID.unique(), data.email, data.password, data.username , data.number);
 
             
             if (userAccount) {
               const setData =  await dataBaseServices.setUserProfileData(
                 {
-                  username ,
-                  number, 
-                  isEmailVerify,
-                  email, 
+                  ...data ,
                   id : userAccount.targets[0].userId,
                   newTask : 0,
                   completedTask : 0,
                   acceptedTask : 0,
-                  failedTask : 0
+                  failedTask : 0,
                 })
               
                
