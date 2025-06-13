@@ -63,7 +63,7 @@ const AddEmployee = () => {
           <Input
             label="Phone"
             type="tel"
-            {...register("number", { required: "Phone number is required" })}
+            {...register("number", { required: "Phone number is required" , maxLength : {value : 10 , message : "number must be at least 10 characters long "} })}
           />
           {errors.number && (
             <p className="text-red-500 text-sm">{errors.number.message}</p>

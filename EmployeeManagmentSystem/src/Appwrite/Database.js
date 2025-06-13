@@ -38,25 +38,21 @@ export class databaseServices{
     }
 
 
-     async setUserProfileData({username ,number , isEmailVerify, email , id}){
-        console.log(username ,number , isEmailVerify, email , id);
+     async setUserProfileData(profile){
+      console.log(profile);
+      
+        // console.log(username ,number , isEmailVerify, email , id);
         
         try {
             const userPersonalData = await this.database.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteAuthCollectionId,
                 ID.unique() , 
-                {
-                    userId : String(id),
-                    userName : String(username),
-                    email : String(email),
-                    number : String(number),
-                    isEmailVerify : Boolean(isEmailVerify)
-                }  
+                profile
             )
             return userPersonalData
         } catch (error) {
-          throw new Error(error)
+          throw Error(error)
             
         }
      }

@@ -12,6 +12,7 @@
         "start": "node server.js"
     },
     "dependencies": {
+        "@emailjs/browser": "^4.4.1",
         "@reduxjs/toolkit": "^2.4.0",
         "@sentry/react": "^9.27.0",
         "appwrite": "^16.0.2",

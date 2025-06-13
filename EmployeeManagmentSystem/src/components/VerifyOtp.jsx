@@ -1,9 +1,29 @@
-import React from "react";
-import Input from "./Input"; // Adjust the import path for Input component
+import React, { useRef  } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { useOtpTimer } from "../utlity/hook/useOtpTime";
+import Input from "./Input"; // Adjust the import path for Input component
+import { setResend, setUserEmailVerify } from "../Store/otpSendSlice";
 
+const VerifyOtp = React.memo(({generatedOtp}) => { 
+  const dispatch = useDispatch()
+  const second = useOtpTimer()
+  const emailOtp = useRef(null)
+  const {resend} = useSelector(state => state.otpSendSlice)
+console.log('chld');
 
-const VerifyOtp = ({second , VerifyOtp , resendOtp , emailOtp }) => { 
+    const verifyEmailOtp = async() => {
+      console.log(generatedOtp , emailOtp.current.value , 'varify');
+      
+      if(parseInt(generatedOtp) === parseInt(emailOtp.current.value)){
+       dispatch(setUserEmailVerify(true)) 
+       toast.success("OTP Verified!");
+      }else{
+      toast.error("Invalid OTP, please try again.");
+    }
+    
+  };
+
   return (
     <div>
       
@@ -16,17 +36,19 @@ const VerifyOtp = ({second , VerifyOtp , resendOtp , emailOtp }) => {
           />
           <button
             type="button"
-            onClick={VerifyOtp}
+            onClick={() => {verifyEmailOtp()}}
             className="px-3 py-1 rounded-md bg-blue-600 text-white"
           >
             Submit
           </button>
           {second !== 0 ? (
-            <span className="px-2 py-1 font-medium mt-1">{time}</span>
+            <p className="text-xs text-white">
+              {second > 0 ? `Resend OTP in ${second}s` : "Didn’t receive OTP?"}
+          </p>
           ) : (
             <button
               type="button"
-              onClick={resendOtp}
+              onClick={() => {dispatch(setResend(!resend))}}
               className="px-4 py-1 rounded-md bg-green-600 text-white"
             >
               Resend
@@ -36,6 +58,6 @@ const VerifyOtp = ({second , VerifyOtp , resendOtp , emailOtp }) => {
       
     </div>
   );
-};
+})
 
 export default VerifyOtp;
