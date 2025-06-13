@@ -20,10 +20,15 @@ export class authService {
         
     }
     
+<<<<<<< Updated upstream
     async createAccount({email, password, username , number , isEmailVerify}) {
+=======
+    async createAccount(data) {
+>>>>>>> Stashed changes
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, username , number);
 
+            console.log(userAccount , 'accoutn');
             
             if (userAccount) {
               const setData =  await dataBaseServices.setUserProfileData(
@@ -48,6 +53,8 @@ export class authService {
                return null;
             }
         } catch (error) {
+          console.log(error);
+          
             throw  error
         }
     }

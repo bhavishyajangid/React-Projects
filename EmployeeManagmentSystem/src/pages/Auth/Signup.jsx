@@ -12,7 +12,7 @@ import { login } from "../../Store/authSlice";
 const Signup = () => {
 console.log('signup');
 
-  const { otpSend , generatedOtp ,resend , loader , isEmailExist ,  userEmailVerify} = useSelector(state => state.otpSendSlice)
+  const { otpSend , generatedOtp ,resend , loader ,   userEmailVerify} = useSelector(state => state.otpSendSlice)
   const [second, setSecond] = useState(60);
   const [userData , setUserData] = useState("")
   const emailOtp = useRef(null);

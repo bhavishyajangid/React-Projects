@@ -54,7 +54,7 @@ const Navbar = ({onClose}) => {
   return (
     <>
        <div className="bg-teal-600 text-white flex justify-between items-center px-6 py-4 shadow-md">
-        <div className="text-xl md:text-2xl font-bold tracking-wider">Welcome, Admin</div>
+        <div className="text-xl md:text-2xl font-bold tracking-wider">{`Welcome ${currentUserDetails.userName}`}</div>
         <div className="md:hidden">
           <button onClick={() => onClose()}>
             <FaBars className="text-2xl" />
