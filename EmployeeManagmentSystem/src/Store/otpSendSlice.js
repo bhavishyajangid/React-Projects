@@ -22,10 +22,7 @@ const otpSendSlice =createSlice({
         },
         setResend : (state , action) => {
             state.resend = action.payload
-              state.userEmailVerify = false;
             state.generatedOtp = null;
-            state.loader = false;
-            state.otpSend = false
         },
         setLoader : (state , action) => {
             state.loader = action.payload

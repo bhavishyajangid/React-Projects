@@ -45,20 +45,24 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#111111]">
       <form
-        className="w-96 p-5 flex flex-col gap-3 bg-[#e4e4e4]  rounded-lg shadow-lg "
+        className="w-96 p-5 flex flex-col gap-3 bg-[#bdbdbd]  rounded-lg shadow-lg text-black "
         onSubmit={handleSubmit(LoginDetails)}
       >
         <h2 className="text-2xl font-semibold text-center mb-6 text-black">Login</h2>
         <Input
           type="text"
           label="Username"
-          {...register("email", { required: true })}
+          {...register("email", { required: "email is required" })}
         />
 
         <Input
           type="password"
           label="Password"
-          {...register("password", { required: true })}
+          {...register("password", { required: "Password is required" ,
+             minLength: {
+                value: 8,
+                message: "password must be 8 character long",
+              }, }) }
         />
 
         <Button

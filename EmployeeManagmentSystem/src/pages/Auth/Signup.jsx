@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import authServices from "../../Appwrite/Auth";
 import dataBaseServices from "../../Appwrite/Database";
 import { Button, Input, Loader, VerifyOtp } from "../../export";
-import { login } from "../../Store/authSlice";
+import { handleCreateAccount, login } from "../../Store/authSlice";
 import {
   setGeneratedOtp,
   setLoader,
@@ -39,25 +39,20 @@ const Signup = () => {
   // Submit handler function
 
   const handleSignup = async (data) => {
-    const verifyEmailExist = await dataBaseServices.emailIsExists(data.email);
-    if (verifyEmailExist) {
-      return toast.error("Email Already In Use !! Try Another Email");
-    }
     if (!userEmailVerify) {
       // if email not verify first verify for create a account
       dispatch(setOtpSend({ otp: true, user: data }));
     } else {
       try {
-        dispatch(setLoader(true));
-        const newUser = await authServices.createAccount({
+        dispatch(setLoader(true))
+        const newUser = await dispatch(handleCreateAccount({
           ...data,
           isEmailVerify: userEmailVerify,
-        });
+        })).unwrap()
         console.log(newUser, "new user foud");
 
         if (newUser) {
-          dispatch(login(newUser));
-          newUser.admim ? navigate("/admin") : navigate("/employee");
+          navigate("/login")
           toast.success("Account created succesfully");
         }
       } catch (error) {
@@ -111,7 +106,7 @@ const Signup = () => {
     <>
       <div className=" h-screen flex justify-center items-center  bg-[#111111]">
         <form
-          className=" px-5 py-2 flex flex-col  gap-3 rounded-lg shadow-lg w-96 bg-[#1C1C1C]"
+          className=" px-5 py-2 flex flex-col  gap-3 rounded-lg shadow-lg w-96 bg-[#bdbdbd] text-black"
           onSubmit={handleSubmit(handleSignup)}
         >
           <h2 className="text-2xl font-semibold text-center ">Sign Up</h2>
@@ -188,8 +183,8 @@ const Signup = () => {
           {/* Submit Button */}
           <Button
             type="submit"
-            btn="Sign up"
-            className="mt-2 w-full h-10 bg-green-500 text-white font-bold text-base rounded-md hover:bg-green-600 "
+            label="Sign Up"
+            className="justify-center"
           />
 
           {/* Already have an account? */}

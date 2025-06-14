@@ -1,58 +1,73 @@
-import { Client, Account, ID, Databases } from "appwrite";
-import conf from "../config/config.js";
-import dataBaseServices, { databaseServices } from "./Database.js";
-import TaskServices from "./Task.js";
+import { Account, Client, ID } from "appwrite";
 import emailjs from "emailjs-com";
-import { showError } from "../utlity/Error&Sucess.js";
+import conf from "../config/config.js";
+import dataBaseServices from "./Database.js";
+import storageServices from "./storage.js";
 
 export class authService {
   client = new Client();
   account;
 
-  constructor() {
-    this.client
+ constructor() {
+  // Normal client for frontend actions like login/signup
+  this.client
+    .setEndpoint(conf.appwriteUrl)
+    .setProject(conf.appwriteProjectId);
 
-      .setEndpoint(conf.appwriteUrl)
-      .setProject(conf.appwriteProjectId);
-    // .setKey(conf.appwriteAuthKey)
-    this.account = new Account(this.client);
-  }
+  this.account = new Account(this.client);
+}
 
+  
   async createAccount(user) {
     let customUserId = ID.unique();
+    let imageId = "";
+    let userSavedId = "";
     try {
-      let newobj = {
-        ...user,
-        userId: customUserId,
-        newTask: 0,
-        completedTask: 0,
-        acceptedTask: 0,
-        failedTask: 0,
-      };
 
-      console.log(newobj, "obj");
-
-      if(newobj.profile){
-          
-      }
-
-      const setData = await dataBaseServices.setUserProfileData(newobj);
-
-      if (setData) {
-        const userAccount = await this.account.create(
+       await this.account.create(
           customUserId,
           user.email,
           user.password,
           user.username,
           user.number
-        );
+        ); 
+        userSavedId = customUserId;
 
-        return userAccount ? setData : {};
-      } else {
-        throw new Error("Failed to save user profile.");
-      }
+        console.log(setData, "setDATA is saved");
+
+        if (user.profileUrl) {
+          let result = await storageServices.createFile(user.profileUrl[0]);
+          user.profileUrl = result.fileUrl;
+          imageId = result.fileId;
+        }
+       console.log(user , 'image saved');
+       
+        let newobj = {
+          ...user,
+          userId: customUserId,
+          newTask: 0,
+          completedTask: 0,
+          acceptedTask: 0,
+          failedTask: 0,
+        };
+
+        
+        const setData = await dataBaseServices.setUserProfileData(newobj);
+        
+        console.log(setData, "data saved");
+        return setData ? setData : [];
+
     } catch (error) {
       console.log(error);
+
+      if (imageId) {
+        try {
+          await storageServices.deleteFile(imageId);
+        } catch (err) {
+          console.warn("Failed to delete uploaded image:", err.message);
+        }
+      }
+
 
       throw error.message || "Something went wrong";
     }

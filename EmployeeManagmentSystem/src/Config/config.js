@@ -7,7 +7,7 @@ const config = {
     appwriteBucketId: import.meta.env.VITE_APPWRITE_BUCKET_ID,
     appwriteAllTaskCollectionId : import.meta.env.VITE_APPWRITE_ALLTASK_COLLECTION_ID,
     appwriteMessageCollectionId : import.meta.env.VITE_APPWRITE_MESSAGE_COLLECTION_ID ,
-    appwriteAuthKey : import.meta.env.VITE_APPWRITE_AUTH_KEY 
+    appwriteAuthKey : import.meta.env.VITE_APPWRITE_API_KEY
 };
 
 export default config;

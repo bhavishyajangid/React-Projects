@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Input, SelectOption } from "../../export";
+import { HomeSkeleton, Input, Loader, SelectOption } from "../../export";
 import {
   genderOptions,
   maritalStatusOptions,
@@ -7,7 +7,12 @@ import {
   roleOptions,
 } from "../../utlity/SelectOption";
 // import { handleCreatUser } from "../../Store/thunks/signupThunk";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import authServices from "../../Appwrite/Auth";
+import { useNavigate } from "react-router";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { handleCreateAccount } from "../../Store/authSlice";
 
 const AddEmployee = () => {
   const {
@@ -15,21 +20,31 @@ const AddEmployee = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch()
 
+  const {loader}  = useSelector(state => state.authSlice)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const onSubmit = async(data) => {
-    console.log(data);
-    
-  try {
-      await dispatch(handleCreatUser(data)).unwrap()
-     console.log(employee , 'employee');
-     
-  } catch (error) {
-    console.log(error);
-    
-  }
+   data.admin = data.admin == "true" ? true : false
+    try {
+       let employee =  await dispatch(handleCreateAccount(data)).unwrap()
+      if(employee){
+        console.log(employee , 'employee');
+        
+        navigate("/employee")
+        toast.success('Employee Created Sucessfully')
+      }
+    } catch (error) {
+      console.log(error , 'error ocur in the addEmployee');
+      toast.error(error)
+    }
   };
 
+  console.log(loader , 'loader');
+  
+  if(loader){
+    return <Loader/>
+  }
   return (
     <div className="w-full mx-auto p-6 bg-white shadow rounded-lg">
       <form
@@ -63,7 +78,14 @@ const AddEmployee = () => {
           <Input
             label="Phone"
             type="tel"
-            {...register("number", { required: "Phone number is required" , maxLength : {value : 10 , message : "number must be at least 10 characters long "} })}
+            maxLength = "10"
+           {...register("number", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^[0-9]{10}$/, // Only exactly 10 digits
+                message: "Please enter a valid phone number (10 digits)",
+              },
+            })}
           />
           {errors.number && (
             <p className="text-red-500 text-sm">{errors.number.message}</p>
@@ -166,7 +188,7 @@ const AddEmployee = () => {
           <label className="block text-sm mb-1">Upload Image</label>
           <input
             type="file"
-            {...register("profile", { required: "Profile image is required" })}
+            {...register("profileUrl", { required: "Profile image is required" })}
             className="w-full text-sm"
           />
           {errors.profile && (

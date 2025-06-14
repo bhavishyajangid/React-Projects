@@ -42,7 +42,7 @@ console.log('chld');
             Submit
           </button>
           {second !== 0 ? (
-            <p className="text-xs text-white">
+            <p className="text-xs text-gray-700 ">
               {second > 0 ? `Resend OTP in ${second}s` : "Didn’t receive OTP?"}
           </p>
           ) : (

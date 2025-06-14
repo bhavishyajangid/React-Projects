@@ -8,9 +8,7 @@ import { ChatBox, Navbar, Loader } from "../../export";
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  useEffect(() => {
-  console.log("Home rendered")
-}, [])
+
   return (
     
     <div className="h-screen w-full overflow-hidden bg-gray-100 text-gray-800 font-sans flex flex-col">
