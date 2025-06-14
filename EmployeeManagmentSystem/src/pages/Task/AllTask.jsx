@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useEffect } from "react";
-import { CardSkeleton, Loader, RejectedTask, TaskCard } from "../../export";
+import { Button, CardSkeleton, Loader, RejectedTask, TaskCard } from "../../export";
 import { FilterBar } from "../../export"; // adjust path as needed
 import { useState } from "react";
-import { FaCirclePlus } from "react-icons/fa6";
+
 import { Link, Navigate, useLocation } from "react-router";
 import { FiFilter } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -93,10 +93,7 @@ const AllTask = ({ tasks, heading }) => {
          
               <div className="flex justify-end items-center">
                 <Link to="/addTask">
-                  <button className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-1.5 rounded-lg shadow-sm transition duration-200 max-sm:text-sm">
-                    <FaCirclePlus className="text-lg max-sm:text-sm" />
-                    <span>Add Task</span>
-                  </button>
+                  <Button label="Add Task" type=""/>
                 </Link>
               </div>
           

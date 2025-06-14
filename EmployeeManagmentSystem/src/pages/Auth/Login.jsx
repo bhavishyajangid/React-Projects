@@ -45,10 +45,10 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#111111]">
       <form
-        className="w-96 p-5 flex flex-col gap-3  bg-[#1C1C1C] rounded-lg shadow-lg "
+        className="w-96 p-5 flex flex-col gap-3 bg-[#e4e4e4]  rounded-lg shadow-lg "
         onSubmit={handleSubmit(LoginDetails)}
       >
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6 text-black">Login</h2>
         <Input
           type="text"
           label="Username"
@@ -62,9 +62,8 @@ const Login = () => {
         />
 
         <Button
-          type="submit"
-          className="mt-5  w-full h-9 bg-green-500  text-white font-medium rounded-md hover:bg-green-600"
-          btn="Login"
+        className="justify-center"
+          label="Login"
         />
 
         <div className=" text-center">
