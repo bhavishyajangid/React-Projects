@@ -10,7 +10,7 @@ const App = () => {
     
     <div className='max-w-md  min-h-screen m-auto overflow-hidden relative'>
       <Navbar/>
-      <Referall/>
+      {/* <Referall/> */}
      <Home/>
      
       

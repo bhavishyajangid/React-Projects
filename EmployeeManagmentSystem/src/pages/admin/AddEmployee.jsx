@@ -13,31 +13,44 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { handleCreateAccount } from "../../Store/authSlice";
+import { validateAdminPassword } from "../../utlity/verifyAdmin";
 
 const AddEmployee = () => {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const {loader}  = useSelector(state => state.authSlice)
+  const {loader , currentUserDetails}  = useSelector(state => state.authSlice)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const onSubmit = async(data) => {
-   data.admin = data.admin == "true" ? true : false
-    try {
-       let employee =  await dispatch(handleCreateAccount(data)).unwrap()
-      if(employee){
-        console.log(employee , 'employee');
-        
-        navigate("/employee")
-        toast.success('Employee Created Sucessfully')
-      }
-    } catch (error) {
-      console.log(error , 'error ocur in the addEmployee');
-      toast.error(error)
+    clearErrors()
+      data.admin = data.admin == "true" ? true : false
+        try {
+           let employee =  await dispatch(handleCreateAccount({data , currentUser : currentUserDetails || null})).unwrap()
+          if(employee){
+            console.log(employee , 'employee');
+            navigate("/user")
+             reset();
+            toast.success('Employee Created Sucessfully')
+          }
+        } catch (error) {
+            if (error?.field && error?.message) {
+      setError(error.field, {
+        type: "manual",
+        message: error.message,
+      });
+    } else {
+      toast.error(error?.message || "Something went wrong");
     }
+        }
+      
+  
   };
 
   console.log(loader , 'loader');
@@ -124,16 +137,6 @@ const AddEmployee = () => {
           />
         </div>
 
-        <div>
-          <Input
-            label="Designation"
-            {...register("designation", { required: "Designation is required" })}
-            placeholder="Designation"
-          />
-          {errors.designation && (
-            <p className="text-red-500 text-sm">{errors.designation.message}</p>
-          )}
-        </div>
 
         <div>
           <SelectOption
@@ -172,6 +175,25 @@ const AddEmployee = () => {
           />
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Input
+            label="Admin Password for Security"
+            type="password"
+            {...register("adminPassword", { 
+                required: "Admin Password is required",
+                 minLength: {
+      value: 8,
+      message: "Password must be at least 8 characters long",
+    },
+
+             })}
+            placeholder="******"
+          />
+          {errors.adminPassword && (
+            <p className="text-red-500 text-sm">{errors.adminPassword.message}</p>
           )}
         </div>
 

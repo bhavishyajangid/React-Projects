@@ -19,13 +19,13 @@ export const deleteUser = createAsyncThunk(
 
 export const handleCreateAccount = createAsyncThunk(
   "auth/user",
-  async (data, { rejectWithValue }) => {
+  async (data , currentUser, { rejectWithValue }) => {
     const verifyEmailExist = await dataBaseServices.emailIsExists(data.email);
     if (verifyEmailExist) {
       return rejectWithValue("Email Already In Use !! Try Another Email");
     }
     try {
-      let user = await authServices.createAccount(data);
+      let user = await authServices.createAccount(data , currentUser);
       return user;
     } catch (error) {
       return rejectWithValue(error);

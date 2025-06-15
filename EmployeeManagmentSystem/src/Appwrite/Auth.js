@@ -3,8 +3,10 @@ import emailjs from "emailjs-com";
 import conf from "../config/config.js";
 import dataBaseServices from "./Database.js";
 import storageServices from "./storage.js";
+import { validateAdminPassword } from "../utlity/verifyAdmin.js";
 
 export class authService {
+  
   client = new Client();
   account;
 
@@ -15,25 +17,33 @@ export class authService {
     .setProject(conf.appwriteProjectId);
 
   this.account = new Account(this.client);
+
 }
 
   
-  async createAccount(user) {
+  async createAccount(user , currentUser) {
+    
     let customUserId = ID.unique();
     let imageId = "";
     let userSavedId = "";
+    let userCreated = false
+    let sessionDeleted = false
+ 
     try {
+    
+      
+        if (currentUser?.admin) {
+         let isValid  = await validateAdminPassword(currentUser.email, user.adminPassword);
+         if(!isValid) throw new Error('admin password is invalid')
+        }
+      
+      
+     
 
-       await this.account.create(
-          customUserId,
-          user.email,
-          user.password,
-          user.username,
-          user.number
-        ); 
-        userSavedId = customUserId;
+      console.log('password is valid');
+      
 
-        console.log(setData, "setDATA is saved");
+        // console.log(setData, "setDATA is saved");
 
         if (user.profileUrl) {
           let result = await storageServices.createFile(user.profileUrl[0]);
@@ -50,17 +60,51 @@ export class authService {
           acceptedTask: 0,
           failedTask: 0,
         };
-
+         delete newobj.password;
+         delete newobj.adminPassword
         
         const setData = await dataBaseServices.setUserProfileData(newobj);
+        userSavedId = setData.$id;
+        console.log("data saved");
+
+
         
-        console.log(setData, "data saved");
-        return setData ? setData : [];
+         if(currentUser?.admin && setData){
+         await this.account.deleteSession('current')
+          sessionDeleted = true
+      }
+
+      
+ console.log("delete session");
+ 
+     let finalUser =   await this.account.create(
+          customUserId,
+          user.email,
+          user.password,
+          user.userName,
+        ); 
+
+        userCreated = true
+        
+console.log(finalUser , 'account create');
+
+
+  if(finalUser){
+           if(currentUser?.admin){
+             return await this.login({email : currentUser.email, password : user.adminPassword})
+           }else{
+             return finalUser ? setData : []
+           }
+        }
+
+        
 
     } catch (error) {
       console.log(error);
 
-      if (imageId) {
+      if (imageId && !userCreated) {
+        console.log('delete image');
+        
         try {
           await storageServices.deleteFile(imageId);
         } catch (err) {
@@ -68,8 +112,19 @@ export class authService {
         }
       }
 
+      if(userSavedId && !userCreated){
+        console.log('delete saved data');
+        
+         await dataBaseServices.deleteUserFromDatabase(userSavedId)
+      }
 
-      throw error.message || "Something went wrong";
+       if(sessionDeleted && currentUser?.admin){
+        console.log('login user again');
+        
+          await this.login({email : currentUser.email , password : user.adminPassword})
+       }
+
+       throw new Error(error?.message || "Something went wrong");
     }
   }
 
