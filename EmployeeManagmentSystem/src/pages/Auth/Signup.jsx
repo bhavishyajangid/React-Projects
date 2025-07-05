@@ -1,18 +1,18 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import authServices from "../../Appwrite/Auth";
-import dataBaseServices from "../../Appwrite/Database";
 import { Button, Input, Loader, VerifyOtp } from "../../export";
-import { handleCreateAccount, login } from "../../Store/authSlice";
+
 import {
+  resetState,
   setGeneratedOtp,
   setLoader,
   setOtpSend,
 } from "../../Store/otpSendSlice";
-import { resetState } from "../../Store/otpSendSlice";
+import { handleCreateAccount } from "../../Store/thunks/userThunk";
 
 const Signup = () => {
   console.log("signup");

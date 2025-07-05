@@ -1,21 +1,22 @@
 
-import { lazy, StrictMode, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider
 } from 'react-router-dom'
+import './index.css'
 
-import App from './App.jsx'
-import { AddEmployee, AllTask, Home, Loader, ProtectedLayout } from './export.js'
 import { Provider } from 'react-redux'
+import App from './App.jsx'
+import { AllTask, Home, Loader, ProtectedLayout } from './export.js'
 import store from './Store/index.js'
 
 import HomeRedirect from './Routes/HomeRedirect.jsx'
 import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
+
 
 // Lazy imports
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
@@ -31,6 +32,8 @@ const AddTask = lazy(() => import('./pages/admin/AddTask.jsx'))
 const Task = lazy(() => import('./pages/admin/Task.jsx'))
 const EmployeeDashboard = lazy(() => import('./pages/Dashboard/EmployeeDashboard.jsx'))
 const AdminDashboard = lazy(() => import('./pages/Dashboard/AdminDashboard.jsx'))
+const EmployeeInfo = lazy(() => import('./pages/admin/EmployeeInfo.jsx'))
+const EmployeeInfoProvider = lazy(() => import('./pages/admin/EmployeeInfoProvider.jsx'))
 
 // Router setup
 const router = createBrowserRouter(
@@ -59,7 +62,8 @@ const router = createBrowserRouter(
           <Route path="/user" element={<AllEmployee />} />
           <Route path="/addTask" element={<AddTask />} />
           <Route path="/editTask/:taskId" element={<EditTask />} />
-          <Route path="/addEmployee" element={<AddEmployee/>} />
+          <Route path='/employeeInfo' element={<EmployeeInfo/>} />
+          <Route path="/editEmployee/:employeeId" element={<EmployeeInfoProvider/>} />
         </Route>
       </Route>
     </Route>

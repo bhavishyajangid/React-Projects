@@ -35,7 +35,7 @@ import ProtectedLayout from "./Routes/ProtectedLayout.jsx";
 import Task from "./pages/admin/Task.jsx";
 import TaskFullPageSkeleton from "./components/skeleton/TaskFullPageSkeleton.jsx";
 import FilterBar from "./components/FilterBar.jsx";
-import AddEmployee from "./pages/admin/AddEmployee.jsx";
+import AddEmployee from "./pages/admin/AddOrEditEmployee.jsx";
 import SelectOption from "./components/SelectOption.jsx";
 export  {
     Login, 

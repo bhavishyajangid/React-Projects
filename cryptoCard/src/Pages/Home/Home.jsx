@@ -9,7 +9,7 @@ import Guarantee from '../../components/Guarantee';
 import Header from '../../components/Header';
 
 const Home = () => (
-  <div className="w-full min-h-screen flex flex-col bg-black">
+  <div className="w-full min-h-screen flex flex-col bg-black ">
   <Header/>
   <FeatureCards />
   <ScrollWithImage />

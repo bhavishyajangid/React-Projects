@@ -16,6 +16,6 @@ export const departmentOptions = [
 ];
 
 export const roleOptions = [
-  { label: 'Admin', value: true },
-  { label: 'Employee', value: false },
+  { value: "Admin", label: "Admin" },
+  { value: "Employee", label: "Employee" },
 ];

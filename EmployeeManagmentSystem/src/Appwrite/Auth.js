@@ -234,6 +234,16 @@ console.log(finalUser , 'account create');
       return false;
     }
   }
+
+  async updateUser(data , nameEdit , emailEdit , passwordEdit){
+     try {
+       if(nameEdit){
+          this.account.updateName(data.userName)
+       }
+     } catch (error) {
+      
+     }
+  }
 }
 
 const authServices = new authService();

@@ -6,7 +6,7 @@ const Guarantee = () => {
     {/* Image section */}
     <div className="px-5">
     <img
-      src="/man.jpg" // Replace with actual image URL or import
+      src="/man.jpg"
       alt="Man holding Bepjet card"
       className="w-full h-96 object-cover rounded-md "
     />

@@ -32,21 +32,22 @@ const AllEmployee = () => {
   if (!allEmployee) return <UserSkeleton />;
 
   return (
-   <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
+   <div className="p-4 bg-gray-100 max-sm:p-2 ">
+      <div className="flex justify-between mb-10 max-sm:flex-col max-sm:justify-start max-sm:gap-5">
         <h2 className="text-2xl font-semibold text-gray-800">Manage Employees</h2>
-        <Link to="/addEmployee">
+        {/* <Link to="/addEmployee">
        <Button label='Add Employee' type=''/>
-        </Link>
-      </div>
-
-      <div className="mb-4">
+        </Link> */}
+        <div className="">
         <input
           type="text"
           placeholder="Search By Employee ID"
-          className="w-64 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-teal-200"
+          className="w-64 px-4 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-teal-200"
         />
       </div>
+      </div>
+
+      
 
       <div className="overflow-x-auto shadow-md rounded-lg bg-white">
         <table className="min-w-full table-auto text-sm text-left text-gray-700">
@@ -73,7 +74,7 @@ const AllEmployee = () => {
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">
                     <img
-                      src={emp.profileImage || '/default-avatar.png'}
+                      src={emp.profileUrl || '/default-avatar.png'}
                       alt="profile"
                       className="h-10 w-10 rounded-full object-cover"
                     />
@@ -82,12 +83,16 @@ const AllEmployee = () => {
                   <td className="px-4 py-3">{emp.dob || 'N/A'}</td>
                   <td className="px-4 py-3">{emp.department || 'N/A'}</td>
                   <td className="px-4 py-3 flex gap-2 flex-wrap">
+                    <Link to={`/editEmployee/${emp.userId}?mode=view`}>
                     <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow">
                       View
                     </button>
+                    </Link>
+                    <Link to={`/editEmployee/${emp.userId}?mode=edit`}>
                     <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow">
                       Edit
                     </button>
+                    </Link>
                     <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow">
                       Salary
                     </button>

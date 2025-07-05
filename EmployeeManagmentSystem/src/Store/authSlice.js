@@ -1,37 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authServices from "../Appwrite/Auth";
-import dataBaseServices from "../Appwrite/Database";
-
-export const deleteUser = createAsyncThunk(
-  "auth/deleteUser",
-
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await dataBaseServices.deleteUserFromDatabase(userId);
-      console.log("User deleted successfully:", response);
-      return response;
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const handleCreateAccount = createAsyncThunk(
-  "auth/user",
-  async (data , currentUser, { rejectWithValue }) => {
-    const verifyEmailExist = await dataBaseServices.emailIsExists(data.email);
-    if (verifyEmailExist) {
-      return rejectWithValue("Email Already In Use !! Try Another Email");
-    }
-    try {
-      let user = await authServices.createAccount(data , currentUser);
-      return user;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
+import { editUser } from "./thunks/userThunk";
+import { handleCreateAccount } from "./thunks/userThunk";
 
 const authSlice = createSlice({
   name: "auth",
@@ -61,7 +30,7 @@ const authSlice = createSlice({
     builder
 
       .addCase(handleCreateAccount.pending, (state) => {
-        state.loader = true
+        state.loader = true;
       })
       .addCase(handleCreateAccount.fulfilled, (state, action) => {
         if (state.currentUserDetails?.admin) {
@@ -69,6 +38,21 @@ const authSlice = createSlice({
         }
       })
       .addCase(handleCreateAccount.rejected, (state) => {
+        state.loader = false;
+      })
+
+      .addCase(editUser.pending, (state) => {
+        state.loader = true;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        const index = state.allEmployee.findIndex(
+          (user) => user.$id === action.payload.$id
+        );
+        if (index !== -1) {
+          state.allEmployee[index] = action.payload; // Correctly replace the old object
+        }
+      })
+      .addCase(editUser.rejected, (state) => {
         state.loader = false;
       });
   },

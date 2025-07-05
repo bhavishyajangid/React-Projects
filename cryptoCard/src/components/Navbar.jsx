@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TbMenu } from "react-icons/tb";
-import Sidebar from './Sidebar';
 import { RxCross2 } from "react-icons/rx";
+import Sidebar from './Sidebar';
 const Navbar = () => {
   const [isOpen , setIsOpen] = useState(false)
   return (
