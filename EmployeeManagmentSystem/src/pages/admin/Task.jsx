@@ -10,10 +10,6 @@ const Task = () => {
     <div>
     
       <GridCards />
-
-   
-    
-
       {/* Task List Section */}
       <AllTask tasks={allTask} heading="Pending Task" />
     </div>

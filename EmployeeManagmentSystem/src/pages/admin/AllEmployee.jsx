@@ -1,112 +1,181 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import dataBaseServices from '../../Appwrite/Database';
-import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router';
-import UserCard from '../../components/UserCard';
-import { Button, ChatBox, UserSkeleton } from '../../export';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { Link } from 'react-router';
+import { UserSkeleton } from '../../export';
+import { FaFilter } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa";
 const AllEmployee = () => {
-   const {allEmployee} = useSelector(state => state.authSlice)
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { allEmployee } = useSelector(state => state.authSlice)
+  const [inputVal, setInputVal] = useState("")
+  const [employee, setAllemployee] = useState(allEmployee)
+  const [department, setDepartment] = useState("")
+  const [filter, setFilter] = useState(false)
 
+  console.log('rerender');
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const filtered = (inputVal.trim() === "" && department == "")
+        ? allEmployee : (department !== "" && inputVal.trim() == "") ? allEmployee.filter((item) => item.department == department)
+          : employee.filter(item =>
+            item.userName?.toLowerCase().includes(inputVal.toLowerCase())
+          );
+      setAllemployee(filtered);
+    }, 300); // debounce delay
 
-
-  const deleteUser = useCallback(async (userId) => {
-    setLoading(true);
-    try {
-      const res = await dataBaseServices.deleteUserFromDatabase(userId);
-      if (res) {
-        toast.success("User Deleted Successfully");
-        setAllUser(prev => prev.filter(item => item.userId !== userId));
-        navigate("/user");
-      }
-    } catch (error) {
-      toast.error(error.message || "Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    return () => clearTimeout(timer);
+  }, [inputVal, allEmployee, department]);
 
   if (!allEmployee) return <UserSkeleton />;
 
+
   return (
-   <div className="p-4 bg-gray-100 max-sm:p-2 ">
-      <div className="flex justify-between mb-10 max-sm:flex-col max-sm:justify-start max-sm:gap-5">
-        <h2 className="text-2xl font-semibold text-gray-800">Manage Employees</h2>
-        {/* <Link to="/addEmployee">
-       <Button label='Add Employee' type=''/>
-        </Link> */}
-        <div className="">
-        <input
-          type="text"
-          placeholder="Search By Employee ID"
-          className="w-64 px-4 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-teal-200"
-        />
-      </div>
-      </div>
+    <>
+      <div className="p-4 bg-gray-100 max-sm:p-2 max-sm:hidden ">
+        <div className="flex justify-between mb-10 max-sm:flex-col max-sm:justify-start max-sm:gap-5">
+          <div className='flex justify-between items-center'>
+            <h2 className="text-2xl font-semibold text-gray-800">Manage Employees</h2>
+            <button onClick={() => setFilter(prev => !prev)} className='sm:hidden px-4 py-2 bg-blue-400 text-sm text-white font-semibold rounded-lg flex gap-2 items-center'> <span><FaFilter /></span>Filter</button>
+          </div>
 
-      
 
-      <div className="overflow-x-auto shadow-md rounded-lg bg-white">
-        <table className="min-w-full table-auto text-sm text-left text-gray-700">
-          <thead className="bg-gray-200 text-gray-700 font-semibold">
-            <tr>
-              <th className="px-4 py-3">S No</th>
-              <th className="px-4 py-3">Image</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">DOB</th>
-              <th className="px-4 py-3">Department</th>
-              <th className="px-4 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allEmployee.length === 0 ? (
+          <div className={`gap-3 ${filter ? 'flex' : 'hidden'} sm:flex`}>
+            <div>
+              <select onChange={(e) => {
+                setDepartment(e.target.value)
+              }} className='px-4 py-1.5 rounded-lg text-sm border border-gray-200'>
+                <option value="" className=''>Department</option>
+                <option value="Tech" className=''>Tech</option>
+                <option value="HR" className=''>HR</option>
+                <option value="Marketing" className=''>Marketing</option>
+
+              </select>
+            </div>
+            <input
+              type="text"
+              value={inputVal}
+              onChange={(e) => { setInputVal(e.target.value) }}
+              placeholder="Search By Employee Name "
+              className="w-64 px-4 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-teal-200"
+            />
+          </div>
+        </div>
+
+
+
+        <div className="overflow-x-auto shadow-md rounded-lg bg-white">
+          <table className="min-w-full table-auto text-sm text-left text-gray-700">
+            <thead className="bg-gray-200 text-gray-700 font-semibold">
               <tr>
-                <td colSpan="6" className="text-center py-4 text-gray-500">
-                  No employees found.
-                </td>
+                <th className="px-4 py-3">S No</th>
+                <th className="px-4 py-3">Image</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">DOB</th>
+                <th className="px-4 py-3">Department</th>
+                <th className="px-4 py-3">Action</th>
               </tr>
-            ) : (
-              allEmployee.map((emp, index) => (
-                <tr key={emp.$id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3">{index + 1}</td>
-                  <td className="px-4 py-3">
-                    <img
-                      src={emp.profileUrl || '/default-avatar.png'}
-                      alt="profile"
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  </td>
-                  <td className="px-4 py-3 capitalize">{emp.userName}</td>
-                  <td className="px-4 py-3">{emp.dob || 'N/A'}</td>
-                  <td className="px-4 py-3">{emp.department || 'N/A'}</td>
-                  <td className="px-4 py-3 flex gap-2 flex-wrap">
-                    <Link to={`/editEmployee/${emp.userId}?mode=view`}>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow">
-                      View
-                    </button>
-                    </Link>
-                    <Link to={`/editEmployee/${emp.userId}?mode=edit`}>
-                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow">
-                      Edit
-                    </button>
-                    </Link>
-                    <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow">
-                      Salary
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow">
-                      Leave
-                    </button>
+            </thead>
+            <tbody>
+              {employee.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-4 text-gray-500">
+                    No employees found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                employee.map((emp, index) => (
+                  <tr key={emp.$id} className="border-t hover:bg-gray-50">
+                    <td className="px-4 py-3">{index + 1}</td>
+                    <td className="px-4 py-3">
+                      <img
+                        src={emp.profileUrl || '/default-avatar.png'}
+                        alt="profile"
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    </td>
+                    <td className="px-4 py-3 capitalize">{emp.userName}</td>
+                    <td className="px-4 py-3">{emp.dob || 'N/A'}</td>
+                    <td className="px-4 py-3">{emp.department || 'N/A'}</td>
+                    <td className="px-4 py-3 flex gap-2 flex-wrap">
+                      <Link to={`/editEmployee/${emp.userId}?mode=view`}>
+                        <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow">
+                          View
+                        </button>
+                      </Link>
+                      <Link to={`/editEmployee/${emp.userId}?mode=edit`}>
+                        <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow">
+                          Edit
+                        </button>
+                      </Link>
+                      <Link to='/salaryhistory'>
+                        <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow text-sm">
+                          Salary
+                        </button>
+                      </Link>
+                      <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow">
+                        Leave
+                      </button>
+
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+
+      {/* mobile view  */}
+
+      <div className="sm:hidden space-y-4">
+        {employee.length === 0 ? (
+          <div className="text-center py-4 text-gray-500">No employees found.</div>
+        ) : (
+          employee.map((employee) => (
+            <div className="bg-white shadow rounded-lg p-4 border">
+              <div className="flex items-center gap-4 mb-2">
+                <img
+                  src={employee.profileUrl || '/default-avatar.png'}
+                  alt="profile"
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+                <div>
+                  <div className="text-lg font-semibold capitalize">{employee.userName}</div>
+                  <div className="text-sm text-gray-500">{employee.department || 'N/A'}</div>
+                </div>
+              </div>
+              <div className="text-sm text-gray-700 mb-2">
+                DOB: {employee.dob || 'N/A'}
+              </div>
+              <div className="flex flex-wrap justify-end gap-2">
+                <Link to={`/editEmployee/${employee.userId}?mode=view`}>
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow text-sm">
+                    View
+                  </button>
+                </Link>
+                <Link to={`/editEmployee/${employee.userId}?mode=edit`}>
+                  <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow text-sm">
+                    Edit
+                  </button>
+                </Link>
+                <Link to='/salaryhistory'>
+                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow text-sm">
+                    Salary
+                  </button>
+                </Link>
+                <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow text-sm">
+                  Leave
+                </button>
+              </div>
+            </div>
+
+          ))
+        )}
+      </div>
+
+    </>
+
 
   );
 };

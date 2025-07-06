@@ -18,6 +18,7 @@ import HomeRedirect from './Routes/HomeRedirect.jsx'
 import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
 
 
+
 // Lazy imports
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
@@ -34,6 +35,7 @@ const EmployeeDashboard = lazy(() => import('./pages/Dashboard/EmployeeDashboard
 const AdminDashboard = lazy(() => import('./pages/Dashboard/AdminDashboard.jsx'))
 const EmployeeInfo = lazy(() => import('./pages/admin/EmployeeInfo.jsx'))
 const EmployeeInfoProvider = lazy(() => import('./pages/admin/EmployeeInfoProvider.jsx'))
+const SalaryHistory = lazy(() => import('./pages/salary/SalaryHistory.jsx'))
 
 // Router setup
 const router = createBrowserRouter(
@@ -54,6 +56,7 @@ const router = createBrowserRouter(
           <Route path="/acceptedTask" element={<AcceptedTask />} />
           <Route path="/rejectedTask" element={<RejectedTask />} />
           <Route path="/task" element={<Task />} />
+          <Route path="/salaryhistory" element={<SalaryHistory/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>

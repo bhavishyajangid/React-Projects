@@ -29,6 +29,7 @@ const EmployeeInfo = ({employee}) => {
   ];
 
   return (
+    <>
     <div className=" flex justify-center mt-10">
       <div className="bg-white shadow-xl rounded-3xl overflow-hidden w-full max-w-5xl grid grid-cols-1 md:grid-cols-3">
         {/* Left Side - Profile Image */}
@@ -62,6 +63,9 @@ const EmployeeInfo = ({employee}) => {
         </div>
       </div>
     </div>
+
+    
+    </>
   );
 };
 

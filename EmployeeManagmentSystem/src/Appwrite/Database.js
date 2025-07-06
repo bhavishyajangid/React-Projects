@@ -50,8 +50,6 @@ export class databaseServices {
   }
 
   async getUser(indentifier, queryType = "userId") {
-    console.log(indentifier, queryType, "kahdfg");
-
     if (!["userId", "userName"].includes(queryType)) {
       throw new Error("Invalid query type. Must be 'userId' or 'userName'.");
     }
@@ -61,7 +59,6 @@ export class databaseServices {
         conf.appwriteAuthCollectionId, // Your collection ID
         [Query.equal(queryType, indentifier)] // Query to find the user by userId
       );
-      console.log(userDetails, "userDetail");
 
       return userDetails.documents[0] || []; // Return the first document (user)
     } catch (error) {
@@ -131,8 +128,6 @@ export class databaseServices {
       if (user) return user;
     } catch (error) {
       if (imageId) {
-        console.log("delete image");
-
         try {
           await storageServices.deleteFile(imageId);
         } catch (err) {

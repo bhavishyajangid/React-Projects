@@ -10,9 +10,9 @@ const EmployeeInfoProvider = () => {
     const {employeeId} = useParams()
    const [searchParams] = useSearchParams()
    const mode = searchParams.get("mode")
-    console.log(employeeId , 'adfasdfas');
+   
     
-    console.log(mode , 'mode');
+    
     
     const [employee , setEmployee] = useState(null)
 

@@ -51,6 +51,7 @@ const authSlice = createSlice({
         if (index !== -1) {
           state.allEmployee[index] = action.payload; // Correctly replace the old object
         }
+        state.loader = false
       })
       .addCase(editUser.rejected, (state) => {
         state.loader = false;
