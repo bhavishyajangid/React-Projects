@@ -10,25 +10,29 @@ import {
   FaTimes,
   FaTasks,
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 
 
-const sidebarOptions = [
-   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" },
-  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" },
-  { id: 3, label: 'Departments', icon: <FaBuilding /> , link : "" },
-  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task'},
-  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link : "" },
-  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : "" },
-  { id: 7, label: 'Setting', icon: <FaCog />, link : "" },
-];
+
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const {currentUserDetails} = useSelector(state => state.authSlice)
   const [activeOption , setActiveOption] = useState(1)
 
   const handleSelect = (id) => {
     setActiveOption(id);
   };
+
+  const sidebarOptions = [
+   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" },
+  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" },
+  { id: 3, label: 'Departments', icon: <FaBuilding /> , link : "" },
+  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task'},
+  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link : "" },
+  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : "/salaryhistory" },
+  { id: 7, label: 'Setting', icon: <FaCog />, link : "" },
+];
   return (
     <>
       <div

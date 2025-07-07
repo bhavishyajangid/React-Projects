@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 export class databaseServices {
   client = new Client();
   database;
+  salary
 
   constructor() {
     this.client
@@ -14,6 +15,7 @@ export class databaseServices {
       .setEndpoint(conf.appwriteUrl)
       .setProject(conf.appwriteProjectId);
     this.database = new Databases(this.client);
+    this.salary = new Databases(this.client)
   }
 
   async emailIsExists(emailToCheck) {
@@ -82,6 +84,7 @@ export class databaseServices {
       console.log("error while fetching all user form database", error);
     }
   }
+
   async deleteUserFromDatabase(userId) {
     try {
       // Assuming you have a "users" collection and the userId is the document ID
@@ -138,6 +141,39 @@ export class databaseServices {
       throw new Error(error.message || "User not found or update failed");
     }
   }
+
+ async addSalary(data) {
+      try {
+        const result = await this.salary.createDocument(
+          conf.appwriteDatabaseId,
+          conf.appwriteSalaryCollectionId,
+          ID.unique(),
+          data
+        )
+       return result ? result : []
+      } catch (error) {
+        throw error.message || "failed to add salary"
+      }
+ }
+
+ async fetchSalaryHistory(userId){
+  console.log(userId);
+  
+    try {
+       const salary = await this.salary.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteSalaryCollectionId,
+        [Query.equal("employeeId",  userId)]
+       )
+
+       return salary ? salary.documents : []
+    } catch (error) {
+      console.log(error);
+      
+      throw error.message || "failed to fetch salary details"
+    }
+ }
+   
 }
 
 const dataBaseServices = new databaseServices();

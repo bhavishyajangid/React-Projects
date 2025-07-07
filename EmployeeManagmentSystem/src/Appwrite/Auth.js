@@ -6,105 +6,94 @@ import storageServices from "./storage.js";
 import { validateAdminPassword } from "../utlity/verifyAdmin.js";
 
 export class authService {
-  
   client = new Client();
   account;
 
- constructor() {
-  // Normal client for frontend actions like login/signup
-  this.client
-    .setEndpoint(conf.appwriteUrl)
-    .setProject(conf.appwriteProjectId);
+  constructor() {
+    // Normal client for frontend actions like login/signup
+    this.client
+      .setEndpoint(conf.appwriteUrl)
+      .setProject(conf.appwriteProjectId);
 
-  this.account = new Account(this.client);
+    this.account = new Account(this.client);
+  }
 
-}
-
-  
-  async createAccount(user , currentUser) {
-    
+  async createAccount(user, currentUser) {
     let customUserId = ID.unique();
     let imageId = "";
     let userSavedId = "";
-    let userCreated = false
-    let sessionDeleted = false
- 
+    let userCreated = false;
+    let sessionDeleted = false;
+
     try {
-    
-      
-        if (currentUser?.admin) {
-         let isValid  = await validateAdminPassword(currentUser.email, user.adminPassword);
-         if(!isValid) throw new Error('admin password is invalid')
-        }
-      
-      
-     
-
-      console.log('password is valid');
-      
-
-        // console.log(setData, "setDATA is saved");
-
-        if (user.profileUrl) {
-          let result = await storageServices.createFile(user.profileUrl[0]);
-          user.profileUrl = result.fileUrl;
-          imageId = result.fileId;
-        }
-       console.log(user , 'image saved');
-       
-        let newobj = {
-          ...user,
-          userId: customUserId,
-          newTask: 0,
-          completedTask: 0,
-          acceptedTask: 0,
-          failedTask: 0,
-        };
-         delete newobj.password;
-         delete newobj.adminPassword
-        
-        const setData = await dataBaseServices.setUserProfileData(newobj);
-        userSavedId = setData.$id;
-        console.log("data saved");
-
-
-        
-         if(currentUser?.admin && setData){
-         await this.account.deleteSession('current')
-          sessionDeleted = true
+      if (currentUser?.admin) {
+        let isValid = await validateAdminPassword(
+          currentUser.email,
+          user.adminPassword
+        );
+        if (!isValid) throw new Error("admin password is invalid");
       }
 
-      
- console.log("delete session");
- 
-     let finalUser =   await this.account.create(
-          customUserId,
-          user.email,
-          user.password,
-          user.userName,
-        ); 
+      console.log("password is valid");
 
-        userCreated = true
-        
-console.log(finalUser , 'account create');
+      // console.log(setData, "setDATA is saved");
 
+      if (user.profileUrl) {
+        let result = await storageServices.createFile(user.profileUrl[0]);
+        user.profileUrl = result.fileUrl;
+        imageId = result.fileId;
+      }
+      console.log(user, "image saved");
 
-  if(finalUser){
-           if(currentUser?.admin){
-             return await this.login({email : currentUser.email, password : user.adminPassword})
-           }else{
-             return finalUser ? setData : []
-           }
+      let newobj = {
+        ...user,
+        userId: customUserId,
+        newTask: 0,
+        completedTask: 0,
+        acceptedTask: 0,
+        failedTask: 0,
+      };
+      delete newobj.password;
+      delete newobj.adminPassword;
+
+      const setData = await dataBaseServices.setUserProfileData(newobj);
+      userSavedId = setData.$id;
+      console.log("data saved");
+
+      if (currentUser?.admin && setData) {
+        await this.account.deleteSession("current");
+        sessionDeleted = true;
+      }
+
+      console.log("delete session");
+
+      let finalUser = await this.account.create(
+        customUserId,
+        user.email,
+        user.password,
+        user.userName
+      );
+
+      userCreated = true;
+
+      console.log(finalUser, "account create");
+
+      if (finalUser) {
+        if (currentUser?.admin) {
+          return await this.login({
+            email: currentUser.email,
+            password: user.adminPassword,
+          });
+        } else {
+          return finalUser ? setData : [];
         }
-
-        
-
+      }
     } catch (error) {
       console.log(error);
 
       if (imageId && !userCreated) {
-        console.log('delete image');
-        
+        console.log("delete image");
+
         try {
           await storageServices.deleteFile(imageId);
         } catch (err) {
@@ -112,19 +101,22 @@ console.log(finalUser , 'account create');
         }
       }
 
-      if(userSavedId && !userCreated){
-        console.log('delete saved data');
-        
-         await dataBaseServices.deleteUserFromDatabase(userSavedId)
+      if (userSavedId && !userCreated) {
+        console.log("delete saved data");
+
+        await dataBaseServices.deleteUserFromDatabase(userSavedId);
       }
 
-       if(sessionDeleted && currentUser?.admin){
-        console.log('login user again');
-        
-          await this.login({email : currentUser.email , password : user.adminPassword})
-       }
+      if (sessionDeleted && currentUser?.admin) {
+        console.log("login user again");
 
-       throw new Error(error?.message || "Something went wrong");
+        await this.login({
+          email: currentUser.email,
+          password: user.adminPassword,
+        });
+      }
+
+      throw new Error(error?.message || "Something went wrong");
     }
   }
 
@@ -235,14 +227,12 @@ console.log(finalUser , 'account create');
     }
   }
 
-  async updateUser(data , nameEdit , emailEdit , passwordEdit){
-     try {
-       if(nameEdit){
-          this.account.updateName(data.userName)
-       }
-     } catch (error) {
-      
-     }
+  async updateUser(data, nameEdit, emailEdit, passwordEdit) {
+    try {
+      if (nameEdit) {
+        this.account.updateName(data.userName);
+      }
+    } catch (error) {}
   }
 }
 

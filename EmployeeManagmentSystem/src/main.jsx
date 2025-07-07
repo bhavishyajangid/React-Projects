@@ -19,6 +19,7 @@ import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
 
 
 
+
 // Lazy imports
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
@@ -35,7 +36,9 @@ const EmployeeDashboard = lazy(() => import('./pages/Dashboard/EmployeeDashboard
 const AdminDashboard = lazy(() => import('./pages/Dashboard/AdminDashboard.jsx'))
 const EmployeeInfo = lazy(() => import('./pages/admin/EmployeeInfo.jsx'))
 const EmployeeInfoProvider = lazy(() => import('./pages/admin/EmployeeInfoProvider.jsx'))
-const SalaryHistory = lazy(() => import('./pages/salary/SalaryHistory.jsx'))
+const SalaryHistory = lazy(() => import('./pages/admin/salary/SalaryHistory.jsx'))
+const LeaveHistory = lazy(() => import('./pages/admin/Leaves/LeaveHistory.jsx'))
+const AddSalary = lazy(() => import('./pages/admin/salary/AddSalary.jsx'))
 
 // Router setup
 const router = createBrowserRouter(
@@ -56,7 +59,8 @@ const router = createBrowserRouter(
           <Route path="/acceptedTask" element={<AcceptedTask />} />
           <Route path="/rejectedTask" element={<RejectedTask />} />
           <Route path="/task" element={<Task />} />
-          <Route path="/salaryhistory" element={<SalaryHistory/>} />
+          <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
+          <Route path="/leavehistory" element={<LeaveHistory/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>
@@ -67,6 +71,7 @@ const router = createBrowserRouter(
           <Route path="/editTask/:taskId" element={<EditTask />} />
           <Route path='/employeeInfo' element={<EmployeeInfo/>} />
           <Route path="/editEmployee/:employeeId" element={<EmployeeInfoProvider/>} />
+           <Route path='/addsalary' element={<AddSalary/>} />
         </Route>
       </Route>
     </Route>

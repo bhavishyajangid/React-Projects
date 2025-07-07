@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import { UserSkeleton } from '../../export';
@@ -7,24 +7,48 @@ import { FaEye } from "react-icons/fa";
 const AllEmployee = () => {
   const { allEmployee } = useSelector(state => state.authSlice)
   const [inputVal, setInputVal] = useState("")
-  const [employee, setAllemployee] = useState(allEmployee)
   const [department, setDepartment] = useState("")
   const [filter, setFilter] = useState(false)
 
-  console.log('rerender');
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const filtered = (inputVal.trim() === "" && department == "")
-        ? allEmployee : (department !== "" && inputVal.trim() == "") ? allEmployee.filter((item) => item.department == department)
-          : employee.filter(item =>
-            item.userName?.toLowerCase().includes(inputVal.toLowerCase())
-          );
-      setAllemployee(filtered);
-    }, 300); // debounce delay
 
-    return () => clearTimeout(timer);
-  }, [inputVal, allEmployee, department]);
+  const filteredEmployees = useMemo(() => {
+    if (!inputVal.trim() && !department) return allEmployee;
+
+    return allEmployee.filter(emp => {
+      const matchesDept = department ? emp.department === department : true;
+      const matchesName = inputVal.trim()
+        ? emp.userName?.toLowerCase().includes(inputVal.toLowerCase())
+        : true;
+      return matchesDept && matchesName;
+    });
+  }, [inputVal, department, allEmployee]);
+
+
+  const actionButtons = (emp) => [
+   
+    
+    {
+      name: "View",
+      link: `/editEmployee/${emp.userId}?mode=view`,
+      bg: "bg-blue-500 hover:bg-blue-600",
+    },
+    {
+      name: "Edit",
+      link: `/editEmployee/${emp.userId}?mode=edit`,
+      bg: "bg-green-500 hover:bg-green-600",
+    },
+    { 
+      name: "Salary",
+      link: `/salaryhistory/${emp.userId}`,
+      bg: "bg-yellow-400 hover:bg-yellow-500",
+    },
+    {
+      name: "Leave",
+      link: "/leavehistory",
+      bg: "bg-red-500 hover:bg-red-600",
+    },
+  ];
+
 
   if (!allEmployee) return <UserSkeleton />;
 
@@ -76,14 +100,14 @@ const AllEmployee = () => {
               </tr>
             </thead>
             <tbody>
-              {employee.length === 0 ? (
+              {filteredEmployees.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-4 text-gray-500">
                     No employees found.
                   </td>
                 </tr>
               ) : (
-                employee.map((emp, index) => (
+                filteredEmployees.map((emp, index) => (
                   <tr key={emp.$id} className="border-t hover:bg-gray-50">
                     <td className="px-4 py-3">{index + 1}</td>
                     <td className="px-4 py-3">
@@ -97,25 +121,13 @@ const AllEmployee = () => {
                     <td className="px-4 py-3">{emp.dob || 'N/A'}</td>
                     <td className="px-4 py-3">{emp.department || 'N/A'}</td>
                     <td className="px-4 py-3 flex gap-2 flex-wrap">
-                      <Link to={`/editEmployee/${emp.userId}?mode=view`}>
-                        <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow">
-                          View
-                        </button>
-                      </Link>
-                      <Link to={`/editEmployee/${emp.userId}?mode=edit`}>
-                        <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow">
-                          Edit
-                        </button>
-                      </Link>
-                      <Link to='/salaryhistory'>
-                        <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow text-sm">
-                          Salary
-                        </button>
-                      </Link>
-                      <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow">
-                        Leave
-                      </button>
-
+                      {actionButtons(emp).map((btn, i) => (
+                        <Link to={btn.link} key={i}>
+                          <button className={`${btn.bg} text-white px-3 py-1 rounded shadow text-sm`}>
+                            {btn.name}
+                          </button>
+                        </Link>
+                      ))}
                     </td>
                   </tr>
                 ))
@@ -129,10 +141,10 @@ const AllEmployee = () => {
       {/* mobile view  */}
 
       <div className="sm:hidden space-y-4">
-        {employee.length === 0 ? (
+        {filteredEmployees.length === 0 ? (
           <div className="text-center py-4 text-gray-500">No employees found.</div>
         ) : (
-          employee.map((employee) => (
+          filteredEmployees.map((employee) => (
             <div className="bg-white shadow rounded-lg p-4 border">
               <div className="flex items-center gap-4 mb-2">
                 <img
@@ -159,7 +171,7 @@ const AllEmployee = () => {
                     Edit
                   </button>
                 </Link>
-                <Link to='/salaryhistory'>
+                <Link to={`/salaryhistory/${employee.userId}`}>
                   <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow text-sm">
                     Salary
                   </button>

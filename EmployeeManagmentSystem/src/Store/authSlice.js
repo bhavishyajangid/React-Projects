@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editUser } from "./thunks/userThunk";
-import { handleCreateAccount } from "./thunks/userThunk";
+import { editUser, handleCreateAccount } from "./thunks/userThunk";
+
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -55,7 +56,7 @@ const authSlice = createSlice({
       })
       .addCase(editUser.rejected, (state) => {
         state.loader = false;
-      });
+      })
   },
 });
 

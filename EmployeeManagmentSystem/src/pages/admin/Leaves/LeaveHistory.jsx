@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
 
-const salaryData = [
-  {
-    empId: 'yousaf222',
-    salary: 1000,
-    allowance: 50,
-    deduction: 40,
-    total: 1010,
-    payDate: '9/11/2024',
-  },  {
-    empId: 'yousaf222',
-    salary: 1000,
-    allowance: 50,
-    deduction: 40,
-    total: 1010,
-    payDate: '9/11/2024',
-  },
-  // Add more data as needed
-];
 
-const SalaryHistory = () => {
+const leaveData = [
+  {
+  leaveType : 'sick Leave' ,
+  from : "9/11/2024",
+  to : '10/11/2024',
+  description : 'high fiver and flu',
+  appliedDate : "8/11/2024",
+  status : "approved"
+  }
+]
+
+let optionLeave = [
+  "SNO",
+  "LEAVE TYPE",
+  'FROM',
+  'TO',
+  'DESCRIPTION',
+  'APPLIED DATE',
+  'STATUS'
+]
+
+
+const LeaveHistory = () => {
   const [search, setSearch] = useState('');
 
-  const filteredData = salaryData.filter(item =>
-    item.empId.toLowerCase().includes(search.toLowerCase())
+  const filteredData = leaveData.filter(item =>
+    item.status.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -32,7 +36,7 @@ const SalaryHistory = () => {
       <div className="w-full max-w-6xl">
         {/* 🔍 Search */}
         <div className="flex justify-between  max-sm:flex-col max-sm:gap-3 mb-10 mt-5">
-      <h2 className="text-2xl font-bold ">Salary History</h2>
+          <h2 className="text-2xl font-bold ">Leave History</h2>
           <input
             type="text"
             placeholder="Search By Emp ID"
@@ -48,12 +52,12 @@ const SalaryHistory = () => {
             <thead className="bg-gray-100 text-gray-700 font-semibold">
               <tr>
                 <th className="py-2 px-4 border">SNO</th>
-                <th className="py-2 px-4 border">EMP ID</th>
-                <th className="py-2 px-4 border">SALARY</th>
-                <th className="py-2 px-4 border">ALLOWANCE</th>
-                <th className="py-2 px-4 border">DEDUCTION</th>
-                <th className="py-2 px-4 border">TOTAL</th>
-                <th className="py-2 px-4 border">PAY DATE</th>
+                <th className="py-2 px-4 border">LEAVE TYPE</th>
+                <th className="py-2 px-4 border">FROM</th>
+                <th className="py-2 px-4 border">TO</th>
+                <th className="py-2 px-4 border">DESCRIPTION</th>
+                <th className="py-2 px-4 border">APPLIED DATE</th>
+                <th className="py-2 px-4 border">STATUS</th>
               </tr>
             </thead>
             <tbody>
@@ -61,12 +65,12 @@ const SalaryHistory = () => {
                 filteredData.map((item, index) => (
                   <tr key={index} className="text-center border-t hover:bg-gray-50">
                     <td className="py-2 px-4 border">{index + 1}</td>
-                    <td className="py-2 px-4 border text-blue-600 font-medium">{item.empId}</td>
-                    <td className="py-2 px-4 border">{item.salary}</td>
-                    <td className="py-2 px-4 border">{item.allowance}</td>
-                    <td className="py-2 px-4 border">{item.deduction}</td>
-                    <td className="py-2 px-4 border font-semibold">{item.total}</td>
-                    <td className="py-2 px-4 border">{item.payDate}</td>
+                    <td className="py-2 px-4 border text-blue-600 font-medium">{item.leaveType}</td>
+                    <td className="py-2 px-4 border">{item.from}</td>
+                    <td className="py-2 px-4 border">{item.to}</td>
+                    <td className="py-2 px-4 border">{item.description}</td>
+                    <td className="py-2 px-4 border font-semibold">{item.appliedDate}</td>
+                    <td className="py-2 px-4 border">{item.status}</td>
                   </tr>
                 ))
               ) : (
@@ -87,12 +91,12 @@ const SalaryHistory = () => {
           ) : (
             filteredData.map((item, index) => {
               const fields = [
-                { label: 'EMP ID', value: item.empId,},
-                { label: 'SALARY', value: `₹${item.salary}` },
-                { label: 'ALLOWANCE', value: `₹${item.allowance}` },
-                { label: 'DEDUCTION', value: `₹${item.deduction}` },
-                { label: 'TOTAL', value: `₹${item.total}` },
-                { label: 'PAY DATE', value: item.payDate },
+                { label: 'LEAVE TYPE', value: item.leaveType, },
+                { label: 'FROM', value: `₹${item.from}` },
+                { label: 'TO', value: `₹${item.to}` },
+                { label: 'DESCRIPTION', value: `₹${item.description}` },
+                { label: 'APPLIED DATE', value: `₹${item.appliedDate}` },
+                { label: 'STATUS', value: item.status },
               ];
 
               return (
@@ -117,4 +121,4 @@ const SalaryHistory = () => {
   );
 };
 
-export default SalaryHistory;
+export default LeaveHistory;
