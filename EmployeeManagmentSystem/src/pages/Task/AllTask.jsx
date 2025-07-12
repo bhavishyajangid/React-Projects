@@ -1,21 +1,16 @@
-import React, { memo, useCallback, useEffect } from "react";
-import { Button, CardSkeleton, Loader, RejectedTask, TaskCard } from "../../export";
-import { FilterBar } from "../../export"; // adjust path as needed
-import { useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { Button, CardSkeleton, FilterBar, TaskCard } from "../../export";
 
-import { Link, Navigate, useLocation } from "react-router";
 import { FiFilter } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import TaskServices from "../../Appwrite/Task";
-import { showError } from "../../utlity/Error&Sucess";
+import { Link, Navigate, useLocation } from "react-router";
 import { handleFilterTask } from "../../Store/thunks/taskThunk";
+import { showError } from "../../utlity/Error&Sucess";
 import { getCorrectTaskList } from "../../utlity/getCorrectTaskList";
-import { set } from "react-hook-form";
 
 const AllTask = ({ tasks, heading }) => {
-  console.log(tasks, "tasks");
   const taskSlice = useSelector((state) => state.taskSlice);
-  const { currentUserDetails } = useSelector((state) => state.authSlice);
+  const { currentUserDetails , allEmployee } = useSelector((state) => state.authSlice);
   const location = useLocation();
   const currentPath = location.pathname;
   const [showFilters, setShowFilters] = useState(false);
@@ -102,7 +97,7 @@ const AllTask = ({ tasks, heading }) => {
       </div>
 
       {showFilters && (
-        <FilterBar filterTask={filterTask} resetTask={resetTask} />
+        <FilterBar filterTask={filterTask} resetTask={resetTask} dropDownOption={allEmployee} dropDownName={"Employee"} />
       )}
 
       {loading ? (

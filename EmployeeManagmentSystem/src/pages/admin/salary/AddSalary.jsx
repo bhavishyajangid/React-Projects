@@ -16,7 +16,6 @@ const AddSalary = () => {
   let employee =department.trim() ? allEmployee.filter((item) => item.department == department) : allEmployee
 
   const onSubmit = async (data) => {
-
     setLoader(true);
     try {
       const result = await dataBaseServices.addSalary(data);

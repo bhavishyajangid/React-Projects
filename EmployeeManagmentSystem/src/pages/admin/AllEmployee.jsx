@@ -44,7 +44,7 @@ const AllEmployee = () => {
     },
     {
       name: "Leave",
-      link: "/leavehistory",
+      link: `/leavehistory/${emp.userId}`,
       bg: "bg-red-500 hover:bg-red-600",
     },
   ];

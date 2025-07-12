@@ -39,6 +39,8 @@ const EmployeeInfoProvider = lazy(() => import('./pages/admin/EmployeeInfoProvid
 const SalaryHistory = lazy(() => import('./pages/admin/salary/SalaryHistory.jsx'))
 const LeaveHistory = lazy(() => import('./pages/admin/Leaves/LeaveHistory.jsx'))
 const AddSalary = lazy(() => import('./pages/admin/salary/AddSalary.jsx'))
+const AddLeave = lazy(() => import('./pages/admin/Leaves/AddLeave.jsx'))
+const ApproveOrRejectLeave = lazy(() => import('./pages/admin/Leaves/ApproveOrRejectLeave.jsx'))
 
 // Router setup
 const router = createBrowserRouter(
@@ -60,7 +62,8 @@ const router = createBrowserRouter(
           <Route path="/rejectedTask" element={<RejectedTask />} />
           <Route path="/task" element={<Task />} />
           <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
-          <Route path="/leavehistory" element={<LeaveHistory/>} />
+          <Route path="/leavehistory/:empId" element={<LeaveHistory/>} />
+          <Route path="/addleave" element={<AddLeave/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>
@@ -72,6 +75,7 @@ const router = createBrowserRouter(
           <Route path='/employeeInfo' element={<EmployeeInfo/>} />
           <Route path="/editEmployee/:employeeId" element={<EmployeeInfoProvider/>} />
            <Route path='/addsalary' element={<AddSalary/>} />
+           <Route path='/approveLeave' element={<ApproveOrRejectLeave/>} />
         </Route>
       </Route>
     </Route>
