@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import { IoIosAddCircle } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,6 @@ const LeaveHistory = () => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves , setFilterLeaves] = useState()
-  
 
   let filterData = showFilter ? "" : allLeave
 
@@ -39,12 +38,13 @@ const LeaveHistory = () => {
         toast.error(error);
       }
     };
-
+    
     if(allLeave.length == 0){
       handleLeave();
     }
   }, [empId , allLeave , dispatch]);
 
+  
   if (loader) {
     return <ShimmerLeaveHistory />;
   }
