@@ -25,13 +25,13 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   const sidebarOptions = [
-   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" },
-  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" },
-  { id: 3, label: 'Departments', icon: <FaBuilding /> , link : "" },
-  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task'},
-  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  currentUserDetails.admin ? "/approveLeave" : `/leavehistory/${currentUserDetails.userId}`},
-  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : `/salaryhistory/${currentUserDetails.userId}` },
-  { id: 7, label: 'Setting', icon: <FaCog />, link : "" },
+   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" , visible : !currentUserDetails.admin  },
+  { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" , visible : currentUserDetails.admin },
+  { id: 3, label: 'Departments', icon: <FaBuilding /> , link : ""  , visible : currentUserDetails.admin },
+  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task' , visible : !currentUserDetails.admin },
+  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  currentUserDetails.admin ? "/approveLeave" : `/leavehistory/${currentUserDetails.userId}` , visible : !currentUserDetails.admin },
+  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : `/salaryhistory/${currentUserDetails.userId}` , visible : !currentUserDetails.admin  },
+  { id: 7, label: 'Setting', icon: <FaCog />, link : ""  , visible : true },
 ];
   return (
     <>
@@ -54,18 +54,25 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Sidebar Options */}
         <div className="px-4 md:px-6 py-2 md:py-4 space-y-3 w-full flex flex-col">
           {sidebarOptions.map((item, index) => (
+            <div className={`${!item.visible && "hidden"}`} >
+
             <Link to={item.link} key={index}>
-            <div
+             <div
               onClick={() => {handleSelect(item.id)}}
               className={`px-4 py-2 rounded cursor-pointer flex items-center gap-3 font-medium transition-all w-full
                 ${activeOption === item.id ? 'bg-gray-800 text-white shadow-inner' : 'hover:bg-gray-700 text-gray-300'}`}
-            >
+                >
               {item.icon} {item.label}
             </div>
+              
+           
             </Link> 
+              </div>
           ))}
         </div>
       </div>
+
+      
 
       {/* Overlay for Mobile */}
       {isOpen && (

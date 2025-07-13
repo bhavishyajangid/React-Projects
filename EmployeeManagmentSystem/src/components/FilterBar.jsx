@@ -47,7 +47,7 @@ const FilterBar = ({filterTask , resetTask , dropDownOption , dropDownName}) => 
           />
         </div>
 
-         { (currentUserDetails.admin && dropDownName) &&  <div className="w-full md:w-1/4">
+         { (dropDownName) &&  <div className="w-full md:w-1/4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             {dropDownName}
           </label>

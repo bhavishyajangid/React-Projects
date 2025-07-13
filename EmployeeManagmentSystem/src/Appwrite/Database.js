@@ -106,7 +106,6 @@ export class databaseServices {
 
     if (
       data.profileUrl &&
-      data.profileUrl &&
       typeof data.profileUrl !== "string" &&
       data.profileUrl[0] &&
       data.profileUrl[0].size > 0
@@ -205,6 +204,64 @@ export class databaseServices {
     
   }
 
+}
+
+async addLeave(data){
+  let imageId = ""
+   try {
+
+    if (
+      data.attachementUrl &&
+      data.attachementUrl[0] &&
+      data.attachementUrl[0].size > 0
+    ) {
+      try {
+        let result = await storageServices.createFile(data.attachementUrl[0]);
+        data.attachementUrl = result.fileUrl;
+        imageId = result.fileId;
+      } catch (error) {
+        throw new Error(error.message || "Unable to update profile image");
+      }
+    }
+
+    
+      const result = await this.database.createDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteLeaveCollectionId,
+        ID.unique(),
+        data
+      )
+      
+      return result
+
+   } catch (error) {
+    if (imageId) {
+        try {
+          await storageServices.deleteFile(imageId);
+        } catch (err) {
+          console.warn("Failed to delete uploaded image:", err.message);
+        }
+      }
+    console.log(error);
+    
+      throw new Error(error.message || 'Failed To Apply Leave Try After Some Time')
+   }
+}
+
+async fetchLeaves(userId){
+try {
+  const result = await this.database.listDocuments(
+    conf.appwriteDatabaseId,
+    conf.appwriteLeaveCollectionId,
+    [Query.equal("employeeId", userId)],
+  )
+
+  return result.documents || []
+} catch (error) {
+  console.log(error);
+  throw new Error(error.message || 'Failed To Fetch Leaves Try Again After Some Time')
+  
+}
 }
 
 

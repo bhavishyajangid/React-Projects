@@ -8,7 +8,8 @@ const config = {
     appwriteAllTaskCollectionId : import.meta.env.VITE_APPWRITE_ALLTASK_COLLECTION_ID,
     appwriteMessageCollectionId : import.meta.env.VITE_APPWRITE_MESSAGE_COLLECTION_ID ,
     appwriteAuthKey : import.meta.env.VITE_APPWRITE_API_KEY,
-    appwriteSalaryCollectionId : import.meta.env.VITE_APPWRITE_SALARY_COLLECTION_ID 
+    appwriteSalaryCollectionId : import.meta.env.VITE_APPWRITE_SALARY_COLLECTION_ID ,
+    appwriteLeaveCollectionId : import.meta.env.VITE_APPWRITE_LEAVE_COLLECTION_ID
 };
 
 export default config;
