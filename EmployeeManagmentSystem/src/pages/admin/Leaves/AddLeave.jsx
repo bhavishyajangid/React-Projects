@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm , Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import dataBaseServices from "../../../Appwrite/Database";
@@ -7,6 +7,8 @@ import { Button, Input, Loader } from "../../../export";
 import { DefaultContext } from "react-icons/lib";
 import { handleAddLeave } from "../../../Store/thunks/leaveThunk";
 import { Navigate, useNavigate } from "react-router";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const departments = ["Tech", "HR", "Marketing", "Database"];
 const leaveTypes = ["Sick Leave", "Casual Leave", "Paid Leave", "Maternity Leave", "Emergency Leave"];
@@ -15,7 +17,7 @@ const leaveStatus = ["Pending", "Approved", "Rejected"];
 const AddLeave = () => {
   const {currentUserDetails} = useSelector(state => state.authSlice)
   const {loader} = useSelector(state => state.leaveSlice)
-  const { register, handleSubmit, reset, watch } = useForm({defaultValues : {
+  const { register, handleSubmit, reset, watch , control } = useForm({defaultValues : {
     employeeId : currentUserDetails.userId
   }});
   const watchFromDate = watch("fromDate");
@@ -26,21 +28,24 @@ const AddLeave = () => {
  
 
   const calculateDays = () => {
-    if (watchFromDate && watchToDate) {
-      const start = new Date(watchFromDate);
-      const end = new Date(watchToDate);
-      const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return String(diffDays)
-    }
-    return 0;
-  };
+  if (watchFromDate && watchToDate) {
+    const diffTime = Math.abs(watchToDate - watchFromDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return String(diffDays);
+  }
+  return 0;
+};
 
   const onSubmit = async (data) => {
+
+      data.fromDate = data.fromDate?.toISOString().split("T")[0]
+     data.toDate =  data.toDate?.toISOString().split("T")[0]
+   
+
     let completeData = {
       ...data,
       totalDays : calculateDays(),
-      appliedDate : new Date().toISOString().split("T")[0],
+      appliedDate : new Date().toLocaleDateString("en-GB"),
       status : 'pending',
       attachementUrl : data.attachementUrl[0]
     }
@@ -106,22 +111,52 @@ const AddLeave = () => {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
-          </div>
+          </div >
 
           {/* From Date */}
-          <Input
-            label="From"
-            type="date"
-            {...register("fromDate", { required: "From date is required" })}
-          />
+          <div>
+
+          <label className="block text-sm font-medium mb-1">From</label>
+    <Controller
+  name="fromDate"
+  control={control}
+  rules={{ required: "From date is required" }}
+  render={({ field }) => (
+    <DatePicker
+      {...field}
+      wrapperClassName="w-full"
+      dateFormat="yyyy/MM/dd" // <- displays like 2025/07/14
+      placeholderText="Select start date"
+      selected={field.value}
+      onChange={(date) => field.onChange(date)}
+      className="w-full px-3 py-2 border rounded-md text-sm"
+    />
+  )}
+/>
+    </div>
+
+<div >
 
           {/* To Date */}
-          <Input
-            label="To"
-            type="date"
-            {...register("toDate", { required: "To date is required" })}
-          />
+          <label className="block text-sm font-medium mb-1">To</label>
+           <Controller
+  name="toDate"
+  control={control}
+  rules={{ required: "To date is required" }}
+  render={({ field }) => (
+    <DatePicker
+      {...field}
+      wrapperClassName="w-full"  // ✅ add this
+      dateFormat="yyyy/MM/dd"
+      placeholderText="Select end date"
+      selected={field.value}
+      onChange={(date) => field.onChange(date)}
+      className="w-full px-3 py-2 border rounded-md text-sm"
+    />
+  )}
+/>
 
+          </div>
           {/* Description */}
           <Input
             label="Description"

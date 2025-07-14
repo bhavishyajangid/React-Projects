@@ -265,6 +265,43 @@ try {
 }
 
 
+ async filterLeaves(data){
+ console.log(data);
+ 
+  let query = []
+
+
+         if(data.startDate){
+            query.push(Query.greaterThanEqual('fromDate' , data.startDate))
+         }
+
+         if (data.endDate) {
+            query.push(Query.lessThanEqual('toDate', data.endDate));
+          }
+
+          if(data.status){
+             query.push(Query.equal('status' , data.status))
+          }
+   
+
+    try {
+      const result = await this.database.listDocuments(
+         conf.appwriteDatabaseId,
+         conf.appwriteLeaveCollectionId,
+         query
+         
+      )
+
+      console.log(result);
+      
+      return result.documents || []
+    } catch (error) {
+      console.log(error)
+      throw new Error(error.message || "Failed To Filter Data")
+    }
+ }
+
+
 }
 
 const dataBaseServices = new databaseServices();

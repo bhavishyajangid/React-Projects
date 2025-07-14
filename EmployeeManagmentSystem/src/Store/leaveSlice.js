@@ -11,6 +11,9 @@ reducers : {
    setAllLeave : (state , action) => {
     state.allLeave = action.payload
     state.loader = false
+   },
+   setLoader : (state , action) => {
+     state.loader = action.payload
    }
 },
    
@@ -34,5 +37,5 @@ reducers : {
 
 })
 
-export const {setAllLeave} = leaveSlice.actions
+export const {setAllLeave , setLoader} = leaveSlice.actions
 export default leaveSlice
