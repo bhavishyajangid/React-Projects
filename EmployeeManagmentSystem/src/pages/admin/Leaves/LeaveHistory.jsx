@@ -68,28 +68,33 @@ const LeaveHistory = () => {
     return <ShimmerLeaveHistory />;
   }
 
+  const handleDescription = (text , maxlength = 20) => {
+        if(!text && text <= maxlength) return text
+        return text.slice(0 , maxlength) + "..."
+  }
+
   return (
-    <div className="min-h-screen  bg-gray-100 flex flex-col ">
+    <div className="h-screen  bg-gray-100 flex flex-col ">
       {/* <GridCards/> */}
       <div className="w-full max-w-6xl">
         {/* 🔍 Search */}
-        <div className="flex justify-between px-5  max-sm:gap-3 mb-10 mt-5">
-          <h2 className="text-2xl font-bold ">Leave History</h2>
+        <div className="flex justify-between px-5 max-sm:px-2 max-sm:gap-3 mb-10 mt-5">
+          <h2 className="text-2xl font-bold max-sm:text-xl">Leave History</h2>
 
-          <div className="flex gap-5 ">
+          <div className="flex gap-5 max-sm:gap-3 ">
             <button
               onClick={() => setShowFilter(!showFilter)}
-              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5  rounded-md flex items-center gap-2 "
+              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5 max-sm:px-2 max-sm:py-1  rounded-md flex items-center gap-2 "
             >
               <FiFilter />
-              Filter
+              <span className="max-sm:hidden">Filter</span>
             </button>
 
             {!currentUserDetails.admin && (
               <Link to="/addleave">
                 <button className="px-4 py-2 bg-teal-500 text-white font-semibold rounded-lg text-sm flex justify-center items-center gap-2">
                   <IoIosAddCircle className="text-xl" />
-                  Apply Leave
+                  <span className="max-sm:hidden"> Apply </span> Leave
                 </button>
               </Link>
             )}
@@ -115,8 +120,8 @@ const LeaveHistory = () => {
                 <th className="py-2 px-4 border">TO</th>
                 <th className="py-2 px-4 border">Days</th>
                 <th className="py-2 px-4 border">DESCRIPTION</th>
-                <th className="py-2 px-4 border">APPLIED DATE</th>
                 <th className="py-2 px-4 border">STATUS</th>
+                <th className="py-2 px-4 border">Show</th>
               </tr>
             </thead>
             <tbody>
@@ -133,10 +138,7 @@ const LeaveHistory = () => {
                     <td className="py-2 px-4 border">{item.fromDate}</td>
                     <td className="py-2 px-4 border">{item.toDate}</td>
                     <td className="py-2 px-4 border">{item.totalDays}</td>
-                    <td className="py-2 px-4 border">{item.description}</td>
-                    <td className="py-2 px-4 border font-semibold">
-                      {item.appliedDate}
-                    </td>
+                    <td className="py-2 px-4 border">{handleDescription(item.description)}</td>
                     <td className="py-2 px-4 border ">
                       <span
                         className={`px-2 py-1  rounded-xl text-sm capitalize text-white font-semibold ${
@@ -149,6 +151,11 @@ const LeaveHistory = () => {
                       >
                         {item.status}
                       </span>
+                    </td>
+                    <td className="py-2 px-4 border font-semibold">
+                      <Link to={`/leavedetails/${item.$id}`}>
+                      <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">View</button>
+                      </Link>
                     </td>
                   </tr>
                 ))
@@ -172,13 +179,31 @@ const LeaveHistory = () => {
           ) : (
             filterData.map((item, index) => {
               const fields = [
-                { label: "LEAVE TYPE", value: item.leaveType },
-                { label: "FROM", value: `₹${item.fromDate}` },
-                { label: "TO", value: `₹${item.toDate}` },
-                { label: "Days", value: `₹${item.totalDays}` },
-                { label: "DESCRIPTION", value: `₹${item.description}` },
-                { label: "APPLIED DATE", value: `₹${item.appliedDate}` },
-                { label: "STATUS", value: item.status },
+                {
+                  label: "LEAVE TYPE",
+                  value: item.leaveType,
+                  classname: "text-blue-600 font-medium",
+                },
+                { label: "FROM", value: `₹ ${item.fromDate}` },
+                { label: "TO", value: `₹ ${item.toDate}` },
+                { label: "Days", value: `₹ ${item.totalDays}` },
+                { label: "DESCRIPTION", value: `₹ ${handleDescription(item.description)}` },
+                {
+                  label: "APPLIED DATE",
+                  value: `₹ ${item.appliedDate}`,
+                  classname: "font-semibold",
+                },
+                {
+                  label: "STATUS",
+                  value: item.status,
+                  classname: `px-2 py-1  rounded-xl text-sm capitalize text-white font-semibold ${
+                    item.status == "pending"
+                      ? "bg-blue-500 "
+                      : item.status == "approved"
+                      ? "bg-green-500 "
+                      : "bg-red-400"
+                  }`,
+                },
               ];
 
               return (
@@ -192,16 +217,10 @@ const LeaveHistory = () => {
                   </div>
                   {fields.map((field, i) => (
                     <div className="flex justify-between items-center" key={i}>
-                      <span className="font-semibold text-gray-600">
+                      <span className={`font-semibold text-gray-600  `}>
                         {field.label}
                       </span>
-                      <span
-                        className={`${
-                          field.label == "EMP ID"
-                            ? "text-blue-400 font-semibold"
-                            : "text-[#141414] "
-                        }`}
-                      >
+                      <span className={`${field.classname}`}>
                         {field.value}
                       </span>
                     </div>

@@ -11,9 +11,8 @@ import './index.css'
 
 import { Provider } from 'react-redux'
 import App from './App.jsx'
-import { AllTask, Home, Loader, ProtectedLayout } from './export.js'
+import { AllTask, Home,  Loader , ProtectedLayout } from './export.js'
 import store from './Store/index.js'
-
 import HomeRedirect from './Routes/HomeRedirect.jsx'
 import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
 
@@ -41,6 +40,8 @@ const LeaveHistory = lazy(() => import('./pages/admin/Leaves/LeaveHistory.jsx'))
 const AddSalary = lazy(() => import('./pages/admin/salary/AddSalary.jsx'))
 const AddLeave = lazy(() => import('./pages/admin/Leaves/AddLeave.jsx'))
 const ApproveOrRejectLeave = lazy(() => import('./pages/admin/Leaves/ApproveOrRejectLeave.jsx'))
+const LeaveDetails = lazy(() => import('./pages/admin/Leaves/leaveDetails.jsx'))
+
 
 // Router setup
 const router = createBrowserRouter(
@@ -63,6 +64,7 @@ const router = createBrowserRouter(
           <Route path="/task" element={<Task />} />
           <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
           <Route path="/leavehistory/:empId" element={<LeaveHistory/>} />
+          <Route path="/leavedetails/:leaveId" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
         </Route>
       </Route>

@@ -1,14 +1,11 @@
-import { useState } from "react";
-import { useForm , Controller } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import dataBaseServices from "../../../Appwrite/Database";
-import { Button, Input, Loader } from "../../../export";
-import { DefaultContext } from "react-icons/lib";
-import { handleAddLeave } from "../../../Store/thunks/leaveThunk";
-import { Navigate, useNavigate } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { Button, Input, Loader } from "../../../export";
+import { handleAddLeave } from "../../../Store/thunks/leaveThunk";
 
 const departments = ["Tech", "HR", "Marketing", "Database"];
 const leaveTypes = ["Sick Leave", "Casual Leave", "Paid Leave", "Maternity Leave", "Emergency Leave"];
@@ -18,7 +15,8 @@ const AddLeave = () => {
   const {currentUserDetails} = useSelector(state => state.authSlice)
   const {loader} = useSelector(state => state.leaveSlice)
   const { register, handleSubmit, reset, watch , control } = useForm({defaultValues : {
-    employeeId : currentUserDetails.userId
+    employeeId : currentUserDetails.userId,
+    department : currentUserDetails.department || ""
   }});
   const watchFromDate = watch("fromDate");
   const watchToDate = watch("toDate");
@@ -47,15 +45,16 @@ const AddLeave = () => {
       totalDays : calculateDays(),
       appliedDate : new Date().toLocaleDateString("en-GB"),
       status : 'pending',
-      attachementUrl : data.attachementUrl[0]
+      attachmentUrl : data.attachmentUrl.length > 0 ? data.attachmentUrl :  ""
     }
     console.log(completeData);
     try {
       const result = await dispatch(handleAddLeave(completeData)).unwrap()
       if (result) {
-
-        toast.success("Leave successfully added!");
         navigate(`/leavehistory/${currentUserDetails.userId}`)
+          setTimeout(() => {
+      toast.success("Leave successfully added!", { autoClose: 1000 });
+    }, 100); //
       }
     } catch (error) {
       console.error(error);
@@ -69,7 +68,7 @@ const AddLeave = () => {
 
   return (
     <div className="flex justify-center items-center bg-gray-100">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6 max-sm:p-0">
         <h2 className="text-2xl font-semibold mb-6">Add Leave Request</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -84,6 +83,7 @@ const AddLeave = () => {
           <div>
             <label className="block text-sm font-medium mb-1">Department</label>
             <select
+            disabled
               {...register("department", {
                 required: "Department is required",
               
@@ -179,7 +179,7 @@ const AddLeave = () => {
           <Input
             label="Attachment (Optional)"
             type="file"
-            {...register("attachementUrl")}
+            {...register("attachmentUrl")}
           />
         </div>
 

@@ -25,12 +25,12 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   const sidebarOptions = [
-   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" , visible : !currentUserDetails.admin  },
+   { id: 1, label: 'Dashboard', icon: <FaTachometerAlt />, link : "/admin" , visible : true  },
   { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" , visible : currentUserDetails.admin },
   { id: 3, label: 'Departments', icon: <FaBuilding /> , link : ""  , visible : currentUserDetails.admin },
-  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task' , visible : !currentUserDetails.admin },
-  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  currentUserDetails.admin ? "/approveLeave" : `/leavehistory/${currentUserDetails.userId}` , visible : !currentUserDetails.admin },
-  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : `/salaryhistory/${currentUserDetails.userId}` , visible : !currentUserDetails.admin  },
+  { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task' , visible : true  },
+  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  currentUserDetails.admin ? "/approveLeave" : `/leavehistory/${currentUserDetails.userId}`  , visible : true  },
+  { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : `/salaryhistory/${currentUserDetails.userId}` , visible : true },
   { id: 7, label: 'Setting', icon: <FaCog />, link : ""  , visible : true },
 ];
   return (
@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Sidebar Options */}
         <div className="px-4 md:px-6 py-2 md:py-4 space-y-3 w-full flex flex-col">
           {sidebarOptions.map((item, index) => (
-            <div className={`${!item.visible && "hidden"}`} >
+            <div className={`${item.visible ? "block" : "hidden"}`} >
 
             <Link to={item.link} key={index}>
              <div

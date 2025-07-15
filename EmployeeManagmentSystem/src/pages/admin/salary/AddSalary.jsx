@@ -13,7 +13,7 @@ const AddSalary = () => {
   const [loader, setLoader] = useState(false);
   const [department, setDepartment] = useState("");
 
-  let employee =department.trim() ? allEmployee.filter((item) => item.department == department) : allEmployee
+  let employee = department.trim() ? allEmployee.filter((item) => item.department == department) : allEmployee
 
   const onSubmit = async (data) => {
     setLoader(true);

@@ -5,33 +5,20 @@ import dataBaseServices from '../../Appwrite/Database'
 import { Loader } from '../../export'
 import AddOrEditEmployee from './AddOrEditEmployee'
 import EmployeeInfo from './EmployeeInfo'
+import { useSelector } from 'react-redux'
 
 const EmployeeInfoProvider = () => {
+  const {allEmployee} = useSelector(state => state.authSlice)
     const {employeeId} = useParams()
    const [searchParams] = useSearchParams()
    const mode = searchParams.get("mode")
    
     
-    
-    
-    const [employee , setEmployee] = useState(null)
+    let index = allEmployee.findIndex((item) => item.userId == employeeId)
+    let employee = index >= 0 ? allEmployee[index] : {}
 
-    useEffect(() => {
-        setEmployee(null)
-          const editEmployee = async() => {
-              try {
-                 const employeeData = await dataBaseServices.getUser(employeeId)
-                 if(employeeData) setEmployee(employeeData)
-              } catch (error) {
-                 toast.error("employee not found try agian ")
-              }
-          }
 
-          editEmployee()
-    }, [employeeId])
-
-    if(!employee) return <Loader/>
-    
+ 
 
   return mode === "edit" ? (
     <AddOrEditEmployee employee={employee} />

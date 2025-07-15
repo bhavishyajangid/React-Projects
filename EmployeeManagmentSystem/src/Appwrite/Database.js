@@ -211,13 +211,15 @@ async addLeave(data){
    try {
 
     if (
-      data.attachementUrl &&
-      data.attachementUrl[0] &&
-      data.attachementUrl[0].size > 0
+      data.attachmentUrl &&
+      data.attachmentUrl[0] &&
+      data.attachmentUrl[0].size > 0
     ) {
       try {
-        let result = await storageServices.createFile(data.attachementUrl[0]);
-        data.attachementUrl = result.fileUrl;
+        let result = await storageServices.createFile(data.attachmentUrl[0]);
+
+        
+        data.attachmentUrl = result.fileUrl;
         imageId = result.fileId;
       } catch (error) {
         throw new Error(error.message || "Unable to update profile image");
