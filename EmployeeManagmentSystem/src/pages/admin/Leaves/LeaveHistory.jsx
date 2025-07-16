@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router";
 import { toast } from "react-toastify";
 import dataBaseServices, { databaseServices } from "../../../Appwrite/Database";
 import { FilterBar, ShimmerLeaveHistory } from "../../../export";
-import { setAllLeave, setLoader } from "../../../Store/leaveSlice";
+import { setAllLeave, setLeaveByEmployee, setLoader } from "../../../Store/leaveSlice";
 
 const LeaveHistory = () => {
   const dropDownOption = [
@@ -17,19 +17,22 @@ const LeaveHistory = () => {
 
   const { empId } = useParams();
   const dispatch = useDispatch();
-  const { loader, allLeave } = useSelector((state) => state.leaveSlice);
+  const { loader, allLeave , leaveByEmployee } = useSelector((state) => state.leaveSlice);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
 
+  console.log(allLeave , leaveByEmployee);
+  
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
-
+  
   const handleFilter = useCallback(
     async (data) => {
       if (!data.startDate && !data.endDate && !data.status) {
         toast.info("Please select at least one filter.");
         return;
       }
+
       dispatch(setLoader(true));
       try {
         const res = await dataBaseServices.filterLeaves(data);
@@ -47,22 +50,32 @@ const LeaveHistory = () => {
     setFilterLeaves(null);
   }, [dispatch]);
 
+  
+  
   useEffect(() => {
+    if(leaveByEmployee[empId]){
+      dispatch(setAllLeave(leaveByEmployee[empId]))
+      return 
+    }
+  
     const handleLeave = async () => {
+     
+      let newEmpId = currentUserDetails.admin ? null : empId
+      dispatch(setLoader(true))
       try {
-        const result = await dataBaseServices.fetchLeaves(empId);
-        if (empId) {
-          dispatch(setAllLeave(result));
+        const result = await dataBaseServices.fetchLeaves(newEmpId);
+        if (empId) {          
+          dispatch(setLeaveByEmployee({empId , leaves : result}));
         }
       } catch (error) {
         toast.error(error);
+      }finally{
+        setLoader(false)
       }
     };
 
-    if (allLeave.length == 0) {
-      handleLeave();
-    }
-  }, [empId, allLeave, dispatch]);
+     handleLeave();
+  }, [empId]);
 
   if (loader) {
     return <ShimmerLeaveHistory />;

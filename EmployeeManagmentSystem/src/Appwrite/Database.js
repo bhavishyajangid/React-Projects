@@ -251,11 +251,14 @@ async addLeave(data){
 }
 
 async fetchLeaves(userId){
+  console.log(userId, 'sdf');
+  
+  let query = userId ? [Query.equal("employeeId", userId)] : []
 try {
   const result = await this.database.listDocuments(
     conf.appwriteDatabaseId,
     conf.appwriteLeaveCollectionId,
-    [Query.equal("employeeId", userId)],
+    query
   )
 
   return result.documents || []
@@ -303,6 +306,23 @@ try {
     }
  }
 
+ async fetchSingleLeave(leaveId){
+   try {
+    
+    const leave = await this.database.getDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteLeaveCollectionId,
+      leaveId
+    )
+
+    return leave || []
+  
+   } catch (error) {
+    console.log(error);
+    throw new Error( error.message || "enable to fetch leave")
+    
+   }
+ }
 
 }
 

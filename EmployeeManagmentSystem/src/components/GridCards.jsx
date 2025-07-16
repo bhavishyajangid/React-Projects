@@ -14,7 +14,6 @@ const GridCards = ({option}) => {
        const {currentUserDetails} = useSelector(state => state.authSlice)
     const { newTask , completedTask , acceptedTask , rejectedTask} = useSelector(state => state.taskSlice)
 
-    console.log(currentUserDetails , 'user');
     
 
    const taskInfo = [

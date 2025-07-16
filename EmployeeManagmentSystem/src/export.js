@@ -38,7 +38,7 @@ import FilterBar from "./components/FilterBar.jsx";
 import AddEmployee from "./pages/admin/AddOrEditEmployee.jsx";
 import SelectOption from "./components/SelectOption.jsx";
 import ShimmerLeaveHistory from "./components/skeleton/ShimmerLeaveHistory.jsx";
-;
+import LeaveDetailsShimmer from "./components/skeleton/LeaveDetailsShimmer.jsx";
 export  {
     Login, 
     Signup,
@@ -79,5 +79,6 @@ export  {
     AddEmployee,
     SelectOption,
     ShimmerLeaveHistory,
+    LeaveDetailsShimmer
    
 }

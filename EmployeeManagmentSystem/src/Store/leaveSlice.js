@@ -4,13 +4,22 @@ const leaveSlice = createSlice({
     name : "leave" ,
     initialState : {
         allLeave : [],
-        loader : true,
-        error : ''
+        loader : false,
+        error : '',
+        leaveByEmployee : {
+            employeeId : []
+        }
     },
 reducers : {
-   setAllLeave : (state , action) => {
-    state.allLeave = action.payload
+   setLeaveByEmployee : (state , action) => {
+    const {empId , leaves} = action.payload
+    state.leaveByEmployee[empId] = leaves
+    state.allLeave = leaves
     state.loader = false
+   },
+   setAllLeave : (state , action) => {
+     state.allLeave = action.payload
+     state.loader = false
    },
    setLoader : (state , action) => {
      state.loader = action.payload
@@ -37,5 +46,5 @@ reducers : {
 
 })
 
-export const {setAllLeave , setLoader} = leaveSlice.actions
+export const {setLeaveByEmployee , setLoader , setAllLeave} = leaveSlice.actions
 export default leaveSlice
