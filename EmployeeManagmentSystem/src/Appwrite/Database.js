@@ -251,7 +251,8 @@ async addLeave(data){
 }
 
 async fetchLeaves(userId){
-  console.log(userId, 'sdf');
+  console.log(userId);
+  
   
   let query = userId ? [Query.equal("employeeId", userId)] : []
 try {
@@ -260,6 +261,7 @@ try {
     conf.appwriteLeaveCollectionId,
     query
   )
+console.log(result, 'rslfakdjs');
 
   return result.documents || []
 } catch (error) {

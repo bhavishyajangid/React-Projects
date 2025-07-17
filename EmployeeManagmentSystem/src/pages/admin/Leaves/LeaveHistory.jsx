@@ -21,6 +21,7 @@ const LeaveHistory = () => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
+  const isAdminPage = currentUserDetails.admin && empId == currentUserDetails.userId
 
   console.log(allLeave , leaveByEmployee);
   
@@ -59,8 +60,12 @@ const LeaveHistory = () => {
     }
   
     const handleLeave = async () => {
+     if(leaveByEmployee[empId]){
+        setAllLeave(leaveByEmployee[empId])
+        return
+     }
      
-      let newEmpId = currentUserDetails.admin ? null : empId
+      let newEmpId = isAdminPage ? null : empId
       dispatch(setLoader(true))
       try {
         const result = await dataBaseServices.fetchLeaves(newEmpId);
@@ -79,11 +84,6 @@ const LeaveHistory = () => {
 
   if (loader) {
     return <ShimmerLeaveHistory />;
-  }
-
-  const handleDescription = (text , maxlength = 20) => {
-        if(!text && text <= maxlength) return text
-        return text.slice(0 , maxlength) + "..."
   }
 
   return (
@@ -128,11 +128,14 @@ const LeaveHistory = () => {
             <thead className="bg-gray-100 text-gray-700 font-semibold">
               <tr>
                 <th className="py-2 px-4 border">SNO</th>
+                {
+                  isAdminPage && <th className="py-2 px-4 border">EmployeeName</th>
+                }
+               
                 <th className="py-2 px-4 border">LEAVE TYPE</th>
                 <th className="py-2 px-4 border">FROM</th>
                 <th className="py-2 px-4 border">TO</th>
                 <th className="py-2 px-4 border">Days</th>
-                <th className="py-2 px-4 border">DESCRIPTION</th>
                 <th className="py-2 px-4 border">STATUS</th>
                 <th className="py-2 px-4 border">Show</th>
               </tr>
@@ -145,13 +148,18 @@ const LeaveHistory = () => {
                     className="text-center border-t hover:bg-gray-50"
                   >
                     <td className="py-2 px-4 border">{index + 1}</td>
-                    <td className="py-2 px-4 border text-blue-600 font-medium">
+                    {
+                      isAdminPage && <td className="py-2 capitalize px-4 border text-blue-600 font-medium">
+                      {item.employeeName}
+                    </td>  
+                    }
+                               
+                    <td className="py-2 px-4 border text-cyan-700 font-medium">
                       {item.leaveType}
                     </td>
                     <td className="py-2 px-4 border">{item.fromDate}</td>
                     <td className="py-2 px-4 border">{item.toDate}</td>
                     <td className="py-2 px-4 border">{item.totalDays}</td>
-                    <td className="py-2 px-4 border">{handleDescription(item.description)}</td>
                     <td className="py-2 px-4 border ">
                       <span
                         className={`px-2 py-1  rounded-xl text-sm capitalize text-white font-semibold ${
@@ -192,15 +200,18 @@ const LeaveHistory = () => {
           ) : (
             filterData.map((item, index) => {
               const fields = [
-                {
+               isAdminPage && {
+                  label: "EMPLOYEENAME",
+                  value: item.employeeName,
+                  classname: "text-blue-600 font-medium",
+                },{
                   label: "LEAVE TYPE",
                   value: item.leaveType,
-                  classname: "text-blue-600 font-medium",
+                  classname: "text-cyan-700 font-medium",
                 },
                 { label: "FROM", value: `₹ ${item.fromDate}` },
                 { label: "TO", value: `₹ ${item.toDate}` },
                 { label: "Days", value: `₹ ${item.totalDays}` },
-                { label: "DESCRIPTION", value: `₹ ${handleDescription(item.description)}` },
                 {
                   label: "APPLIED DATE",
                   value: `₹ ${item.appliedDate}`,

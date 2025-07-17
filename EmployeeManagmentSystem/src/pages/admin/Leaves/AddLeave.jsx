@@ -45,7 +45,8 @@ const AddLeave = () => {
       totalDays : calculateDays(),
       appliedDate : new Date().toLocaleDateString("en-GB"),
       status : 'pending',
-      attachmentUrl : data.attachmentUrl.length > 0 ? data.attachmentUrl :  ""
+      attachmentUrl : data.attachmentUrl.length > 0 ? data.attachmentUrl :  "",
+      employeeName : currentUserDetails.userName
     }
     console.log(completeData);
     try {
