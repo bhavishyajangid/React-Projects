@@ -1,4 +1,4 @@
-import React, { useRef  } from "react";
+import React, { memo, useRef  } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useOtpTimer } from "../utlity/hook/useOtpTime";
@@ -9,12 +9,11 @@ const VerifyOtp = React.memo(({generatedOtp}) => {
   const dispatch = useDispatch()
   const second = useOtpTimer()
   const emailOtp = useRef(null)
-  const {resend} = useSelector(state => state.otpSendSlice)
-console.log('chld');
+
 
     const verifyEmailOtp = async() => {
-      console.log(generatedOtp , emailOtp.current.value , 'varify');
-      
+       if(emailOtp.current.value == "") return 
+       
       if(parseInt(generatedOtp) === parseInt(emailOtp.current.value)){
        dispatch(setUserEmailVerify(true)) 
        toast.success("OTP Verified!");
@@ -48,7 +47,7 @@ console.log('chld');
           ) : (
             <button
               type="button"
-              onClick={() => {dispatch(setResend(!resend))}}
+              onClick={() => {dispatch(setResend())}}
               className="px-4 py-1 rounded-md bg-green-600 text-white"
             >
               Resend
@@ -60,4 +59,4 @@ console.log('chld');
   );
 })
 
-export default VerifyOtp;
+export default memo(VerifyOtp)

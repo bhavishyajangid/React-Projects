@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editUser, handleCreateAccount } from "./thunks/userThunk";
+import { editUser} from "./thunks/userThunk";
 
 
 
@@ -29,18 +29,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
-      .addCase(handleCreateAccount.pending, (state) => {
-        state.loader = true;
-      })
-      .addCase(handleCreateAccount.fulfilled, (state, action) => {
-        if (state.currentUserDetails?.admin) {
-          state.allEmployee.push(action.payload);
-        }
-      })
-      .addCase(handleCreateAccount.rejected, (state) => {
-        state.loader = false;
-      })
 
       .addCase(editUser.pending, (state) => {
         state.loader = true;

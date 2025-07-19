@@ -46,7 +46,6 @@ const Login = () => {
     <>
      <div className="text-center absolute top-10 right-[40%]">
        <p>For admin login : - <span className="text-blue-700">bhavishya8824@gmail.com</span> </p>
-     <p>For employee login : - <span className="text-blue-700">abcd@gmail.com</span> </p>
      <p>password for both: - <span className="text-blue-700">12345678</span> </p>
     </div>
     <div className="flex justify-center items-center min-h-screen bg-[#111111]">

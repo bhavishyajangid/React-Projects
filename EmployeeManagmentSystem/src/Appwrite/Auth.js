@@ -18,54 +18,19 @@ export class authService {
     this.account = new Account(this.client);
   }
 
-  async createAccount(user, currentUser) {
+  async createAccount(user) {
     let customUserId = ID.unique();
-    let imageId = "";
     let userSavedId = "";
     let userCreated = false;
-    let sessionDeleted = false;
+
+    let newObj = {
+      ...user,
+      userId: customUserId,
+    };
 
     try {
-      if (currentUser?.admin) {
-        let isValid = await validateAdminPassword(
-          currentUser.email,
-          user.adminPassword
-        );
-        if (!isValid) throw new Error("admin password is invalid");
-      }
-
-      console.log("password is valid");
-
-      // console.log(setData, "setDATA is saved");
-
-      if (user.profileUrl) {
-        let result = await storageServices.createFile(user.profileUrl[0]);
-        user.profileUrl = result.fileUrl;
-        imageId = result.fileId;
-      }
-      console.log(user, "image saved");
-
-      let newobj = {
-        ...user,
-        userId: customUserId,
-        newTask: 0,
-        completedTask: 0,
-        acceptedTask: 0,
-        failedTask: 0,
-      };
-      delete newobj.password;
-      delete newobj.adminPassword;
-
-      const setData = await dataBaseServices.setUserProfileData(newobj);
+      const setData = await dataBaseServices.setUserProfileData(newObj);
       userSavedId = setData.$id;
-      console.log("data saved");
-
-      if (currentUser?.admin && setData) {
-        await this.account.deleteSession("current");
-        sessionDeleted = true;
-      }
-
-      console.log("delete session");
 
       let finalUser = await this.account.create(
         customUserId,
@@ -76,44 +41,16 @@ export class authService {
 
       userCreated = true;
 
-      console.log(finalUser, "account create");
-
       if (finalUser) {
-        if (currentUser?.admin) {
-          return await this.login({
-            email: currentUser.email,
-            password: user.adminPassword,
-          });
-        } else {
-          return finalUser ? setData : [];
-        }
+        return finalUser ? setData : [];
       }
     } catch (error) {
       console.log(error);
-
-      if (imageId && !userCreated) {
-        console.log("delete image");
-
-        try {
-          await storageServices.deleteFile(imageId);
-        } catch (err) {
-          console.warn("Failed to delete uploaded image:", err.message);
-        }
-      }
 
       if (userSavedId && !userCreated) {
         console.log("delete saved data");
 
         await dataBaseServices.deleteUserFromDatabase(userSavedId);
-      }
-
-      if (sessionDeleted && currentUser?.admin) {
-        console.log("login user again");
-
-        await this.login({
-          email: currentUser.email,
-          password: user.adminPassword,
-        });
       }
 
       throw new Error(error?.message || "Something went wrong");
@@ -138,6 +75,14 @@ export class authService {
       throw error;
     }
   }
+  async getUserAllDetails(id, queary) {
+    try {
+      const userDetails = await dataBaseServices.getUser(id, queary);
+      return userDetails ? userDetails : [];
+    } catch (error) {
+      throw new Error("failed to fetch user info", error);
+    }
+  }
 
   async getCurrentUser() {
     try {
@@ -156,15 +101,6 @@ export class authService {
       }
       console.error("Error in getCurrentUser:", error.message);
       return null;
-    }
-  }
-
-  async getUserAllDetails(id, queary) {
-    try {
-      const userDetails = await dataBaseServices.getUser(id, queary);
-      return userDetails ? userDetails : [];
-    } catch (error) {
-      throw new Error("failed to fetch user info", error);
     }
   }
 
@@ -190,6 +126,7 @@ export class authService {
 
   async sendOtp(user) {
     const otpCode = Math.floor(Math.random() * 1000000);
+    console.log(user, "in ther otp ");
 
     const templateParams = {
       to_email: user.email, // The recipient's email

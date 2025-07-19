@@ -9,6 +9,7 @@ import { ChatBox, Navbar, Loader } from "../../export";
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+alert("Project is under development. Some features may not work fully. I'm fixing them — thanks for understanding!");
   return (
     
     <div className=" h-screen w-full overflow-hidden bg-gray-100 text-gray-800 font-sans flex flex-col">

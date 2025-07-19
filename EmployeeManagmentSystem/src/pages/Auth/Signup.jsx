@@ -1,31 +1,27 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import authServices from "../../Appwrite/Auth";
 import { Button, Input, Loader, VerifyOtp } from "../../export";
 
 import {
+  handleEmailExist,
+  handleOtp,
   resetState,
-  setGeneratedOtp,
   setLoader,
-  setOtpSend,
+  setOtpSend
 } from "../../Store/otpSendSlice";
-import { handleCreateAccount } from "../../Store/thunks/userThunk";
 
 const Signup = () => {
-  console.log("signup");
-
   const {
     otpSend,
     generatedOtp,
-    resend,
     loader,
     userEmailVerify,
     formDetails,
   } = useSelector((state) => state.otpSendSlice);
-  const firstRender = useRef(true);
 
   const {
     register,
@@ -35,28 +31,41 @@ const Signup = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
-  // Submit handler function
 
   const handleSignup = async (data) => {
+
     if (!userEmailVerify) {
-      // if email not verify first verify for create a account
-      dispatch(setOtpSend({ otp: true, user: data }));
+      const lastEmail = formDetails?.email;
+
+      // 2. Only proceed if the email is different from the last OTP attempt
+      if (lastEmail !== data.email) {
+        const emailExists = await dispatch(
+          handleEmailExist(data.email)
+        ).unwrap();
+
+        if (emailExists) {
+          toast.error("Email already in use! Try another email.");
+        } else {
+          // if the email is not already in use then send otp 
+          dispatch(setOtpSend({ otp: true, user: data }));
+        }
+      }
+      return;
     } else {
       try {
-        dispatch(setLoader(true))
-        const newUser = await dispatch(handleCreateAccount({
+        dispatch(setLoader(true));
+        const newUser = await authServices.createAccount({
           ...data,
           isEmailVerify: userEmailVerify,
-        })).unwrap()
-        console.log(newUser, "new user foud");
+        });
 
         if (newUser) {
-          navigate("/login")
+          navigate("/login");
           toast.success("Account created succesfully");
         }
       } catch (error) {
-        toast.error(`${error}`);
+        console.log(error);
+        toast.error(`${error}ughiuyiy`);
       } finally {
         dispatch(setLoader(false));
       }
@@ -64,41 +73,33 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-
     // Asynchronous function to send OTP
     const handleSendOtp = async () => {
+
       if (otpSend) {
-        dispatch(setLoader(true));
         try {
-          const otp = await authServices.sendOtp(formDetails); // Wait for OTP to be sent
+          const otp = await dispatch(handleOtp(formDetails)).unwrap(); // Wait for OTP to be sent
 
           if (otp) {
             console.log("Generated OTP:", otp);
-            dispatch(setGeneratedOtp(otp));
-            toast.success("OTP sent successfully to email !");
+            toast.success("OTP successfully sent to email !");
           }
         } catch (error) {
           console.error("Error sending OTP:", error);
           toast.error("Failed to sending OTP.");
-        } finally {
-          dispatch(setLoader(false));
         }
       }
     };
 
     handleSendOtp(); // Invoke the OTP sending function
-  }, [otpSend, resend]); // Run the effect when otpSend or resend changes
-
+  }, [otpSend]); // Run the effect when otpSend or resend changes
 
   useEffect(() => {
-          dispatch(resetState())
-  }, [location.pathname])
+    return () => {
+      dispatch(resetState());
+    };
+  }, [dispatch]);
 
-  
   if (loader) {
     return <Loader />;
   }
@@ -181,11 +182,7 @@ const Signup = () => {
           />
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            label="Sign Up"
-            className="justify-center"
-          />
+          <Button type="submit" label="Sign Up" className="justify-center" />
 
           {/* Already have an account? */}
           <div className="text-center text-xs">

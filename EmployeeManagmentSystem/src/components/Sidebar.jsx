@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Sidebar Options */}
         <div className="px-4 md:px-6 py-2 md:py-4 space-y-3 w-full flex flex-col">
           {sidebarOptions.map((item, index) => (
-            <div className={`${item.visible ? "block" : "hidden"}`} >
+            <div key={index} className={`${item.visible ? "block" : "hidden"}`} >
 
             <Link to={item.link} key={index}>
              <div

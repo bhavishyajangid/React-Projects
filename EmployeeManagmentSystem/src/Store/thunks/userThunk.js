@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import dataBaseServices from "../../Appwrite/Database";
 
+
  export const editUser = createAsyncThunk(
     'employee/edituser',
 
@@ -16,21 +17,7 @@ import dataBaseServices from "../../Appwrite/Database";
     }
 )
 
-export const handleCreateAccount = createAsyncThunk(
-  "auth/user",
-  async (data , currentUser, { rejectWithValue }) => {
-    const verifyEmailExist = await dataBaseServices.emailIsExists(data.email);
-    if (verifyEmailExist) {
-      return rejectWithValue("Email Already In Use !! Try Another Email");
-    }
-    try {
-      let user = await authServices.createAccount(data , currentUser);
-      return user;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
+
 
 export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
