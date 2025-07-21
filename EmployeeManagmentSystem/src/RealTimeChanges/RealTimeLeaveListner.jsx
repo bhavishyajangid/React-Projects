@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import dataBaseServices from "../Appwrite/Database"
+import LeaveServices from "../Appwrite/Leave"
 import conf from '../config/config'
 const RealTimeLeaveListner = () => {
     const dispatch = useDispatch()
@@ -10,16 +10,14 @@ const RealTimeLeaveListner = () => {
     useEffect(() => {
         if(!currentUserDetails) return 
 
-        subscriptionRef.current = dataBaseServices.client.subscribe(
+        subscriptionRef.current = LeaveServices.client.subscribe(
             `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteLeaveCollectionId}.documents` , 
             (res) => {
                 const payload = res.payload
                 const isAdmin  = currentUserDetails.admin
-
-                if(res.events.includes('databases.*.collections.*.documents.*.create')){
-                    console.log('create data' , payload);
-                    
-                }
+if (res.events.some(event => event.endsWith('.create'))) {
+  console.log('✅ Create event triggered:', payload);
+}
 
                  if (res.events.includes("databases.*.collections.*.documents.*.update")) {
                           console.log('update' , payload);

@@ -11,7 +11,7 @@ const RealTimeTaskListner = () => {
 
   useEffect(() => {
     if (!currentUserDetails) return;
-
+    
     subscriptionRef.current = TaskServices.client.subscribe(
       `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteAllTaskCollectionId}.documents`,
       (res) => {

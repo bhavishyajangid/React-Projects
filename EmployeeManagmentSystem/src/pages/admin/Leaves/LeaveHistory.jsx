@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import dataBaseServices, { databaseServices } from "../../../Appwrite/Database";
 import { FilterBar, ShimmerLeaveHistory } from "../../../export";
 import { setAllLeave, setLeaveByEmployee, setLoader } from "../../../Store/leaveSlice";
+import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveHistory = () => {
   const dropDownOption = [
@@ -36,7 +37,7 @@ const LeaveHistory = () => {
 
       dispatch(setLoader(true));
       try {
-        const res = await dataBaseServices.filterLeaves(data);
+        const res = await LeaveServices.filterLeaves(data);
         if (res) setFilterLeaves(res);
       } catch (error) {
         toast.error(error);
@@ -68,7 +69,7 @@ const LeaveHistory = () => {
       let newEmpId = isAdminPage ? null : empId
       dispatch(setLoader(true))
       try {
-        const result = await dataBaseServices.fetchLeaves(newEmpId);
+        const result = await LeaveServices.fetchLeaves(newEmpId);
         if (empId) {          
           dispatch(setLeaveByEmployee({empId , leaves : result}));
         }

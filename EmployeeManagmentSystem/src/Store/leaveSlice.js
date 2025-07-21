@@ -1,5 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { handleAddLeave } from "./thunks/leaveThunk";
+import LeaveServices from "../Appwrite/Leave";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+
+export const handleAddLeave = createAsyncThunk(
+  'leave/addLeave',
+  async (data, { rejectWithValue }) => {
+    try {
+      const result = await LeaveServices.addLeave(data);
+      return result;
+    } catch (error) {
+      return rejectWithValue(error.message); // ✅ correct spelling
+    }
+  }
+);
+
 const leaveSlice = createSlice({
     name : "leave" ,
     initialState : {
@@ -7,7 +21,7 @@ const leaveSlice = createSlice({
         loader : false,
         error : '',
         leaveByEmployee : {
-            employeeId : []
+            
         }
     },
 reducers : {

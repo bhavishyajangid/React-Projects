@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import dataBaseServices from "../../../Appwrite/Database";
 import { LeaveDetailsShimmer } from "../../../export";
+import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveDetails = () => {
 
@@ -20,7 +21,7 @@ const LeaveDetails = () => {
   useEffect(() => {
     const fetchLeaveUser = async () => {
       try {
-        const singleLeave = await dataBaseServices.fetchSingleLeave(leaveId);
+        const singleLeave = await LeaveServices.fetchSingleLeave(leaveId);
 
         if (isAdmin) {
           const user = await dataBaseServices.getUser(singleLeave.employeeId);
@@ -39,13 +40,13 @@ const LeaveDetails = () => {
   }, [leaveId, isAdmin]);
 
   const handleStatusChange = async (status) => {
-    try {
-      await dataBaseServices.updateLeaveStatus(leaveId, status);
-      toast.success(`Leave ${status}`);
-      navigate(-1);
-    } catch (error) {
-      toast.error("Failed to update status");
-    }
+    // try {
+    //   await dataBaseServices.updateLeaveStatus(leaveId, status);
+    //   toast.success(`Leave ${status}`);
+    //   navigate(-1);
+    // } catch (error) {
+    //   toast.error("Failed to update status");
+    // }
   };
   console.log(leave);
 
