@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import LeaveServices from "../Appwrite/Leave"
 import conf from '../config/config'
+import { setRealTimeLeave } from "../Store/leaveSlice"
 const RealTimeLeaveListner = () => {
     const dispatch = useDispatch()
     const {currentUserDetails} = useSelector(state => state.authSlice)
@@ -16,7 +17,7 @@ const RealTimeLeaveListner = () => {
                 const payload = res.payload
                 const isAdmin  = currentUserDetails.admin
 if (res.events.some(event => event.endsWith('.create'))) {
-  console.log('✅ Create event triggered:', payload);
+    dispatch(setRealTimeLeave({empId : payload.employeeId , leave : payload , currentUser : currentUserDetails.userId}))
 }
 
                  if (res.events.includes("databases.*.collections.*.documents.*.update")) {

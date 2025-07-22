@@ -16,14 +16,14 @@ const LeaveHistory = () => {
     { userName: "rejected" },
   ];
 
-  const { empId } = useParams();
+  const {empId} = useParams()
   const dispatch = useDispatch();
   const { loader, allLeave , leaveByEmployee } = useSelector((state) => state.leaveSlice);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
-  const isAdminPage = currentUserDetails.admin && empId == currentUserDetails.userId
-
+  // let empId = currentUserDetails.userId
+  const isAdminPage = currentUserDetails.admin && empId == 123
   console.log(allLeave , leaveByEmployee);
   
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
@@ -55,17 +55,19 @@ const LeaveHistory = () => {
   
   
   useEffect(() => {
-    if(leaveByEmployee[empId]){
-      dispatch(setAllLeave(leaveByEmployee[empId]))
-      return 
-    }
-  
-    const handleLeave = async () => {
-     if(leaveByEmployee[empId]){
-        setAllLeave(leaveByEmployee[empId])
-        return
-     }
+    console.log('the leave hisotiy compone run ' );
      
+  
+     
+    if(leaveByEmployee[empId]){
+        dispatch(setAllLeave(leaveByEmployee[empId]))
+        return
+    }
+
+   
+
+   console.log('the leave hisotiy compone after ' );
+    const handleLeave = async () => {
       let newEmpId = isAdminPage ? null : empId
       dispatch(setLoader(true))
       try {
@@ -81,6 +83,8 @@ const LeaveHistory = () => {
     };
 
      handleLeave();
+     
+    
   }, [empId]);
 
   if (loader) {

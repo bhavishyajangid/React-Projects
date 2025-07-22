@@ -29,7 +29,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   { id: 2, label: 'Employees', icon: <FaUsers /> , link : "/user" , visible : currentUserDetails.admin },
   { id: 3, label: 'Departments', icon: <FaBuilding /> , link : ""  , visible : currentUserDetails.admin },
   { id: 4, label: 'Tasks', icon: <FaTasks />  , link : '/task' , visible : true  },
-  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  `/leavehistory/${ currentUserDetails.userId}`  , visible : true  },
+  { id: 5, label: 'Leaves', icon: <FaCalendarAlt /> , link :  `/leavehistory/${ currentUserDetails.admin ? 123 : currentUserDetails.userId}`  , visible : true  },
   { id: 6, label: 'Salary', icon: <FaMoneyBill /> , link : currentUserDetails.admin ? "/addsalary" : `/salaryhistory/${currentUserDetails.userId}` , visible : true },
   { id: 7, label: 'Setting', icon: <FaCog />, link : ""  , visible : true },
 ];
