@@ -134,6 +134,23 @@ console.log(result, 'rslfakdjs');
    }
  }
 
+ async updateLeave(leaveId , status){
+    try {
+       await this.Leave.updateDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteLeaveCollectionId,
+        leaveId,
+        {status : status}
+      )
+      return true
+    } catch (error) {
+      console.log(error);
+      
+       throw new Error(error.message || 'Failed To Update Leave Try Again After Some Time')
+       
+    }
+ }
+
 
 
 }

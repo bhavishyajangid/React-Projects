@@ -40,7 +40,10 @@ const LeaveHistory = lazy(() => import('./pages/admin/Leaves/LeaveHistory.jsx'))
 const AddSalary = lazy(() => import('./pages/admin/salary/AddSalary.jsx'))
 const AddLeave = lazy(() => import('./pages/admin/Leaves/AddLeave.jsx'))
 const ApproveOrRejectLeave = lazy(() => import('./pages/admin/Leaves/ApproveOrRejectLeave.jsx'))
-const LeaveDetails = lazy(() => import('./pages/admin/Leaves/leaveDetails.jsx'))
+const LeaveDetails = lazy(() => import('./pages/admin/Leaves/LeaveDetails.jsx'))
+
+
+
 
 
 // Router setup
@@ -64,7 +67,7 @@ const router = createBrowserRouter(
           <Route path="/task" element={<Task />} />
           <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
           <Route path="/leavehistory/:empId" element={<LeaveHistory/>} />
-          <Route path="/leavedetails/:leaveId" element={<LeaveDetails/>} />
+          <Route path="/leavedetails/:userId/:index" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
         </Route>
       </Route>

@@ -18,7 +18,7 @@ const LeaveHistory = () => {
 
   const {empId} = useParams()
   const dispatch = useDispatch();
-  const { loader, allLeave , leaveByEmployee } = useSelector((state) => state.leaveSlice);
+  const { loader, allLeave , leaveByEmployee , prevEmpId } = useSelector((state) => state.leaveSlice);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
@@ -55,18 +55,17 @@ const LeaveHistory = () => {
   
   
   useEffect(() => {
-    console.log('the leave hisotiy compone run ' );
-     
-  
-     
+   
     if(leaveByEmployee[empId]){
-        dispatch(setAllLeave(leaveByEmployee[empId]))
+      // CHECK THE PREVEMPid NOT CHANGE MEAN AGAIN SAME SO SHOE SAVED DATA USER COME TO ROUTE
+      if(prevEmpId !== empId){
+        dispatch(setAllLeave({empId , leaves : leaveByEmployee[empId]}))
+      }
         return
     }
 
    
 
-   console.log('the leave hisotiy compone after ' );
     const handleLeave = async () => {
       let newEmpId = isAdminPage ? null : empId
       dispatch(setLoader(true))
@@ -179,7 +178,7 @@ const LeaveHistory = () => {
                       </span>
                     </td>
                     <td className="py-2 px-4 border font-semibold">
-                      <Link to={`/leavedetails/${item.$id}`}>
+                      <Link to={`/leavedetails/${empId}/${index}`}>
                       <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">View</button>
                       </Link>
                     </td>

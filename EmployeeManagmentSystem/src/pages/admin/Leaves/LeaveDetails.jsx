@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -7,49 +7,55 @@ import { LeaveDetailsShimmer } from "../../../export";
 import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveDetails = () => {
+  const { userId, index } = useParams();
+  console.log(userId, index);
 
-
-
-  const { leaveId } = useParams();
   const { currentUserDetails } = useSelector((state) => state.authSlice);
+  const { leaveByEmployee , allLeave } = useSelector((state) => state.leaveSlice);
   const isAdmin = currentUserDetails?.admin;
   const navigate = useNavigate();
 
   const [leave, setLeave] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  let leaveId = useRef('')
   useEffect(() => {
-    const fetchLeaveUser = async () => {
+    const handleLeaveDetails = async () => {
       try {
-        const singleLeave = await LeaveServices.fetchSingleLeave(leaveId);
-
-        if (isAdmin) {
-          const user = await dataBaseServices.getUser(singleLeave.employeeId);
-          setLeave({ ...singleLeave, user });
-        } else {
-          setLeave({ ...singleLeave });
+        if (leaveByEmployee[userId]) {
+          console.log(leaveByEmployee[userId][index], "leaveInfo");
+          let Leave = leaveByEmployee[userId][index];
+           leaveId.current = Leave.$id
+          if (isAdmin) {
+            const user = await dataBaseServices.getUser(Leave.employeeId);
+            if (user) {
+              setLeave({ ...Leave, user });
+            }
+          } else {
+            setLeave(leave);
+          }
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.message || "failed to fetch ");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchLeaveUser();
-  }, [leaveId, isAdmin]);
+    handleLeaveDetails();
+  }, [userId, index]);
 
   const handleStatusChange = async (status) => {
-    // try {
-    //   await dataBaseServices.updateLeaveStatus(leaveId, status);
-    //   toast.success(`Leave ${status}`);
-    //   navigate(-1);
-    // } catch (error) {
-    //   toast.error("Failed to update status");
-    // }
+    console.log(leaveByEmployee , allLeave);
+    setLoading(true)
+  try {
+    await LeaveServices.updateLeave(leaveId.current , status)
+  } catch (error) {
+    toast.error(error.message)
+  }finally{
+    setLoading(false)
+  }
   };
-  console.log(leave);
-
+  
 
   const leaveFields = [
     {
@@ -82,9 +88,8 @@ const LeaveDetails = () => {
           Leave Details
         </h2>
 
-
         <div className="mb-10">
-          {isAdmin && leave.user && (
+          {isAdmin && leave?.user && (
             <div className="mb-6 p-4 border rounded-lg bg-gray-50">
               <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">
                 Employee Information
@@ -118,7 +123,9 @@ const LeaveDetails = () => {
                     <span className="text-sm font-semibold text-gray-600 whitespace-nowrap">
                       {field.label} :
                     </span>
-                    <span className={`text-sm  break-words`}>{field.value}</span>
+                    <span className={`text-sm  break-words`}>
+                      {field.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -126,17 +133,14 @@ const LeaveDetails = () => {
           )}
 
           <div className="space-y-4 text-sm">
-            {
-              leaveFields.map((item, index) => (
-                <DetailRow
-                  key={index}
-                  label={item.label}
-                  value={item.value}
-                  className={item.className}
-                />
-              ))
-            }
-
+            {leaveFields.map((item, index) => (
+              <DetailRow
+                key={index}
+                label={item.label}
+                value={item.value}
+                className={item.className}
+              />
+            ))}
           </div>
 
           {isAdmin && leave.status === "pending" && (
@@ -161,8 +165,6 @@ const LeaveDetails = () => {
             </div>
           )}
         </div>
-
-
       </div>
     </div>
   );
@@ -172,19 +174,24 @@ const DetailRow = ({ label, value, className = "text-gray-800" }) => {
   const isLong = label === "Description" && value?.length > 20;
 
   return (
-    <div className={`${isLong ? "flex flex-col" : "flex justify-between"} gap-1 sm:gap-2 border-b py-2`}>
+    <div
+      className={`${
+        isLong ? "flex flex-col" : "flex justify-between"
+      } gap-1 sm:gap-2 border-b py-2`}
+    >
       <span className="text-sm font-semibold text-gray-600 whitespace-nowrap">
         {label} :
       </span>
 
       {label === "Status" ? (
         <span
-          className={`px-3 py-1 rounded-full text-white font-medium capitalize ${value === "approved"
+          className={`px-3 py-1 rounded-full text-white font-medium capitalize ${
+            value === "approved"
               ? "bg-green-500"
               : value === "pending"
-                ? "bg-blue-500"
-                : "bg-red-400"
-            }`}
+              ? "bg-blue-500"
+              : "bg-red-400"
+          }`}
         >
           {value}
         </span>
