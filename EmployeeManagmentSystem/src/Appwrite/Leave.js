@@ -52,9 +52,9 @@ export class leaveService{
           console.warn("Failed to delete uploaded image:", err.message);
         }
       }
-    console.log(error);
+    console.log(error.message);
     
-      throw new Error(error.message || 'Failed To Apply Leave Try After Some Time')
+      throw error || 'Failed To Apply Leave Try After Some Time'
    }
 }
 

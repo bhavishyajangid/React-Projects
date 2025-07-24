@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
-const AdminDashboardSkeleton = () => {
+const HomeSkeleton = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const shimmerBox = (
@@ -77,4 +77,4 @@ const AdminDashboardSkeleton = () => {
   );
 };
 
-export default memo(AdminDashboardSkeleton);
+export default memo(HomeSkeleton);

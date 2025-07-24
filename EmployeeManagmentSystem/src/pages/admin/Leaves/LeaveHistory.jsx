@@ -2,11 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import { IoIosAddCircle } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
 import dataBaseServices, { databaseServices } from "../../../Appwrite/Database";
 import { FilterBar, ShimmerLeaveHistory } from "../../../export";
-import { setAllLeave, setLeaveByEmployee, setLoader } from "../../../Store/leaveSlice";
+import {
+  setAllLeave,
+  setLeaveByEmployee,
+  setLoader,
+} from "../../../Store/leaveSlice";
 import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveHistory = () => {
@@ -16,18 +20,21 @@ const LeaveHistory = () => {
     { userName: "rejected" },
   ];
 
-  const {empId} = useParams()
+  const { empId } = useParams();
   const dispatch = useDispatch();
-  const { loader, allLeave , leaveByEmployee , prevEmpId } = useSelector((state) => state.leaveSlice);
+  const { loader, allLeave, leaveByEmployee, prevEmpId } = useSelector(
+    (state) => state.leaveSlice
+  );
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
-  // let empId = currentUserDetails.userId
-  const isAdminPage = currentUserDetails.admin && empId == 123
-  console.log(allLeave , leaveByEmployee);
-  
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
-  
+  console.log(allLeave, leaveByEmployee);
+
+  const location = useLocation()
+
+  const isAdminPage = location.pathname.includes('/admin/leavehistory')
+
   const handleFilter = useCallback(
     async (data) => {
       if (!data.startDate && !data.endDate && !data.status) {
@@ -52,38 +59,31 @@ const LeaveHistory = () => {
     setFilterLeaves(null);
   }, [dispatch]);
 
-  
-  
   useEffect(() => {
-   
-    if(leaveByEmployee[empId]){
+    if (leaveByEmployee[empId]) {
       // CHECK THE PREVEMPid NOT CHANGE MEAN AGAIN SAME SO SHOE SAVED DATA USER COME TO ROUTE
-      if(prevEmpId !== empId){
-        dispatch(setAllLeave({empId , leaves : leaveByEmployee[empId]}))
+      if (prevEmpId !== empId) {
+        dispatch(setAllLeave({ empId, leaves: leaveByEmployee[empId] }));
       }
-        return
+      return;
     }
 
-   
-
     const handleLeave = async () => {
-      let newEmpId = isAdminPage ? null : empId
-      dispatch(setLoader(true))
+      let newEmpId = isAdminPage ? null : empId;
+      dispatch(setLoader(true));
       try {
         const result = await LeaveServices.fetchLeaves(newEmpId);
-        if (empId) {          
-          dispatch(setLeaveByEmployee({empId , leaves : result}));
+        if (empId) {
+          dispatch(setLeaveByEmployee({ empId, leaves: result }));
         }
       } catch (error) {
         toast.error(error);
-      }finally{
-        setLoader(false)
+      } finally {
+        setLoader(false);
       }
     };
 
-     handleLeave();
-     
-    
+    handleLeave();
   }, [empId]);
 
   if (loader) {
@@ -132,10 +132,10 @@ const LeaveHistory = () => {
             <thead className="bg-gray-100 text-gray-700 font-semibold">
               <tr>
                 <th className="py-2 px-4 border">SNO</th>
-                {
-                  isAdminPage && <th className="py-2 px-4 border">EmployeeName</th>
-                }
-               
+                {isAdminPage && (
+                  <th className="py-2 px-4 border">EmployeeName</th>
+                )}
+
                 <th className="py-2 px-4 border">LEAVE TYPE</th>
                 <th className="py-2 px-4 border">FROM</th>
                 <th className="py-2 px-4 border">TO</th>
@@ -152,12 +152,12 @@ const LeaveHistory = () => {
                     className="text-center border-t hover:bg-gray-50"
                   >
                     <td className="py-2 px-4 border">{index + 1}</td>
-                    {
-                      isAdminPage && <td className="py-2 capitalize px-4 border text-blue-600 font-medium">
-                      {item.employeeName}
-                    </td>  
-                    }
-                               
+                    {isAdminPage && (
+                      <td className="py-2 capitalize px-4 border text-blue-600 font-medium">
+                        {item.employeeName}
+                      </td>
+                    )}
+
                     <td className="py-2 px-4 border text-cyan-700 font-medium">
                       {item.leaveType}
                     </td>
@@ -179,7 +179,9 @@ const LeaveHistory = () => {
                     </td>
                     <td className="py-2 px-4 border font-semibold">
                       <Link to={`/leavedetails/${empId}/${index}`}>
-                      <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">View</button>
+                        <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
+                          View
+                        </button>
                       </Link>
                     </td>
                   </tr>
@@ -204,11 +206,12 @@ const LeaveHistory = () => {
           ) : (
             filterData.map((item, index) => {
               const fields = [
-               isAdminPage && {
+                isAdminPage && {
                   label: "EMPLOYEENAME",
                   value: item.employeeName,
                   classname: "text-blue-600 font-medium",
-                },{
+                },
+                {
                   label: "LEAVE TYPE",
                   value: item.leaveType,
                   classname: "text-cyan-700 font-medium",

@@ -61,11 +61,9 @@ const AddLeave = () => {
     }, 100); //
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error.message || "Failed to add leave");
-    } finally {
-      reset();
-    }
+      console.log(error);
+      toast.error(error);
+    } 
   };
 
   // useEffect(() => {

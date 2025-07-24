@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { memo, useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import LeaveServices from "../Appwrite/Leave"
 import conf from '../config/config'
@@ -17,7 +17,7 @@ const RealTimeLeaveListner = () => {
                 const payload = res.payload
                 const isAdmin  = currentUserDetails.admin
 if (res.events.some(event => event.endsWith('.create'))) {
-    dispatch(setRealTimeLeave({empId : payload.employeeId , leave : payload , currentUser : currentUserDetails.userId}))
+    dispatch(setRealTimeLeave({empId : payload.employeeId , leave : payload }))
 }
 
                  if (res.events.includes("databases.*.collections.*.documents.*.update")) {
@@ -44,4 +44,4 @@ if (res.events.some(event => event.endsWith('.create'))) {
     return null
 }
 
-export default RealTimeLeaveListner
+export default memo(RealTimeLeaveListner) 

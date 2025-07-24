@@ -66,7 +66,7 @@ const router = createBrowserRouter(
           <Route path="/rejectedTask" element={<RejectedTask />} />
           <Route path="/task" element={<Task />} />
           <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
-          <Route path="/leavehistory/:empId" element={<LeaveHistory/>} />
+          <Route path="/leavehistory/:empId" element={<LeaveHistory key={'employee-leave'}/>} />
           <Route path="/leavedetails/:userId/:index" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
         </Route>
@@ -81,6 +81,7 @@ const router = createBrowserRouter(
           <Route path="/editEmployee/:employeeId" element={<EmployeeInfoProvider/>} />
            <Route path='/addsalary' element={<AddSalary/>} />
            <Route path='/approveLeave' element={<ApproveOrRejectLeave/>} />
+           <Route path="/admin/leavehistory/:empId" element={<LeaveHistory key="admin-leave" />} />
         </Route>
       </Route>
     </Route>

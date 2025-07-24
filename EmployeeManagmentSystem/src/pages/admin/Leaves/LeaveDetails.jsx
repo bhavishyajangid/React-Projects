@@ -35,7 +35,7 @@ const LeaveDetails = () => {
           }
         }
       } catch (error) {
-        toast.error(error.message || "failed to fetch ");
+        toast.error(error.message);
       } finally {
         setLoading(false);
       }
