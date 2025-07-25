@@ -1,6 +1,8 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import LeaveServices from "../Appwrite/Leave";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import setStoreLeaveInObj from "../utlity/storeLeaveinobj";
+import updateLeaveInArray from "../utlity/updateLeaveInArray";
 
 export const handleAddLeave = createAsyncThunk(
   "leave/addLeave",
@@ -20,18 +22,23 @@ const leaveSlice = createSlice({
     allLeave: [],
     loader: false,
     error: "",
-    leaveByEmployee: {},
+    storedLeaves: {},
     prevEmpId: "",
+    firstRender: true,
   },
   reducers: {
-    setLeaveByEmployee: (state, action) => {
+    setStoreLeaves: (state, action) => {
       console.log("leaves set in the obj and allleaves");
-
-      const { empId, leaves } = action.payload;
-      state.prevEmpId = empId;
-      state.leaveByEmployee[empId] = leaves;
-      state.allLeave = leaves;
-      state.loader = false;
+      const { empId, leaves , isAdminPage } = action.payload;
+       if(isAdminPage){
+         state.storedLeaves =  setStoreLeaveInObj(leaves)
+         state.allLeave =  Object.values(state.storedLeaves).flat()
+       }else{
+         state.storedLeaves[empId] = leaves;
+         state.allLeave = leaves;
+       }
+       state.prevEmpId = empId
+       state.loader = false
     },
     setAllLeave: (state, action) => {
       const { empId, leaves } = action.payload;
@@ -44,20 +51,58 @@ const leaveSlice = createSlice({
     setLoader: (state, action) => {
       state.loader = action.payload;
     },
-    setRealTimeLeave: (state, action) => {
+    addRealTimeLeave: (state, action) => {
       const { empId, leave } = action.payload;
       console.log(empId, leave, "idleave");
 
       console.log("leaves set by real time ");
 
-      if (state.leaveByEmployee[empId]) {
-        state.leaveByEmployee[empId].push(leave);
+      if(!state.storedLeaves[empId]){
+         state.storedLeaves[empId] = [leave];
       }
-      state.allLeave.push(leave);
-      if (state.leaveByEmployee[123]) {
-        state.leaveByEmployee[123].push(leave);
+
+      if(state.storedLeaves[empId]){
+         state.storedLeaves[empId].push(leave);
       }
+
+      state.allLeave.push(leave)
+
+      
+     
     },
+
+
+updateLeaveRealTime: (state, action) => {
+  const leave = action.payload;
+
+  // ✅ Only use current() for debugging/logging
+  console.log("Before Update:");
+  console.log("All Leave:", current(state.allLeave));
+  console.log("Stored Leaves:", current(state.storedLeaves[leave.employeeId]));
+  console.log("Incoming Leave:", leave);
+
+  // 🟡 Safe to mutate the state directly
+  if (state.storedLeaves[leave.employeeId]) {
+    const index = state.storedLeaves[leave.employeeId].findIndex(
+      (item) => item.$id === leave.$id
+    );
+
+    if (index !== -1) {
+      state.storedLeaves[leave.employeeId][index] = leave;
+    }
+  }
+
+  const index = state.allLeave.findIndex((item) => item.$id === leave.$id);
+  if (index !== -1) {
+    state.allLeave[index] = leave;
+  }
+
+  // ✅ Log updated state without proxy
+  console.log("After Update:");
+  console.log("All Leave:", current(state.allLeave));
+  console.log("Stored Leaves:", current(state.storedLeaves));
+}
+
 
    
 
@@ -80,9 +125,9 @@ const leaveSlice = createSlice({
 });
 
 export const {
-  setLeaveByEmployee,
-  setUpdateLeaveRealTime,
-  setRealTimeLeave,
+  setStoreLeaves,
+ updateLeaveRealTime,
+  addRealTimeLeave,
   setLoader,
   setAllLeave,
 } = leaveSlice.actions;

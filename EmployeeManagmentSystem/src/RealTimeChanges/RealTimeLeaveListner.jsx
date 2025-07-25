@@ -1,47 +1,48 @@
-import { memo, useEffect, useRef } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import LeaveServices from "../Appwrite/Leave"
-import conf from '../config/config'
-import { setRealTimeLeave, setUpdateLeaveRealTime } from "../Store/leaveSlice"
+import { memo, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import LeaveServices from "../Appwrite/Leave";
+import conf from "../config/config";
+import { addRealTimeLeave, updateLeaveRealTime } from "../Store/leaveSlice";
 const RealTimeLeaveListner = () => {
-    const dispatch = useDispatch()
-    const {currentUserDetails} = useSelector(state => state.authSlice)
-    const subscriptionRef = useRef(null)
-    const {leaveByEmployee} = useSelector(state => state.leaveSlice)
-    useEffect(() => {
-        if(!currentUserDetails) return 
+  const dispatch = useDispatch();
+  const { currentUserDetails } = useSelector((state) => state.authSlice);
+  const subscriptionRef = useRef(null);
+  useEffect(() => {
+    if (!currentUserDetails) return;
 
-        subscriptionRef.current = LeaveServices.client.subscribe(
-            `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteLeaveCollectionId}.documents` , 
-            (res) => {
-                const payload = res.payload
-                const isAdmin  = currentUserDetails.admin
-if (res.events.some(event => event.endsWith('.create'))) {
-    dispatch(setRealTimeLeave({empId : payload.employeeId , leave : payload }))
-}
+    subscriptionRef.current = LeaveServices.client.subscribe(
+      `databases.${conf.appwriteDatabaseId}.collections.${conf.appwriteLeaveCollectionId}.documents`,
+      (res) => {
+        const payload = res.payload;
 
-                 if (res.events.includes("databases.*.collections.*.documents.*.update")) {
-                    console.log(leaveByEmployee);
-                    
-                          dispatch(setUpdateLeaveRealTime(payload))
-                          
-                        }
-
-                         if (res.events.includes("databases.*.collections.*.documents.*.delete")) {
-                                 console.log('delete', payload);
-                                 
-                                }
-
-            }
-        )
-
-        return () => {
-            if(subscriptionRef.current) subscriptionRef.current()
+        if (res.events.some((event) => event.endsWith(".create"))) {
+          dispatch(
+            addRealTimeLeave({ empId: payload.employeeId, leave: payload })
+          );
         }
 
-    } , [currentUserDetails , dispatch])
+        if (
+          res.events.includes("databases.*.collections.*.documents.*.update")
+        ) {
+            console.log(payload);
+            
+          dispatch(updateLeaveRealTime(payload));
+        }
 
-    return null
-}
+        if (
+          res.events.includes("databases.*.collections.*.documents.*.delete")
+        ) {
+          console.log("delete", payload);
+        }
+      }
+    );
 
-export default memo(RealTimeLeaveListner) 
+    return () => {
+      if (subscriptionRef.current) subscriptionRef.current();
+    };
+  }, [currentUserDetails, dispatch]);
+
+  return null;
+};
+
+export default memo(RealTimeLeaveListner);

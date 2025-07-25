@@ -8,7 +8,7 @@ import dataBaseServices, { databaseServices } from "../../../Appwrite/Database";
 import { FilterBar, ShimmerLeaveHistory } from "../../../export";
 import {
   setAllLeave,
-  setLeaveByEmployee,
+  setStoreLeaves,
   setLoader,
 } from "../../../Store/leaveSlice";
 import LeaveServices from "../../../Appwrite/Leave";
@@ -22,14 +22,15 @@ const LeaveHistory = () => {
 
   const { empId } = useParams();
   const dispatch = useDispatch();
-  const { loader, allLeave, leaveByEmployee, prevEmpId } = useSelector(
+  const { loader, allLeave, storedLeaves , prevEmpId } = useSelector(
     (state) => state.leaveSlice
   );
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
-  console.log(allLeave, leaveByEmployee);
+  let firstRender = useRef(true);
+  console.log(allLeave, storedLeaves);
 
   const location = useLocation()
 
@@ -60,13 +61,26 @@ const LeaveHistory = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (leaveByEmployee[empId]) {
-      // CHECK THE PREVEMPid NOT CHANGE MEAN AGAIN SAME SO SHOE SAVED DATA USER COME TO ROUTE
-      if (prevEmpId !== empId) {
-        dispatch(setAllLeave({ empId, leaves: leaveByEmployee[empId] }));
-      }
-      return;
+    
+    
+   const isLeavesAlreadyFetched =
+    isAdminPage
+      ? Object.keys(storedLeaves).length > 0 // Admin view
+      : Boolean(storedLeaves[empId]); // Employee view
+
+  if (isLeavesAlreadyFetched) {
+    // Avoid resetting if already the same
+    if (prevEmpId !== empId || isAdminPage) {
+      const leavesToSet = isAdminPage
+        ? Object.values(storedLeaves).flat()
+        : storedLeaves[empId];
+
+      dispatch(setAllLeave({ empId, leaves: leavesToSet }));
     }
+    return;
+  }
+
+  
 
     const handleLeave = async () => {
       let newEmpId = isAdminPage ? null : empId;
@@ -74,7 +88,7 @@ const LeaveHistory = () => {
       try {
         const result = await LeaveServices.fetchLeaves(newEmpId);
         if (empId) {
-          dispatch(setLeaveByEmployee({ empId, leaves: result }));
+          dispatch(setStoreLeaves({ empId, leaves: result , isAdminPage }));
         }
       } catch (error) {
         toast.error(error);
@@ -178,7 +192,7 @@ const LeaveHistory = () => {
                       </span>
                     </td>
                     <td className="py-2 px-4 border font-semibold">
-                      <Link to={`/leavedetails/${empId}/${index}`}>
+                      <Link to={`/leavedetails/${item.$id}`}>
                         <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
                           View
                         </button>

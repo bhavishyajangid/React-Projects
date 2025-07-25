@@ -1,4 +1,4 @@
-import { useEffect, useState , useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -7,32 +7,29 @@ import { LeaveDetailsShimmer } from "../../../export";
 import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveDetails = () => {
-  const { userId, index } = useParams();
-  console.log(userId, index);
+  const { leaveId } = useParams();
 
   const { currentUserDetails } = useSelector((state) => state.authSlice);
-  const { leaveByEmployee , allLeave } = useSelector((state) => state.leaveSlice);
+  const { storedLeaves, allLeave } = useSelector((state) => state.leaveSlice);
   const isAdmin = currentUserDetails?.admin;
   const navigate = useNavigate();
 
   const [leave, setLeave] = useState([]);
   const [loading, setLoading] = useState(true);
-  let leaveId = useRef('')
+
   useEffect(() => {
     const handleLeaveDetails = async () => {
       try {
-        if (leaveByEmployee[userId]) {
-          console.log(leaveByEmployee[userId][index], "leaveInfo");
-          let Leave = leaveByEmployee[userId][index];
-           leaveId.current = Leave.$id
-          if (isAdmin) {
-            const user = await dataBaseServices.getUser(Leave.employeeId);
-            if (user) {
-              setLeave({ ...Leave, user });
-            }
-          } else {
-            setLeave(leave);
+        console.log('fetch leave');
+        
+        const Leave = await LeaveServices.fetchSingleLeave(leaveId);
+        if (isAdmin) {
+          const user = await dataBaseServices.getUser(Leave.employeeId);
+          if (user) {
+            setLeave({ ...Leave, user });
           }
+        } else {
+          setLeave(Leave);
         }
       } catch (error) {
         toast.error(error.message);
@@ -42,20 +39,19 @@ const LeaveDetails = () => {
     };
 
     handleLeaveDetails();
-  }, [userId, index]);
+  }, [leaveId]);
 
   const handleStatusChange = async (status) => {
-    console.log(leaveByEmployee , allLeave);
-    setLoading(true)
-  try {
-    await LeaveServices.updateLeave(leaveId.current , status)
-  } catch (error) {
-    toast.error(error.message)
-  }finally{
-    setLoading(false)
-  }
+    console.log(storedLeaves, allLeave);
+    setLoading(true);
+    try {
+      await LeaveServices.updateLeave(leave.$id, status);
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
-  
 
   const leaveFields = [
     {

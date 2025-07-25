@@ -146,7 +146,7 @@ console.log(result, 'rslfakdjs');
     } catch (error) {
       console.log(error);
       
-       throw new Error(error.message || 'Failed To Update Leave Try Again After Some Time')
+       throw new Error(error || 'Failed To Update Leave Try Again After Some Time')
        
     }
  }

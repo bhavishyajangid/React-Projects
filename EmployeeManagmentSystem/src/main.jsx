@@ -67,7 +67,7 @@ const router = createBrowserRouter(
           <Route path="/task" element={<Task />} />
           <Route path="/salaryhistory/:empId" element={<SalaryHistory/>} />
           <Route path="/leavehistory/:empId" element={<LeaveHistory key={'employee-leave'}/>} />
-          <Route path="/leavedetails/:userId/:index" element={<LeaveDetails/>} />
+          <Route path="/leavedetails/:leaveId" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
         </Route>
       </Route>
