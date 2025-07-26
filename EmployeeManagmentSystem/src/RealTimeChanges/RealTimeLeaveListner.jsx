@@ -17,7 +17,7 @@ const RealTimeLeaveListner = () => {
 
         if (res.events.some((event) => event.endsWith(".create"))) {
           dispatch(
-            addRealTimeLeave({ empId: payload.employeeId, leave: payload })
+            addRealTimeLeave({ empId: payload.employeeId, leave: payload , isAdminPage : currentUserDetails.admin})
           );
         }
 
@@ -26,7 +26,7 @@ const RealTimeLeaveListner = () => {
         ) {
             console.log(payload);
             
-          dispatch(updateLeaveRealTime(payload));
+          dispatch(updateLeaveRealTime({leave : payload , isAdminPage : currentUserDetails.admin}));
         }
 
         if (

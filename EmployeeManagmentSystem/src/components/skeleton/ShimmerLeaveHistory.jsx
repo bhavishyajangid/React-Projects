@@ -16,6 +16,14 @@ const ShimmerLeaveHistory = () => {
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 px-4">
       {/* Table with shimmer rows */}
+      <div className="flex justify-between items-center mb-5">
+         <p className="w-40 h-10 bg-gray-300 animate-pulse rounded-md"></p>
+         <div className="flex gap-5">
+
+         <span className="px-10 py-3 bg-gray-300 animate-pulse rounded-md"></span>
+         <span className="px-10 py-3 bg-gray-300 animate-pulse rounded-md"></span>
+         </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-md text-sm">
           {/* Table Header */}
@@ -33,7 +41,7 @@ const ShimmerLeaveHistory = () => {
 
           {/* Shimmer Body */}
           <tbody>
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: 10 }).map((_, i) => (
               <ShimmerLeaveRowDesktop key={i} />
             ))}
           </tbody>

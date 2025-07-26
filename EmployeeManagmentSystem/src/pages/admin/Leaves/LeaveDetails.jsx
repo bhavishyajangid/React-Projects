@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef , memo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { LeaveDetailsShimmer } from "../../../export";
 import LeaveServices from "../../../Appwrite/Leave";
 
 const LeaveDetails = () => {
-  const { leaveId } = useParams();
+  const { index } = useParams();
 
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const { storedLeaves, allLeave } = useSelector((state) => state.leaveSlice);
@@ -16,20 +16,20 @@ const LeaveDetails = () => {
 
   const [leave, setLeave] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const handleLeaveDetails = async () => {
       try {
-        console.log('fetch leave');
+        console.log("fetch leave");
         
-        const Leave = await LeaveServices.fetchSingleLeave(leaveId);
+        const LeaveDetail = allLeave[index];
         if (isAdmin) {
-          const user = await dataBaseServices.getUser(Leave.employeeId);
+          const user = await dataBaseServices.getUser(LeaveDetail.employeeId);
           if (user) {
-            setLeave({ ...Leave, user });
+            setLeave({ ...LeaveDetail, user });
           }
         } else {
-          setLeave(Leave);
+          setLeave(LeaveDetail);
         }
       } catch (error) {
         toast.error(error.message);
@@ -39,13 +39,15 @@ const LeaveDetails = () => {
     };
 
     handleLeaveDetails();
-  }, [leaveId]);
+  }, [index]);
 
   const handleStatusChange = async (status) => {
     console.log(storedLeaves, allLeave);
     setLoading(true);
     try {
       await LeaveServices.updateLeave(leave.$id, status);
+      navigate(`/admin/leavehistory/${currentUserDetails.userId}`);
+      toast.success(`Leave ${status} Sucessfully`)
     } catch (error) {
       toast.error(error);
     } finally {
@@ -115,7 +117,7 @@ const LeaveDetails = () => {
                   { label: "Department", value: leave.user.department },
                   { label: "Employee ID", value: leave.user.userId },
                 ].map((field, idx) => (
-                  <div className="flex gap-3">
+                  <div key={idx} className="flex gap-3">
                     <span className="text-sm font-semibold text-gray-600 whitespace-nowrap">
                       {field.label} :
                     </span>
@@ -207,4 +209,4 @@ const DetailRow = ({ label, value, className = "text-gray-800" }) => {
   );
 };
 
-export default LeaveDetails;
+export default memo(LeaveDetails);

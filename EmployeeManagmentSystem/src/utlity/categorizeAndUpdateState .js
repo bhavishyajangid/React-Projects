@@ -1,9 +1,6 @@
 export const categorizeAndUpdateState = (task, state, update = false) => {
-
-
   const removeTaskFromCategory = (category, task) => {
     if (Array.isArray(category)) {
-      
       const index = category.findIndex((t) => t.$id === task.$id);
       if (index !== -1) {
         category.splice(index, 1);
@@ -50,25 +47,21 @@ export const categorizeAndUpdateState = (task, state, update = false) => {
     state.completedTask.value += 1;
     if (update) removeTaskFromCategory(state.allTask, task);
     console.log("penfding ");
-    
   } else {
-  // Reclassify and remove from wrong category if needed
-  let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
-  if (index !== -1) {
-    state.allTask[index] = task;
-  } else {
-    state.allTask.push(task);
-     if (update){
-      console.log("else");
-      
-       removeTaskFromCategory(
-         task.sendBack ? state.completedTask : state.newTask,
-         task
-       );
-     }
+    // Reclassify and remove from wrong category if needed
+    let index = state.allTask.findIndex((ind) => ind.$id == task.$id);
+    if (index !== -1) {
+      state.allTask[index] = task;
+    } else {
+      state.allTask.push(task);
+      if (update) {
+        console.log("else");
+
+        removeTaskFromCategory(
+          task.sendBack ? state.completedTask : state.newTask,
+          task
+        );
+      }
     }
   }
-  
-  }
-
-
+};

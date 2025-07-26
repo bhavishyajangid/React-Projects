@@ -29,16 +29,17 @@ const leaveSlice = createSlice({
   reducers: {
     setStoreLeaves: (state, action) => {
       console.log("leaves set in the obj and allleaves");
-      const { empId, leaves , isAdminPage } = action.payload;
-       if(isAdminPage){
-         state.storedLeaves =  setStoreLeaveInObj(leaves)
-         state.allLeave =  Object.values(state.storedLeaves).flat()
-       }else{
-         state.storedLeaves[empId] = leaves;
-         state.allLeave = leaves;
-       }
-       state.prevEmpId = empId
-       state.loader = false
+      const { empId, leaves, isAdminPage } = action.payload;
+      if (isAdminPage) {
+        state.storedLeaves = setStoreLeaveInObj(leaves);
+        state.allLeave = Object.values(state.storedLeaves).flat();
+      } else {
+        state.storedLeaves[empId] = leaves;
+        state.allLeave = leaves;
+      }
+      state.prevEmpId = empId;
+      state.loader = false;
+      state.firstRender = false;
     },
     setAllLeave: (state, action) => {
       const { empId, leaves } = action.payload;
@@ -52,60 +53,51 @@ const leaveSlice = createSlice({
       state.loader = action.payload;
     },
     addRealTimeLeave: (state, action) => {
-      const { empId, leave } = action.payload;
+      const { empId, leave, isAdminPage } = action.payload;
       console.log(empId, leave, "idleave");
 
       console.log("leaves set by real time ");
 
-      if(!state.storedLeaves[empId]){
-         state.storedLeaves[empId] = [leave];
+      if (state.storedLeaves[empId]) {
+        state.storedLeaves[empId].push(leave);
       }
 
-      if(state.storedLeaves[empId]){
-         state.storedLeaves[empId].push(leave);
+      if (!state.storedLeaves[empId]) {
+        state.storedLeaves[empId] = [leave];
       }
 
-      state.allLeave.push(leave)
+      const currentViewedEmpId = state.prevEmpId; // you store this in your slice
 
-      
-     
+      if (isAdminPage || empId === currentViewedEmpId) {
+        state.allLeave.push(leave);
+      }
     },
 
+    updateLeaveRealTime: (state, action) => {
+      const { leave, isAdminPage } = action.payload;
 
-updateLeaveRealTime: (state, action) => {
-  const leave = action.payload;
+      console.log("Before Update:");
 
-  // ✅ Only use current() for debugging/logging
-  console.log("Before Update:");
-  console.log("All Leave:", current(state.allLeave));
-  console.log("Stored Leaves:", current(state.storedLeaves[leave.employeeId]));
-  console.log("Incoming Leave:", leave);
+      if (state.storedLeaves[leave.employeeId]) {
+        const index = state.storedLeaves[leave.employeeId].findIndex(
+          (item) => item.$id === leave.$id
+        );
 
-  // 🟡 Safe to mutate the state directly
-  if (state.storedLeaves[leave.employeeId]) {
-    const index = state.storedLeaves[leave.employeeId].findIndex(
-      (item) => item.$id === leave.$id
-    );
+        if (index !== -1) {
+          state.storedLeaves[leave.employeeId][index] = leave;
+        }
+      }
 
-    if (index !== -1) {
-      state.storedLeaves[leave.employeeId][index] = leave;
-    }
-  }
+      const index = state.allLeave.findIndex((item) => item.$id === leave.$id);
+      if (
+        (leave.employeeId === state.prevEmpId || isAdminPage) &&
+        index !== -1
+      ) {
+        state.allLeave[index] = leave;
+      }
 
-  const index = state.allLeave.findIndex((item) => item.$id === leave.$id);
-  if (index !== -1) {
-    state.allLeave[index] = leave;
-  }
-
-  // ✅ Log updated state without proxy
-  console.log("After Update:");
-  console.log("All Leave:", current(state.allLeave));
-  console.log("Stored Leaves:", current(state.storedLeaves));
-}
-
-
-   
-
+      console.log("After Update:");
+    },
   },
 
   extraReducers: (builder) => {
@@ -126,7 +118,7 @@ updateLeaveRealTime: (state, action) => {
 
 export const {
   setStoreLeaves,
- updateLeaveRealTime,
+  updateLeaveRealTime,
   addRealTimeLeave,
   setLoader,
   setAllLeave,

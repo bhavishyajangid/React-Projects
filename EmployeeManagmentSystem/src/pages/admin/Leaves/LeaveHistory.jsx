@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FiFilter } from "react-icons/fi";
 import { IoIosAddCircle } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
 import dataBaseServices, { databaseServices } from "../../../Appwrite/Database";
-import { FilterBar, ShimmerLeaveHistory } from "../../../export";
+import { Button, FilterBar, ShimmerLeaveHistory } from "../../../export";
 import {
   setAllLeave,
   setStoreLeaves,
@@ -22,19 +22,17 @@ const LeaveHistory = () => {
 
   const { empId } = useParams();
   const dispatch = useDispatch();
-  const { loader, allLeave, storedLeaves , prevEmpId } = useSelector(
-    (state) => state.leaveSlice
-  );
+  const { loader, allLeave, storedLeaves, prevEmpId, firstRender } =
+    useSelector((state) => state.leaveSlice);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
+  const [leave, setLeave] = useState([]);
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
-  let firstRender = useRef(true);
-  console.log(allLeave, storedLeaves);
 
-  const location = useLocation()
+  const location = useLocation();
 
-  const isAdminPage = location.pathname.includes('/admin/leavehistory')
+  const isAdminPage = location.pathname.includes("/admin/leavehistory");
 
   const handleFilter = useCallback(
     async (data) => {
@@ -60,27 +58,25 @@ const LeaveHistory = () => {
     setFilterLeaves(null);
   }, [dispatch]);
 
+  console.log("componetn rerender");
+
   useEffect(() => {
-    
-    
-   const isLeavesAlreadyFetched =
-    isAdminPage
+    console.log("useEffect run ");
+
+    const isLeavesAlreadyFetched = isAdminPage
       ? Object.keys(storedLeaves).length > 0 // Admin view
       : Boolean(storedLeaves[empId]); // Employee view
 
-  if (isLeavesAlreadyFetched) {
-    // Avoid resetting if already the same
-    if (prevEmpId !== empId || isAdminPage) {
+    if (isLeavesAlreadyFetched && !firstRender) {
+      // Avoid resetting if already the same
+
       const leavesToSet = isAdminPage
         ? Object.values(storedLeaves).flat()
         : storedLeaves[empId];
 
       dispatch(setAllLeave({ empId, leaves: leavesToSet }));
+      return;
     }
-    return;
-  }
-
-  
 
     const handleLeave = async () => {
       let newEmpId = isAdminPage ? null : empId;
@@ -88,7 +84,8 @@ const LeaveHistory = () => {
       try {
         const result = await LeaveServices.fetchLeaves(newEmpId);
         if (empId) {
-          dispatch(setStoreLeaves({ empId, leaves: result , isAdminPage }));
+          dispatch(setStoreLeaves({ empId, leaves: result, isAdminPage }));
+          // firstRender.current = false;
         }
       } catch (error) {
         toast.error(error);
@@ -97,7 +94,9 @@ const LeaveHistory = () => {
       }
     };
 
-    handleLeave();
+    if (empId !== prevEmpId) {
+      handleLeave();
+    }
   }, [empId]);
 
   if (loader) {
@@ -192,7 +191,7 @@ const LeaveHistory = () => {
                       </span>
                     </td>
                     <td className="py-2 px-4 border font-semibold">
-                      <Link to={`/leavedetails/${item.$id}`}>
+                      <Link to={`/leavedetails/${index}`}>
                         <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
                           View
                         </button>
@@ -212,72 +211,85 @@ const LeaveHistory = () => {
         </div>
 
         {/* 📱 Mobile Card View */}
-        <div className="sm:hidden space-y-4">
-          {filterData.length === 0 ? (
-            <div className="text-center py-4 text-gray-500">
-              No records found.
-            </div>
-          ) : (
-            filterData.map((item, index) => {
-              const fields = [
-                isAdminPage && {
-                  label: "EMPLOYEENAME",
-                  value: item.employeeName,
-                  classname: "text-blue-600 font-medium",
-                },
-                {
-                  label: "LEAVE TYPE",
-                  value: item.leaveType,
-                  classname: "text-cyan-700 font-medium",
-                },
-                { label: "FROM", value: `₹ ${item.fromDate}` },
-                { label: "TO", value: `₹ ${item.toDate}` },
-                { label: "Days", value: `₹ ${item.totalDays}` },
-                {
-                  label: "APPLIED DATE",
-                  value: `₹ ${item.appliedDate}`,
-                  classname: "font-semibold",
-                },
-                {
-                  label: "STATUS",
-                  value: item.status,
-                  classname: `px-2 py-1  rounded-xl text-sm capitalize text-white font-semibold ${
-                    item.status == "pending"
-                      ? "bg-blue-500 "
-                      : item.status == "approved"
-                      ? "bg-green-500 "
-                      : "bg-red-400"
-                  }`,
-                },
-              ];
-
-              return (
-                <div
-                  key={index}
-                  className="bg-white shadow rounded-lg p-4 border text-sm space-y-1"
-                >
-                  <div className="mb-2 flex justify-between text-gray-600 font-semibold">
-                    <span>SNO:</span>
-                    <span>{index + 1}</span>
-                  </div>
-                  {fields.map((field, i) => (
-                    <div className="flex justify-between items-center" key={i}>
-                      <span className={`font-semibold text-gray-600  `}>
-                        {field.label}
-                      </span>
-                      <span className={`${field.classname}`}>
-                        {field.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              );
-            })
-          )}
+        <div className="sm:hidden space-y-4 mt-5 px-3">
+  {filterData.length === 0 ? (
+    <div className="text-center py-4 text-gray-500">No records found.</div>
+  ) : (
+    filterData.map((leave, index) => (
+      <div
+        key={leave.$id}
+        className="bg-white shadow rounded-lg p-4 border text-sm space-y-2 flex flex-col"
+      >
+        <div className="flex justify-between text-gray-600 font-semibold">
+          <span>SNO:</span>
+          <span>{index + 1}</span>
         </div>
+
+        {isAdminPage && (
+          <div className="flex justify-between">
+            <span className="text-gray-600 font-semibold">Employee Name:</span>
+            <span className="text-blue-600 font-medium">{leave.employeeName}</span>
+          </div>
+        )}
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">Leave Type:</span>
+          <span className="text-cyan-700 font-medium">{leave.leaveType}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">From:</span>
+          <span>{leave.fromDate}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">To:</span>
+          <span>{leave.toDate}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">Days:</span>
+          <span>{leave.totalDays}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">Applied Date:</span>
+          <span className="font-semibold">{leave.appliedDate}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">Status:</span>
+          <span
+            className={`px-2 py-1 rounded-xl text-sm capitalize text-white font-semibold ${
+              leave.status === "pending"
+                ? "bg-blue-500"
+                : leave.status === "approved"
+                ? "bg-green-500"
+                : "bg-red-400"
+            }`}
+          >
+            {leave.status}
+          </span>
+        </div>
+
+        <div className="flex justify-end">
+          <Link to={`/leavedetails/${index}`}>
+            <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
+              View
+            </button>
+          </Link>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+
+
+
       </div>
     </div>
   );
 };
 
-export default LeaveHistory;
+export default memo(LeaveHistory);
