@@ -8,7 +8,6 @@ import GridCards from "./components/GridCards.jsx";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import Button from "./components/Button.jsx";
 import Input from "./components/Input.jsx";
-import VerifyEmail from "./pages/verificationPage/VerifyEmail.jsx";
 import Loader from "./components/Loader.jsx";
 import VerifyOtp from "./components/VerifyOtp.jsx";
 import Home from "./pages/Dashboard/Home.jsx";
@@ -34,11 +33,16 @@ import HomeSkeleton from "./components/skeleton/HomeSkeleton.jsx";
 import ProtectedLayout from "./Routes/ProtectedLayout.jsx";
 import Task from "./pages/admin/Task.jsx";
 import TaskFullPageSkeleton from "./components/skeleton/TaskFullPageSkeleton.jsx";
+import Sidebar from "./components/Sidebar.jsx";
 import FilterBar from "./components/FilterBar.jsx";
 import AddEmployee from "./pages/admin/AddOrEditEmployee.jsx";
 import SelectOption from "./components/SelectOption.jsx";
 import ShimmerLeaveHistory from "./components/skeleton/ShimmerLeaveHistory.jsx";
 import LeaveDetailsShimmer from "./components/skeleton/LeaveDetailsShimmer.jsx";
+import RealTimeLeaveListner from "./RealTimeChanges/RealTimeLeaveListner.jsx";
+import RealTimeSalaryListner from "./RealTimeChanges/RealTimeSalaryListner.jsx";
+import RealTimeTaskListner from "./RealTimeChanges/RealTimeTaskListner.jsx";
+import SkeletonSalaryHistory from "./components/skeleton/SkeletonSalaryHistory.jsx";
 export  {
     Login, 
     Signup,
@@ -50,7 +54,6 @@ export  {
     AdminDashboard,
     Button,
     Input,
-    VerifyEmail,
     Loader,
     VerifyOtp,
     Home,
@@ -79,6 +82,11 @@ export  {
     AddEmployee,
     SelectOption,
     ShimmerLeaveHistory,
-    LeaveDetailsShimmer
+    LeaveDetailsShimmer,
+    RealTimeLeaveListner,
+    RealTimeSalaryListner,
+     RealTimeTaskListner,
+     Sidebar,
+     SkeletonSalaryHistory
    
 }

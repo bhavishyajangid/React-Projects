@@ -80,27 +80,25 @@ export class authService {
       const userDetails = await dataBaseServices.getUser(id, queary);
       return userDetails ? userDetails : [];
     } catch (error) {
-      throw new Error("failed to fetch user info", error);
+      throw new Error(error || "failed to fetch user info");
     }
   }
 
   async getCurrentUser() {
     try {
-      console.log("currnet user");
       const session = await this.account.getSession("current");
-      if (session) {
-        const isUserLogin = await this.account.get();
-        return await this.getUserAllDetails(isUserLogin.$id);
-      }
 
-      return null;
-    } catch (error) {
-      if (error.code === 401) {
-        // Don't log anything, just return null silently
-        return null;
+      if (!session) return false;
+
+      try {
+        return await this.getUserAllDetails(session.userId);
+      } catch (error) {
+        await this.logout();
+        return false;
       }
-      console.error("Error in getCurrentUser:", error.message);
-      return null;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   }
 
@@ -122,6 +120,14 @@ export class authService {
       console.error("Error in getAllUser:", error);
       return [];
     }
+  }
+
+  async updateUser(data, nameEdit, emailEdit, passwordEdit) {
+    try {
+      if (nameEdit) {
+        this.account.updateName(data.userName);
+      }
+    } catch (error) {}
   }
 
   async sendOtp(user) {
@@ -162,14 +168,6 @@ export class authService {
     } else {
       return false;
     }
-  }
-
-  async updateUser(data, nameEdit, emailEdit, passwordEdit) {
-    try {
-      if (nameEdit) {
-        this.account.updateName(data.userName);
-      }
-    } catch (error) {}
   }
 }
 

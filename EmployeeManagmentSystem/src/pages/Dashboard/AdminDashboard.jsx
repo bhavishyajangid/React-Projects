@@ -4,7 +4,7 @@ import {
   FaUsers
 } from 'react-icons/fa';
 import { GridCards } from '../../export';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import dataBaseServices from '../../Appwrite/Database';
 import { showError } from '../../utlity/Error&Sucess';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,10 +60,10 @@ const AdminDashboard = () => {
   return (
     <>
     <div className='flex flex-col gap-10 py-2 px-3'>
-    <GridCards option={dashboardStats} heading={"Dashboard Overview"}/>
+    <GridCards option={dashboardStats} heading={"Overview"}/>
     </div>
     </>
   )
 }
 
-export default AdminDashboard
+export default memo(AdminDashboard) 

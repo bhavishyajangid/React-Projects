@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import dataBaseServices from "../../../Appwrite/Database";
-import { Button, Input, Loader } from "../../../export";
+import SalaryServices from "../../../Appwrite/Salary";
+import { Button, Input, Loader, SkeletonSalaryHistory } from "../../../export";
+import { Navigate, useNavigate } from "react-router";
 
 const departments = ["Tech", "HR", "Marketing", "Database"];
 
@@ -12,14 +13,17 @@ const AddSalary = () => {
   const { register, handleSubmit, watch, reset } = useForm();
   const [loader, setLoader] = useState(false);
   const [department, setDepartment] = useState("");
-
+  const navigate = useNavigate()
   let employee = department.trim() ? allEmployee.filter((item) => item.department == department) : allEmployee
 
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      const result = await dataBaseServices.addSalary(data);
-      if (result) toast.success(`Salary Added To Employee`);
+      const result = await SalaryServices.addSalary(data);
+      if (result){
+        navigate(`/salaryhistory/${data.employeeId}`)
+toast.success(`Salary Added To Employee`);
+      } 
     } catch (error) {
         console.log(error);
         
@@ -30,7 +34,7 @@ const AddSalary = () => {
     }
   };
 
-  if (loader) return <Loader />;
+  if (loader) return <SkeletonSalaryHistory />;
 
   return (
     <div className=" flex justify-center items-center bg-gray-100 ">

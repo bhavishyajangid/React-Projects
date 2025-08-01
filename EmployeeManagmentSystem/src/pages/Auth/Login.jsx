@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
@@ -26,9 +26,7 @@ const Login = () => {
         await dispatch(fetchTask(loginUser)).unwrap();
         dispatch(login(loginUser));
 
-        loginUser.admin
-          ? navigate("/admin", { replace: true })
-          : navigate("/employee", { replace: true });
+       navigate('/')
 
         showSuccess("Login sucessfully");
       }
@@ -92,4 +90,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default memo(Login)

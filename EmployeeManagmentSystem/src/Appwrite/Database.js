@@ -4,10 +4,10 @@ import { Identity } from "twilio/lib/twiml/VoiceResponse";
 import TaskServices, { taskService } from "./Task";
 import storageServices from "./storage";
 import { toast } from "react-toastify";
+
 export class databaseServices {
   client = new Client();
   database;
-  salary
 
   constructor() {
     this.client
@@ -141,70 +141,7 @@ export class databaseServices {
     }
   }
 
- async addSalary(data) {
-      try {
-        const result = await this.salary.createDocument(
-          conf.appwriteDatabaseId,
-          conf.appwriteSalaryCollectionId,
-          ID.unique(),
-          data
-        )
-       return result ? result : []
-      } catch (error) {
-        throw error.message || "failed to add salary"
-      }
- }
-
- async fetchSalaryHistory(userId){
-  console.log(userId);
-  
-    try {
-       const salary = await this.salary.listDocuments(
-        conf.appwriteDatabaseId,
-        conf.appwriteSalaryCollectionId,
-        [
-        Query.equal("employeeId", userId),
-         ]
-       )
-
-       return salary ? salary.documents : []
-    } catch (error) {
-      console.log(error);
-      
-      throw error.message || "failed to fetch salary details"
-    }
- }
-
- async filterSalary({startDate , endDate}){
- let query = []
-
-
-         if(startDate){
-            query.push(Query.greaterThanEqual('payDate' , startDate))
-         }
-
-         if (endDate) {
-            query.push(Query.lessThanEqual('payDate', endDate));
-  }
-   
-
-   try {
-    const res = await this.database.listDocuments(
-       conf.appwriteDatabaseId,
-       conf.appwriteSalaryCollectionId,
-       query
-    )
-
-    return res.documents || []
-    
-  } catch (error) {
-    console.log(error);
-    throw new Error(error.message || "Something Went Wrong Try After Some Time")
-    
-    
-  }
-
-}
+ 
 }
 
 const dataBaseServices = new databaseServices();

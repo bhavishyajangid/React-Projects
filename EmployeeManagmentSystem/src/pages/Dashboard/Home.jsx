@@ -1,11 +1,7 @@
-import { memo, Suspense, useState , useEffect} from "react";
-import { useSelector } from "react-redux";
+import { memo, Suspense, useState } from "react";
 import { Outlet } from "react-router";
-import { ToastContainer } from "react-toastify";
-import RealTimeTaskListner from "../../components/RealTimeTaskListner";
-import Sidebar from "../../components/Sidebar";
-import { ChatBox, Navbar, Loader } from "../../export";
-import RealTimeLeaveListner from "../../RealTimeChanges/RealTimeLeaveListner";
+import { ChatBox, Loader, Navbar, RealTimeLeaveListner, RealTimeSalaryListner, RealTimeTaskListner, Sidebar } from "../../export";
+
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -30,6 +26,7 @@ const Home = () => {
           </Suspense>
           <RealTimeTaskListner />
           <RealTimeLeaveListner/>
+          <RealTimeSalaryListner/>
         </main>
       </div>
     </div>

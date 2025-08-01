@@ -9,7 +9,7 @@ import { HiOutlineClipboardDocumentCheck } from "react-icons/hi2";
 import { Link } from 'react-router';
 
 
-const GridCards = ({option}) => {
+const GridCards = ({option , heading}) => {
   
        const {currentUserDetails} = useSelector(state => state.authSlice)
     const { newTask , completedTask , acceptedTask , rejectedTask} = useSelector(state => state.taskSlice)
@@ -51,7 +51,7 @@ const GridCards = ({option}) => {
      
   return (
     <div className="flex-1 px-1 md:p-5">
-            <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-6">Task Overview</h1>
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-6">{heading}</h1>
      <div className="grid sm:grid-cols-1 md:grid-cols-2  md:grid-rows-2  gap-6  xl:grid-cols-4">
            
            {

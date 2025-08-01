@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { data, useParams } from "react-router";
-import dataBaseServices from "../../../Appwrite/Database";
-import { toast } from "react-toastify";
-import { FilterBar, Loader } from "../../../export";
+import { useCallback, useEffect, useState } from "react";
 import { FiFilter } from "react-icons/fi";
-import { setLoader } from "../../../Store/otpSendSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { toast } from "react-toastify";
+import SalaryServices from "../../../Appwrite/Salary";
+import { FilterBar, SkeletonSalaryHistory } from "../../../export";
+import { setAllSalary, setSalaryLoader, setStoredSalary } from "../../../Store/salarySlice";
 
 const dropDownOption = [
   { userName: "Pending" },
@@ -13,49 +14,60 @@ const dropDownOption = [
 ];
 
 const SalaryHistory = () => {
-  const [loading, setLoading] = useState(true);
-  let salaryHistory = useRef([]);
   const { empId } = useParams();
+  const { storedSalary , loader , allSalary , firstRender , prevEmpId} = useSelector((state) => state.salarySlice);
   const [showFilter, setShowFilter] = useState(false);
-  const [filterData, setFilterData] = useState([]);
+  const dispatch = useDispatch()
+  console.log(storedSalary);
+
   useEffect(() => {
+    
     const fetchUserSalaryHistory = async () => {
+          dispatch(setSalaryLoader(true))
+
+          if (storedSalary[empId] && !firstRender) {
+            // Avoid resetting if already the same
+            dispatch(setAllSalary({ empId, salary : storedSalary[empId] }));
+            return;
+          }
+     
+
       try {
-        const salary = await dataBaseServices.fetchSalaryHistory(empId);
+        const salary = await SalaryServices.fetchSalaryHistory(empId);
         if (salary) {
-          setFilterData(salary);
-          salaryHistory.current = salary;
+          dispatch(setStoredSalary({empId , salary })) 
         }
       } catch (error) {
         toast.error(error.message || "Failed to fetch salary history");
-      } finally {
-        setLoading(false);
+        dispatch(setSalaryLoader(false))
       }
     };
-    fetchUserSalaryHistory();
+
+    if(prevEmpId !== empId){
+      fetchUserSalaryHistory();
+    }
   }, [empId]);
 
   const filterTask = useCallback(async (data) => {
     if (data.startDate == "" && data.endDate == "") return;
 
-    setLoading(true);
+    dispatch(setSalaryLoader(true))
     try {
-      const result = await dataBaseServices.filterSalary(data);
+      const result = await SalaryServices.filterSalary(data);
       if (result) {
-        setFilterData(result);
+        dispatch(setAllSalary({empId , salary : result}))
       }
     } catch (error) {
       toast.error(error.message);
-    } finally {
-      setLoading(false);
+      dispatch(setSalaryLoader(false))
     }
   }, []);
 
   const resetTask = useCallback(async () => {
-    setFilterData(salaryHistory.current);
+      dispatch(setAllSalary({empId , salary : storedSalary[empId] || []}))
   }, []);
 
-  if (loading) return <Loader />;
+  if (loader) return <SkeletonSalaryHistory/>
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -96,8 +108,8 @@ const SalaryHistory = () => {
               </tr>
             </thead>
             <tbody>
-              {filterData.length > 0 ? (
-                filterData.map((item, index) => (
+              {allSalary.length > 0 ? (
+                allSalary.map((item, index) => (
                   <tr
                     key={index}
                     className="text-center border-t hover:bg-gray-50"
@@ -131,12 +143,12 @@ const SalaryHistory = () => {
 
         {/* Mobile Card View */}
         <div className="sm:hidden space-y-4">
-          {filterData.length === 0 ? (
+          {allSalary.length === 0 ? (
             <div className="text-center py-4 text-gray-500">
               No records found.
             </div>
           ) : (
-            filterData.map((item, index) => {
+            allSalary.map((item, index) => {
               const total =
                 parseInt(item.salary) +
                 parseInt(item.allowance) -
