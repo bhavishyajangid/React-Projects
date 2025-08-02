@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editUser} from "./thunks/userThunk";
+import { editUser, handleFetchAllUser} from "./thunks/userThunk";
 
 
 
@@ -10,6 +10,7 @@ const authSlice = createSlice({
     isLogin: false,
     isEmailExist: false,
     allEmployee: [],
+    allEmployeeCount : 0,
     loader: false,
   },
   reducers: {
@@ -26,6 +27,9 @@ const authSlice = createSlice({
     setAllEmployee: (state, action) => {
       state.allEmployee = action.payload;
     },
+    setAllEmployeeCount : (state , action) => {
+       state.allEmployeeCount = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -45,8 +49,19 @@ const authSlice = createSlice({
       .addCase(editUser.rejected, (state) => {
         state.loader = false;
       })
+
+      .addCase(handleFetchAllUser.pending , (state , action) => {
+         state.loader = true
+      })
+      .addCase(handleFetchAllUser.fulfilled, (state , action) => {
+          state.loader = false
+          state.allEmployee = action.payload
+      })
+      .addCase(handleFetchAllUser.rejected , (state , action) => {
+        state.loader = false
+      })
   },
 });
 
-export const { login, logout, setAllEmployee } = authSlice.actions;
+export const { login, logout, setAllEmployee , setAllEmployeeCount } = authSlice.actions;
 export default authSlice;

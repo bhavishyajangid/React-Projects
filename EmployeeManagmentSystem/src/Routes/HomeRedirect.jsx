@@ -13,6 +13,8 @@ const HomeRedirect = () => {
   }
 
   if (currentUserDetails?.admin) {
+    console.log('navigate tp admin');
+    
     return <Navigate to="/admin" replace />;
   }
 

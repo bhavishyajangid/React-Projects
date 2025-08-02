@@ -1,17 +1,11 @@
 import { useForm } from "react-hook-form";
-import { Input, Loader, SelectOption } from "../../export";
-import {
-  departmentOptions,
-  genderOptions,
-  maritalStatusOptions,
-  roleOptions,
-} from "../../utlity/SelectOption";
+import { Input , Loader , SelectOption } from "../../../export";
+
 // import { handleCreatUser } from "../../Store/thunks/signupThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import dataBaseServices from "../../Appwrite/Database";
-import { editUser } from "../../Store/thunks/userThunk";
+import { editUser } from "../../../Store/thunks/userThunk";
 
 const AddOrEditEmployee = ({ employee }) => {
   const {

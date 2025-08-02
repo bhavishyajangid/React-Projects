@@ -117,8 +117,8 @@ export class authService {
       const response = await users.list();
       return response.users || [];
     } catch (error) {
-      console.error("Error in getAllUser:", error);
-      return [];
+      console.log(error);
+      throw new Error('Network Error : Cannot Fetch User')
     }
   }
 
@@ -169,6 +169,7 @@ export class authService {
       return false;
     }
   }
+ 
 }
 
 const authServices = new authService();

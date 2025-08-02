@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import dataBaseServices from "../../Appwrite/Database";
+import dataBaseServices, { databaseServices } from "../../Appwrite/Database";
 
 
  export const editUser = createAsyncThunk(
@@ -33,3 +33,16 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+
+export const handleFetchAllUser = createAsyncThunk(
+  'alluser',
+
+  async(_ , {rejectWithValue}) => {
+     try {
+      const employee = await dataBaseServices.getAllUser()
+      return employee.documents 
+     } catch (error) {
+       return rejectWithValue(error)
+     }
+  }
+)

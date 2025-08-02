@@ -20,7 +20,7 @@ const Home = () => {
 
         {/* Main scrollable content area */}
         <main className="flex-1 h-full overflow-y-auto p-4">
-          <ChatBox />
+          {/* <ChatBox /> */}
           <Suspense fallback={<Loader />}>
             <Outlet/>
           </Suspense>

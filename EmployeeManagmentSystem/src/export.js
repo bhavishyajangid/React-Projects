@@ -14,7 +14,7 @@ import Home from "./pages/Dashboard/Home.jsx";
 import AddTask from "./pages/admin/AddTask.jsx"
 import TaskCard from "./components/TaskCard.jsx";
 import CardSkeleton from "./components/skeleton/CardSkeleton.jsx";
-import AllEmployee from "./pages/admin/AllEmployee.jsx";
+import AllEmployee from "./pages/admin/employee/AllEmployee.jsx";
 import TaskFullPage from "./pages/Dashboard/TaskFullPage.jsx";
 import EditTask from "./pages/admin/EditTask.jsx";
 import UserSkeleton from "./components/skeleton/UserSkeleton.jsx";
@@ -35,7 +35,6 @@ import Task from "./pages/admin/Task.jsx";
 import TaskFullPageSkeleton from "./components/skeleton/TaskFullPageSkeleton.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import FilterBar from "./components/FilterBar.jsx";
-import AddEmployee from "./pages/admin/AddOrEditEmployee.jsx";
 import SelectOption from "./components/SelectOption.jsx";
 import ShimmerLeaveHistory from "./components/skeleton/ShimmerLeaveHistory.jsx";
 import LeaveDetailsShimmer from "./components/skeleton/LeaveDetailsShimmer.jsx";
@@ -43,6 +42,10 @@ import RealTimeLeaveListner from "./RealTimeChanges/RealTimeLeaveListner.jsx";
 import RealTimeSalaryListner from "./RealTimeChanges/RealTimeSalaryListner.jsx";
 import RealTimeTaskListner from "./RealTimeChanges/RealTimeTaskListner.jsx";
 import SkeletonSalaryHistory from "./components/skeleton/SkeletonSalaryHistory.jsx";
+import AddOrEditEmployee from "./pages/admin/employee/AddOrEditEmployee.jsx";
+import EmployeeInfo from "./pages/admin/employee/EmployeeInfo.jsx";
+import EmployeeInfoProvider from "./pages/admin/employee/EmployeeInfoProvider.jsx";
+import AllemployeeShimmer from "./components/skeleton/AllemployeeShimmer.jsx";
 export  {
     Login, 
     Signup,
@@ -79,7 +82,6 @@ export  {
     Task,
     TaskFullPageSkeleton,
     FilterBar,
-    AddEmployee,
     SelectOption,
     ShimmerLeaveHistory,
     LeaveDetailsShimmer,
@@ -87,6 +89,10 @@ export  {
     RealTimeSalaryListner,
      RealTimeTaskListner,
      Sidebar,
-     SkeletonSalaryHistory
+     SkeletonSalaryHistory,
+     EmployeeInfo,
+     EmployeeInfoProvider,
+     AddOrEditEmployee,
+     AllemployeeShimmer
    
 }

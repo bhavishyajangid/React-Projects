@@ -11,15 +11,11 @@ import {
   FaTasks,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
-  const [activeOption, setActiveOption] = useState(1);
-
-  const handleSelect = (id) => {
-    setActiveOption(id);
-  };
+  const location = useLocation()
 
   const sidebarOptions = [
     {
@@ -40,7 +36,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       id: 3,
       label: "Departments",
       icon: <FaBuilding />,
-      link: "",
+      link: "/hk",
       visible: currentUserDetails.admin,
     },
     { id: 4, label: "Tasks", icon: <FaTasks />, link: "/task", visible: true },
@@ -62,7 +58,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         : `/salaryhistory/${currentUserDetails.userId}`,
       visible: true,
     },
-    { id: 7, label: "Setting", icon: <FaCog />, link: "", visible: true },
+    { id: 7, label: "Setting", icon: <FaCog />, link: "/h", visible: true },
   ];
   return (
     <>
@@ -90,25 +86,26 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         {/* Sidebar Options */}
         <div className="px-4 md:px-6 py-2 md:py-4 space-y-3 w-full flex flex-col">
-          {sidebarOptions.map((item, index) => (
-            <div key={index} className={`${item.visible ? "block" : "hidden"}`}>
-              <Link to={item.link} key={index}>
+           {sidebarOptions.map((item) => {
+            if (!item.visible) return null;
+
+            const isActive = location.pathname.startsWith(item.link);
+
+            return (
+              <Link to={item.link} key={item.id}>
                 <div
-                  onClick={() => {
-                    handleSelect(item.id);
-                  }}
                   className={`px-4 py-2 rounded cursor-pointer flex items-center gap-3 font-medium transition-all w-full
-                ${
-                  activeOption === item.id
-                    ? "bg-gray-800 text-white shadow-inner"
-                    : "hover:bg-gray-700 text-gray-300"
-                }`}
+                  ${
+                    isActive
+                      ? "bg-gray-800 text-white shadow-inner"
+                      : "hover:bg-gray-700 text-gray-300"
+                  }`}
                 >
                   {item.icon} {item.label}
                 </div>
               </Link>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

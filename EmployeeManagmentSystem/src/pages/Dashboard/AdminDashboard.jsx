@@ -1,24 +1,21 @@
+import { memo } from 'react';
 import {
   FaBuilding,
   FaMoneyBill,
   FaUsers
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import { GridCards } from '../../export';
-import { memo, useEffect } from 'react';
-import dataBaseServices from '../../Appwrite/Database';
-import { showError } from '../../utlity/Error&Sucess';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAllEmployee } from '../../Store/authSlice';
 
 const AdminDashboard = () => {
-  const {allEmployee} = useSelector(state => state.authSlice)
-  const dispatch = useDispatch()
+  const {allEmployeeCount} = useSelector(state => state.authSlice)
 
+  
    const dashboardStats = [
   {
     id: 'employees',
     label: 'Total Employees',
-    value: allEmployee.length,
+    value: allEmployeeCount,
     icon: <FaUsers/>,
     color: 'teal-500',
   },
@@ -38,22 +35,7 @@ const AdminDashboard = () => {
   },
 ]; 
 
-   useEffect(() => {
-    const fetchAllEmployee = async() => {
-
-      try {
-        const res = await dataBaseServices.getAllUser()
-        if(res){
-          
-           dispatch(setAllEmployee(res.documents))
-        }
-      } catch (error) {
-        showError(error.message)
-      }
-    }
-
-    fetchAllEmployee()
-   } ,[dispatch])
+   
 
    
 

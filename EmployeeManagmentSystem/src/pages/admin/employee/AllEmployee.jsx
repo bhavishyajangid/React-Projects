@@ -1,14 +1,17 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
-import { UserSkeleton } from '../../export';
+import { useEffect, useMemo, useState } from 'react';
 import { FaFilter } from "react-icons/fa6";
-import { FaEye } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router';
+import { toast } from 'react-toastify';
+import { handleFetchAllUser } from '../../../Store/thunks/userThunk';
+import { AllemployeeShimmer, UserSkeleton } from '../../../export';
 const AllEmployee = () => {
-  const { allEmployee } = useSelector(state => state.authSlice)
+  const { allEmployee , loader} = useSelector(state => state.authSlice)
   const [inputVal, setInputVal] = useState("")
   const [department, setDepartment] = useState("")
   const [filter, setFilter] = useState(false)
+  const dispatch = useDispatch()
+  
 
 
   const filteredEmployees = useMemo(() => {
@@ -23,10 +26,22 @@ const AllEmployee = () => {
     });
   }, [inputVal, department, allEmployee]);
 
+   useEffect(() => {
+    const fetchAllEmployee = async() => {
+
+      if(allEmployee.length > 0)return 
+
+     try {
+     await dispatch(handleFetchAllUser()).unwrap() 
+     } catch (error) {
+       toast.error(error)
+     }
+     }
+     fetchAllEmployee()
+   },[dispatch])
+
 
   const actionButtons = (emp) => [
-   
-    
     {
       name: "View",
       link: `/editEmployee/${emp.userId}?mode=view`,
@@ -50,8 +65,7 @@ const AllEmployee = () => {
   ];
 
 
-  if (!allEmployee) return <UserSkeleton />;
-
+  if (loader) return <AllemployeeShimmer/>
 
   return (
     <>
@@ -145,7 +159,7 @@ const AllEmployee = () => {
           <div className="text-center py-4 text-gray-500">No employees found.</div>
         ) : (
           filteredEmployees.map((employee) => (
-            <div className="bg-white shadow rounded-lg p-4 border">
+            <div key={employee.$id} className="bg-white shadow rounded-lg p-4 border">
               <div className="flex items-center gap-4 mb-2">
                 <img
                   src={employee.profileUrl || '/default-avatar.png'}

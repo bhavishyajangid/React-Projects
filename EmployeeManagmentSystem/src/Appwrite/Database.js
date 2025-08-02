@@ -76,12 +76,9 @@ export class databaseServices {
         conf.appwriteAuthCollectionId,
         [Query.equal("admin", false)]
       );
-
-      if (allUserList) {
-        return allUserList;
-      }
+        return allUserList || []
     } catch (error) {
-      console.log("error while fetching all user form database", error);
+      throw new Error(error || "Network Problem Try After Some time")
     }
   }
 
@@ -140,6 +137,21 @@ export class databaseServices {
       throw new Error(error.message || "User not found or update failed");
     }
   }
+
+   async getTotalEmployeeCount() {
+  try {
+    const res = await this.database.listDocuments(
+      conf.appwriteDatabaseId,
+      conf.appwriteAuthCollectionId,
+      [Query.limit(1)]
+    );
+    return res.total ?? 0; // use nullish coalescing (??) for better safety
+  } catch (error) {
+    console.error("Failed to get employee count:", error); // helpful during dev
+    return 0;
+  }
+}
+
 
  
 }
