@@ -8,7 +8,7 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import './index.css'
-
+import { FpjsProvider } from '@fingerprintjs/fingerprintjs-pro-react'
 import { Provider } from 'react-redux'
 import App from './App.jsx'
 import { AllTask, Home,  Loader , ProtectedLayout } from './export.js'
@@ -91,8 +91,16 @@ const router = createBrowserRouter(
 // App entry point
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
+     <FpjsProvider
+      loadOptions={{
+        apiKey: "VwfmSf5EAf2WKkbr65fM",
+        region: "ap"
+      }}
+    >
+     
     <Suspense fallback={<Loader />}>
       <RouterProvider router={router} />
     </Suspense>
+    </FpjsProvider>
   </Provider>
 )

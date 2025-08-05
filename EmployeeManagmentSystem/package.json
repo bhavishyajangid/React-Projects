@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@emailjs/browser": "^4.4.1",
+        "@fingerprintjs/fingerprintjs-pro-react": "^2.7.0",
         "@reduxjs/toolkit": "^2.4.0",
         "@sentry/react": "^9.27.0",
         "appwrite": "^16.0.2",

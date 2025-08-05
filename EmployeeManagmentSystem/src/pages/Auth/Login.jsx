@@ -30,6 +30,7 @@ const Login = () => {
       navigate('/')
       showSuccess("Login sucessfully");
     } catch (error) {
+      alert(error)
       showError(error)
     } finally {
       setLoader(false);

@@ -9,10 +9,11 @@ const config = {
     appwriteMessageCollectionId : import.meta.env.VITE_APPWRITE_MESSAGE_COLLECTION_ID ,
     appwriteAuthKey : import.meta.env.VITE_APPWRITE_API_KEY,
     appwriteSalaryCollectionId : import.meta.env.VITE_APPWRITE_SALARY_COLLECTION_ID ,
-    appwriteLeaveCollectionId : import.meta.env.VITE_APPWRITE_LEAVE_COLLECTION_ID,
-      OFFICE_LAT : 28.072861,
- OFFICE_LNG :  74.619639,
-ALLOWED_RADIUS : 50
+    appwriteLeaveCollectionId : import.meta.env.VITE_APPWRITE_LEAVE_COLLECTION_ID, 
+    appwriteAttendenceCollectionId : import.meta.env.VITE_APPWRITE_ATTENDENCE_COLLECTION_ID,
+      OFFICE_LAT : 28.0728749,
+ OFFICE_LNG :  74.6196329,
+ALLOWED_RADIUS : 10
 };
 
 export default config;
