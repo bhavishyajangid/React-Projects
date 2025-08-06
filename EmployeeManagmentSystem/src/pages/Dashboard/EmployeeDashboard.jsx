@@ -1,14 +1,13 @@
-import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import { getDistanceInMeters } from '../../utlity/locationCordinates';
-import conf from '../../config/config';
 import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
-import { useAttendence } from '../../utlity/hook/useAttendence';
+import { useState } from 'react';
+import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useAttendence } from '../../utlity/hook/useAttendence';
 const EmployeeDashboard = () => {
-
+const [loader , setLoader] = useState(false)
 const {currentUserDetails} = useSelector(state => state.authSlice)
-const {isLoading, error, data, getData} = useVisitorData(
+const {getData,  error} = useVisitorData(
     {extendedResult: true},
     {immediate: false}
   )
@@ -18,19 +17,24 @@ const {markAttendence} = useAttendence()
 
   const handleAttendenceClick= async(status) => {
     try {
+      setLoader(true)
       const visitor = await getData({ignoreCache : true})
+      
 
-      alert(visitor.visitorId)
-           if(!visitor?.visitorId){
+           if(!visitor?.visitorId || error){
             toast.error('Fingerprint not recornisezed Try Again')
             return
            }
-
+ console.log('fingerid is generated ');
+ 
            await markAttendence(status , visitor.visitorId , currentUserDetails)
+            
+          
     } catch (error) {
-      alert(error)
-        console.error("❌ Error getting fingerprint:", error);
-    toast.error("❌ Failed to get fingerprint. Try again.");
+        console.error(error);
+         toast.error(error)
+    }finally{
+       setLoader(false)
     }
            
   }
@@ -41,7 +45,7 @@ const {markAttendence} = useAttendence()
 
   
 
-  if(isLoading) return <p>...loading</p>
+  if(loader) return <p>...loading</p>
 
   return (
     <div className="sm:px-4 py-8">
