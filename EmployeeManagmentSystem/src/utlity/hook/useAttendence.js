@@ -1,57 +1,42 @@
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import attendenceServices from "../../Appwrite/Attendence";
-import { getDistanceInMeters } from "../locationCordinates";
 import conf from "../../config/config";
-import { current } from "@reduxjs/toolkit";
+import {  setAttendence, setAttendenceMarkedIn, setAttendenceMarkedOut } from "../../Store/attendenceSlice";
+import { getDistanceInMeters } from "../locationCordinates";
 
 export const useAttendence = () => {
   const getTodayDate = () => new Date().toISOString().slice(0, 10);
-
+  const dispatch = useDispatch();
+  const {attendenceInData} = useSelector(state => state.attendenceSlice)
   const markAttendence = async (status, fingerprintId, user) => {
     const todayDate = getTodayDate();
 
     try {
-      console.log("checking attendence");
-      const { AttendenceTotal, checkAttendenceDocument } =
-        await attendenceServices.checkAttendence(todayDate, user.userId);
-
-      console.log("device Check");
-
-      const { deviceTotal, checkDeviceDocument } =
+     
+      const { deviceTotal , checkDeviceDocument } =
         await attendenceServices.checkDevice(fingerprintId);
 
-      if (AttendenceTotal == 0 && status == "out") {
-        toast.error("Cannot Mark Out Before In ");
-        return;
-      } else if (
-        AttendenceTotal > 0 &&
-        status == "out" &&
-        checkAttendenceDocument[0]?.out
-      ) {
-        toast.error("You Have Already Marked Out");
-        return;
-      } else if (AttendenceTotal > 0) {
-        console.log("mkaing out marked");
-        console.log(user.userId, checkAttendenceDocument, checkDeviceDocument);
-
+      
         if (
           status == "out" &&
-          user.userId == checkDeviceDocument[0]?.employeeId
+          user.userId == checkDeviceDocument?.employeeId
         ) {
           const markOut = await attendenceServices.updateTheAttendence(
-            checkAttendenceDocument[0].$id
+           attendenceInData?.$id
           );
 
           if (markOut) {
+            dispatch(setAttendenceMarkedOut(true))
             toast.success("OUT Sucessfully Marked");
             return;
           }
-        } else {
-          toast.error(" User Already Mark In.");
-          return;
         }
-      }
-      // check
+        
+          const response = await fetch("https://ipwho.is/");
+    const data = await response.json()
+    console.log(data);
+    
 
       if (deviceTotal > 0) {
         toast.error("Cannot Mark Two Attendence With Same Device ");
@@ -65,8 +50,6 @@ export const useAttendence = () => {
         return;
       }
 
-      console.log("getting location ");
-
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
@@ -79,12 +62,10 @@ export const useAttendence = () => {
 
           if (distance > conf.ALLOWED_RADIUS) {
             toast.error("You are not at the office");
+            alert(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG)
             console.log(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG);
             return;
           }
-          console.log(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG);
-
-          console.log("saved the attendece");
 
           const attendence = await attendenceServices.setAttendence({
             employeeId: user.userId,
@@ -96,11 +77,13 @@ export const useAttendence = () => {
             day: new Date().toLocaleDateString("en-US", { weekday: "long" }),
             in: true,
           });
-          console.log(attendence);
-          if (attendence)
-            toast.success(
-              `✅ Attendance ${status === "in" ? "IN" : "OUT"} successful`
-            );
+
+          if (attendence) {
+            dispatch(setAttendenceMarkedIn(true));
+          toast.success(
+            `✅ Attendance ${status === "in" ? "IN" : "OUT"} successful`
+          );
+          }
         },
         (err) => {
           console.error(err);

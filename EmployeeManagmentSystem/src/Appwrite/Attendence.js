@@ -21,34 +21,38 @@ export class attendenceService {
         ID.unique(),
         data
       );
+      console.log(result);
+      
       return result;
     } catch (error) {
       throw error;
     }
   }
 
-  async checkAttendence(fingerprintId, todayDate, user) {
-    console.log(fingerprintId, todayDate, user);
-
+  async checkAttendence(userId) {
+    const todayDate =  new Date().toISOString().slice(0, 10);
+    console.log( todayDate, userId);
     try {
       const res = await this.attendence.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteAttendenceCollectionId,
        [
-    Query.equal("employeeId", user),
+    Query.equal("employeeId", userId),
     Query.equal("date", todayDate)
   ]
       );
       console.log(res, "attendence found");
 
-      return {AttendenceTotal : res.total , checkAttendenceDocument : res.documents}
+      return res.documents[0]
     } catch (error) {
       throw error;
     }
   }
 
   async checkDevice(fingerprintId) {
-    const todayDate = new Date().toLocaleTimeString("en-US", { hour12: true });
+    console.log(fingerprintId);
+    
+    const todayDate =  new Date().toISOString().slice(0, 10);
     try {
       const res = await this.attendence.listDocuments(
         conf.appwriteDatabaseId,
@@ -59,7 +63,7 @@ export class attendenceService {
   ]
       );
 
-      return {deviceTotal : res.total , checkDeviceDocument : res.documents}
+      return {deviceTotal : res.total , checkDeviceDocument : res.documents[0]}
     } catch (error) {
       throw error;
     }

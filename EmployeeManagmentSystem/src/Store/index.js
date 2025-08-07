@@ -5,13 +5,15 @@ import chatBoxSlice from './chatBoxSlice'
 import taskSlice from './TaskSlice'
 import leaveSlice from './leaveSlice'
 import salarySlice from './salarySlice'
+import attendenceSlice from './attendenceSlice'
 const store = configureStore({reducer : {
       authSlice : authSlice.reducer,
      otpSendSlice : otpSendSlice.reducer,
       chatBoxSlice : chatBoxSlice.reducer,
       taskSlice : taskSlice.reducer,
       leaveSlice : leaveSlice.reducer,
-      salarySlice : salarySlice.reducer
+      salarySlice : salarySlice.reducer,
+      attendenceSlice : attendenceSlice.reducer
 }})
 
 export default store
