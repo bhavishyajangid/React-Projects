@@ -49,6 +49,26 @@ export class attendenceService {
     }
   }
 
+  async allAttendence(userId , month  ,lastDay){
+    console.log(userId , month ,`2025-${month}-01` , `2025-${month}-${lastDay}` );
+    
+     try {
+       const res = await this.attendence.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteAttendenceCollectionId,
+     [
+      Query.equal("employeeId", userId),
+      Query.between('date', `2025-${month}-01`, `2025-${month}-${lastDay}`)
+    ])
+
+     console.log(res);
+     
+     return res
+
+     } catch (error) {
+      throw error
+     }
+  }
   async checkDevice(fingerprintId) {
     console.log(fingerprintId);
     

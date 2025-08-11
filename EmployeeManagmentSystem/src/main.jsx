@@ -19,6 +19,7 @@ import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
 
 
 
+
 // Lazy imports
 const Signup = lazy(() => import("./pages/Auth/Signup.jsx"))
 const Login = lazy(() => import("./pages/Auth/Login.jsx"))
@@ -41,6 +42,7 @@ const AddSalary = lazy(() => import('./pages/admin/salary/AddSalary.jsx'))
 const AddLeave = lazy(() => import('./pages/admin/Leaves/AddLeave.jsx'))
 const ApproveOrRejectLeave = lazy(() => import('./pages/admin/Leaves/ApproveOrRejectLeave.jsx'))
 const LeaveDetails = lazy(() => import('./pages/admin/Leaves/LeaveDetails.jsx'))
+const AttendenceHistory = lazy(() => import('./pages/attendence/AttendenceHistory.jsx'))
 
 
 
@@ -69,6 +71,7 @@ const router = createBrowserRouter(
           <Route path="/leavehistory/:empId" element={<LeaveHistory key={'employee-leave'}/>} />
           <Route path="/leavedetails/:index" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
+          <Route path="/attendenceHistory" element={<AttendenceHistory/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>

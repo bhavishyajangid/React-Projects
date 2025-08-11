@@ -59,8 +59,14 @@ const Sidebar = ({ isOpen, onClose }) => {
         ? "/addsalary"
         : `/salaryhistory/${currentUserDetails.userId}`,
       visible: true,
+    },{
+      id: 7,
+      label: "Attendence",
+      icon: <FaMoneyBill />,
+      link: '/attendenceHistory',
+      visible: true,
     },
-    { id: 7, label: "Setting", icon: <FaCog />, link: "/h", visible: true },
+    { id: 8, label: "Setting", icon: <FaCog />, link: "/h", visible: true },
   ];
 
   useEffect(() => {

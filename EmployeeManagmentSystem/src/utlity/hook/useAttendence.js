@@ -16,6 +16,7 @@ export const useAttendence = () => {
      
       const { deviceTotal , checkDeviceDocument } =
         await attendenceServices.checkDevice(fingerprintId);
+console.log(attendenceInData);
 
       
         if (

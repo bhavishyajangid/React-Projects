@@ -7,6 +7,7 @@ import attendenceServices from "../../Appwrite/Attendence";
 import { setAttendence } from "../../Store/attendenceSlice";
 import { HomeSkeleton } from "../../export";
 import { useAttendence } from "../../utlity/hook/useAttendence";
+import AttendenceHistory from "../attendence/AttendenceHistory";
 const EmployeeDashboard = () => {
   const { attendenceMarkedIn , attendenceMarkedOut } = useSelector((state) => state.attendenceSlice);
   const [loader, setLoader] = useState(false);
@@ -82,6 +83,7 @@ const EmployeeDashboard = () => {
 
   return (
     <div className="sm:px-4 py-8">
+      <>
       {/* Header top-left */}
       <div className="">
         <h2 className="text-2xl max-sm:text-center sm:text-3xl font-bold text-gray-800 mb-12">
@@ -115,6 +117,7 @@ const EmployeeDashboard = () => {
           </div>
         </div>
       </div>
+    </>
     </div>
   );
 };
