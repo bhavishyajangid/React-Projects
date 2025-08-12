@@ -80,7 +80,9 @@ console.log(attendenceInData);
           });
 
           if (attendence) {
-            dispatch(setAttendenceMarkedIn(true));
+            console.log(attendence , 'attendence');
+            
+            dispatch(setAttendence(attendence));
           toast.success(
             `✅ Attendance ${status === "in" ? "IN" : "OUT"} successful`
           );

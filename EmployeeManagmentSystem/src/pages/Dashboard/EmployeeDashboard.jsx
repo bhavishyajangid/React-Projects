@@ -1,5 +1,5 @@
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -9,7 +9,7 @@ import { HomeSkeleton } from "../../export";
 import { useAttendence } from "../../utlity/hook/useAttendence";
 import AttendenceHistory from "../attendence/AttendenceHistory";
 const EmployeeDashboard = () => {
-  const { attendenceMarkedIn , attendenceMarkedOut } = useSelector((state) => state.attendenceSlice);
+  const { attendenceMarkedIn , attendenceMarkedOut , firstRender } = useSelector((state) => state.attendenceSlice);
   const [loader, setLoader] = useState(false);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const { getData, error } = useVisitorData(
@@ -19,9 +19,12 @@ const EmployeeDashboard = () => {
   const { markAttendence } = useAttendence();
   const dispatch = useDispatch()
 
-
   useEffect(() => {
    const todayMarkedAttendence = async() => {
+    console.log(firstRender);
+    
+    if(!firstRender) return 
+    alert('Use Mobile For Mark Attendece SomeTime Laptop Cannot Recornosize Location ')
          try {
             const result = await attendenceServices.checkAttendence(currentUserDetails.userId)
              dispatch(setAttendence(result))

@@ -71,7 +71,7 @@ const router = createBrowserRouter(
           <Route path="/leavehistory/:empId" element={<LeaveHistory key={'employee-leave'}/>} />
           <Route path="/leavedetails/:index" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
-          <Route path="/attendenceHistory" element={<AttendenceHistory/>} />
+          <Route path="/attendenceHistory/:empId" element={<AttendenceHistory/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>

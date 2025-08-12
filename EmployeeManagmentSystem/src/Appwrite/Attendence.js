@@ -60,10 +60,8 @@ export class attendenceService {
       Query.equal("employeeId", userId),
       Query.between('date', `2025-${month}-01`, `2025-${month}-${lastDay}`)
     ])
-
-     console.log(res);
      
-     return res
+     return res.documents
 
      } catch (error) {
       throw error
@@ -99,6 +97,7 @@ export class attendenceService {
         {
          outTime,
           out: true,
+          status : 'out'
         }
       );
       console.log(res);
