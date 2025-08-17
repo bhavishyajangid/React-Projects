@@ -1,34 +1,49 @@
+import { Result } from "postcss";
+import { useSelector } from "react-redux";
 
-export function prepareAttendanceMap(allAttendance) {
-  const map = new Map();
-
-  for (const record of allAttendance) {
-    const day = record.date.slice(-2); // last 2 characters = day
-    map.set(day, record);
-  }
-
-  return map;
+export  function storedInObj(arr){
+         let obj = {}
+         
+         for (let i = 0; i < arr.length; i++) {
+          let date = parseInt(arr[i].date.slice(-2))
+            obj[date]  = arr[i]  
+         }
+   return obj
 }
-
- export function selectCLR(date, attendanceMap , month) {
- 
-    const todayDate = new Date().toISOString().slice(8, 10)
-    const currentMonth = new Date().toISOString().slice(6, 7)
+ export function selectCLR(date, month , monthRecords) {
+    const todayDate = parseInt(new Date().toISOString().slice(8, 10))
+    const currentMonth = parseInt(new Date().toISOString().slice(6, 7))
     
 
-    if(attendanceMap.size < 1 || (parseInt(currentMonth) == month && date) >  parseInt(todayDate)) return 'bg-gray-400'
+    // console.log(month , date , monthRecords);
 
-  const record = attendanceMap.get(String(date).padStart(2, "0"));
+    if (!monthRecords || Object.keys(monthRecords).length === 0) {
+    return "bg-gray-400";
+  }
+    
+    const record = monthRecords?.[date]
+   
   
-  if (!record) return "bg-red-400"; // No record
 
-  if (record.status == 'out') {
+     if (!record) {
+    // Future date of current month → gray
+
+    console.log(month , currentMonth , date , todayDate);
+    
+    if (month == currentMonth && date >= todayDate) {
+      return "bg-gray-400";
+    }
+    return "bg-red-400"; // No record found
+  }
+
+  
+  if (record.in && record.out) {
     let { hours, minutes } = calculateTime(record.inTime, record.outTime);
 
     // Round up minutes
     if (minutes > 0) hours += 1;
 
-    if (hours < 2) {
+    if (hours < 2 && record?.out) {
       return "bg-red-400";
     } else if (hours < 5) {
       return "bg-yellow-400";
@@ -39,7 +54,7 @@ export function prepareAttendanceMap(allAttendance) {
     }
   }
 
-  return "bg-red-400"; // Missing in or out time
+  return "bg-gray-400"; // Missing in or out time
 }
 
 

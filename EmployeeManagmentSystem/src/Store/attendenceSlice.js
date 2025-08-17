@@ -20,19 +20,27 @@ const attendenceSlice = createSlice({
     },
     setAttendence: (state, action) => {
         state.firstRender = false
+         let currentMonth = new Date().getMonth() + 1
       if (action.payload?.in) {
         state.attendenceMarkedIn = true;
         state.attendenceInData = action.payload;
+        state.storedAttendence[currentMonth]?.push(action.payload)
       }
 
       if (action.payload?.out) {
+       
+         if(state.storedAttendence[currentMonth]){
+          let arr  =  state.storedAttendence[currentMonth]
+           arr[arr.length] = action.payload
+         }
         state.attendenceMarkedOut = true;
       }
+
+
     },
     setStoredAttendence: (state, action) => {
       const { result, month } = action.payload;
-        state.storedAttendence[month] = result;
-        state.allAttendence = result;
+      state.storedAttendence[month] = result
         state.loader = false
       
     },

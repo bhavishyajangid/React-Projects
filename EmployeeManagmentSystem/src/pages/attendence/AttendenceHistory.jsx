@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { useState } from "react";
-import attendenceServices from "../../Appwrite/Attendence";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import attendenceServices from "../../Appwrite/Attendence";
 import { setAllAttendence, setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
 import AttendenceSkeleton from "../../components/skeleton/AttendenceSkeleton";
-import { prepareAttendanceMap, selectCLR } from "../../utlity/AttendenceShowClr";
+import { selectCLR, storedInObj } from "../../utlity/AttendenceShowClr";
 const months = [
   "January",
   "February",
@@ -36,7 +35,6 @@ const AttendenceHistory = () => {
 console.log(storedAttendence , monthIndex);
 
       if(storedAttendence[monthIndex]){
-           dispatch(setAllAttendence(storedAttendence[monthIndex]))
            return
       }
 
@@ -53,8 +51,9 @@ console.log(storedAttendence , monthIndex);
           monthUpdated,
           days
         );
-        
-        dispatch(setStoredAttendence({result , month : monthIndex}))
+       
+        const obj = storedInObj(result)
+        dispatch(setStoredAttendence({month: monthIndex, result: obj }))
         console.log(result);
       } catch (error) {
         console.log(error);
@@ -64,11 +63,9 @@ console.log(storedAttendence , monthIndex);
     fetchAttendence();
   }, [monthIndex]);
 
- const attendanceMap = useMemo(
-  () => prepareAttendanceMap(allAttendence),
-  [allAttendence]
-);
+ 
 
+console.log(storedAttendence , monthIndex);
   if(loader) return <AttendenceSkeleton/>
 
 
@@ -102,7 +99,7 @@ console.log(storedAttendence , monthIndex);
 
         <div className="flex gap-3 flex-wrap mt-10">
           {Array.from({ length: getDaysInMonth(monthIndex) }, (_, index) => {
-            const colorClass = selectCLR(index+ 1 , attendanceMap , monthIndex)
+            const colorClass = selectCLR(index+ 1 , monthIndex , storedAttendence?.[monthIndex]  || {})
             
             return (
             <div

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import attendenceServices from "../../Appwrite/Attendence";
+import { setAttendence, setAttendenceMarkedOut } from "../../Store/attendenceSlice";
 import conf from "../../config/config";
-import {  setAttendence, setAttendenceMarkedIn, setAttendenceMarkedOut } from "../../Store/attendenceSlice";
 import { getDistanceInMeters } from "../locationCordinates";
 
 export const useAttendence = () => {

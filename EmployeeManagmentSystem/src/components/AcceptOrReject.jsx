@@ -27,8 +27,8 @@ const AcceptOrReject = ({ task, isAdmin }) => {
       try {
         const result = await dispatch(handleUserTaskAction(payload)).unwrap();
         if (result) {
+          navigate('/task')
           showSuccess('Task accepted successfully');
-          isAdmin ? navigate('/task') : navigate('/employee');
         }
       } catch (error) {
         showError(error);

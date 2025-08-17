@@ -3,7 +3,7 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Navbar from "./pages/Header/Navbar.jsx";
 import EmployeeDashboard from "./pages/Dashboard/EmployeeDashboard.jsx";
-import TaskValue from "./components/taskValue.jsx";
+import TaskValue from "./components/TaskValue.jsx";
 import GridCards from "./components/GridCards.jsx";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import Button from "./components/Button.jsx";

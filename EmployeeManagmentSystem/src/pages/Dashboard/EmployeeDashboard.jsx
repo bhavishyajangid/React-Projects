@@ -1,13 +1,11 @@
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import attendenceServices from "../../Appwrite/Attendence";
 import { setAttendence } from "../../Store/attendenceSlice";
-import { HomeSkeleton } from "../../export";
 import { useAttendence } from "../../utlity/hook/useAttendence";
-import AttendenceHistory from "../attendence/AttendenceHistory";
 const EmployeeDashboard = () => {
   const { attendenceMarkedIn , attendenceMarkedOut , firstRender } = useSelector((state) => state.attendenceSlice);
   const [loader, setLoader] = useState(false);
