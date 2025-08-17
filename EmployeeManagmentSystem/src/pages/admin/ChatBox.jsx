@@ -1,13 +1,13 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import messageServices from "../../Appwrite/Message";
-import { Message } from "../../export";
 import MessageSkeleton from "../../components/skeleton/MessageSkeleton";
-import { addUnseenMessage, increamentUnseenCount, setChatOpen, setUnseenMessage } from "../../Store/chatBoxSlice";
 import conf from "../../config/config";
+import { Message } from "../../export";
+import { addUnseenMessage, setChatOpen, setUnseenMessage } from "../../Store/chatBoxSlice";
 
 // Utility Functions
 const formatDate = (isoDate) =>

@@ -66,7 +66,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       link: `/attendenceHistory/${currentUserDetails.userId}`,
       visible: true,
     },
-    { id: 8, label: "Setting", icon: <FaCog />, link: "/h", visible: true },
+    { id: 8, label: "Setting", icon: <FaCog />, link: "/setting", visible: true },
   ];
 
   useEffect(() => {

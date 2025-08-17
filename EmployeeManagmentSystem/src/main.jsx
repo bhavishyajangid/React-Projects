@@ -15,6 +15,7 @@ import { AllTask, Home,  Loader , ProtectedLayout } from './export.js'
 import store from './Store/index.js'
 import HomeRedirect from './Routes/HomeRedirect.jsx'
 import PreventLoginAcess from './Routes/PreventLoginAcess.jsx'
+import Setting from './pages/setting/Setting.jsx'
 
 
 
@@ -72,6 +73,7 @@ const router = createBrowserRouter(
           <Route path="/leavedetails/:index" element={<LeaveDetails/>} />
           <Route path="/addleave" element={<AddLeave/>} />
           <Route path="/attendenceHistory/:empId" element={<AttendenceHistory/>} />
+          <Route path="/setting" element={<Setting/>} />
         </Route>
       </Route>
       <Route element={<ProtectedLayout adminOnly={true} />}>

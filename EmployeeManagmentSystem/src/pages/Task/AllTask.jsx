@@ -58,9 +58,9 @@ const AllTask = ({ tasks, heading }) => {
   };
 
   return (
-    <div className="px-5  flex flex-col gap-5  ">
-      <div className="flex justify-between items-center ">
-        <h1 className="text-xl md:text-2xl font-semibold text-gray-700 mb-5 ">
+    <div className=" md:px-5 flex flex-col gap-5  ">
+      <div className="flex justify-between items-center  ">
+        <h1 className="text-xl md:text-2xl font-semibold text-gray-700 max-md:mt-10 md:mb-5 ">
           {heading}
         </h1>
         {currentPath == "/rejectedTask" && (

@@ -22,34 +22,7 @@ const Navbar = ({onClose}) => {
    
   }
 
-  // const navbarOpiton = [
-  //   {
-  //     tittle : "Add task",
-  //     isVisible : currentUserDetails.admin || false,
-  //     type : "button" ,
-  //     link : "/addTask"
-  //   },
-  //   {
-  //     tittle : "Users",
-  //     isVisible : currentUserDetails.admin || false,
-  //     type : "button" ,
-  //     link : "/user"
-  //   },
-  //   {
-  //    tittle : "Logout",
-  //    isVisible : true,
-  //    onClick : handleLogout,
-  //    type : "button"
-  //   },{
-  //    tittle : "Admin",
-  //    isVisible : true,
-  //    type : "button"
-  //   },
-   
-    
 
-
-  // ]
 
 
 

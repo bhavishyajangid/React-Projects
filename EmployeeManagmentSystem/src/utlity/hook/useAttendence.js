@@ -61,9 +61,9 @@ console.log(attendenceInData);
             conf.OFFICE_LNG
           );
 
+          alert(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG)
           if (distance > conf.ALLOWED_RADIUS) {
             toast.error("You are not at the office");
-            alert(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG)
             console.log(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG);
             return;
           }

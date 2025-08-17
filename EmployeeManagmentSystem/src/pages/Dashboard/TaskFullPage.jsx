@@ -51,7 +51,7 @@ const TaskFullPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#f9fafb] p-8 rounded-xl shadow-md text-gray-800 space-y-6">
+    <div className="w-full  p-2 sm:p-5 rounded-xl  text-gray-800 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-4 flex-wrap items-center">

@@ -71,19 +71,19 @@ const SalaryHistory = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <div className="w-full max-w-6xl mx-auto px-4">
+      <div className="w-full max-w-6xl mx-auto sm:px-4">
         {/* Header and Filters */}
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-10 mt-5">
+        <div className="flex justify-between  max-sm:px-2 max-sm:gap-3 mb-10 mt-5">
           <h2 className="text-2xl font-bold">Salary History</h2>
-          <button
+           <button
             onClick={() => {
               setShowFilter(!showFilter);
             }}
-            className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5  rounded-md flex items-center gap-2 "
-          >
-            <FiFilter />
-            Filter
-          </button>
+              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5 max-sm:px-2 max-sm:py-1  rounded-md flex items-center gap-2 "
+            >
+              <FiFilter />
+              <span className="max-sm:hidden">Filter</span>
+            </button>
         </div>
         {showFilter && (
           <FilterBar
