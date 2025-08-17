@@ -6,13 +6,8 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { Button, Input, Loader } from "../../../export";
 import { handleAddLeave } from "../../../Store/leaveSlice";
-import { useEffect } from "react";
-import { Client } from "appwrite";
-import LeaveServices from "../../../Appwrite/Leave";
-import conf from "../../../config/config";
 const departments = ["Tech", "HR", "Marketing", "Database"];
 const leaveTypes = ["Sick Leave", "Casual Leave", "Paid Leave", "Maternity Leave", "Emergency Leave"];
-const leaveStatus = ["Pending", "Approved", "Rejected"];
 
 const AddLeave = () => {
   const {currentUserDetails} = useSelector(state => state.authSlice)
