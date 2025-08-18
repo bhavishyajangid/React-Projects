@@ -202,7 +202,7 @@ const SetNewTask = ({ task }) => {
           </div>
 
           <Button
-            className="w-full h-10 bg-teal-600 text-white font-medium rounded-md hover:bg-teal-700 transition duration-200"
+            className="w-full h-10 bg-teal-600 text-white font-medium rounded-md hover:bg-teal-700 flex justify-center items-center transition duration-200"
             type="submit"
             btn="Submit"
           />

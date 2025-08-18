@@ -12,6 +12,7 @@ import {
   setLoader,
 } from "../../../Store/leaveSlice";
 import LeaveServices from "../../../Appwrite/Leave";
+import { formatDate } from "../../../utlity/formateDate";
 
 const LeaveHistory = () => {
   const dropDownOption = [
@@ -40,7 +41,9 @@ const LeaveHistory = () => {
         toast.info("Please select at least one filter.");
         return;
       }
-
+      data.startDate = formatDate(data.startDate)
+      data.endDate = formatDate(data.endDate)
+      console.log(data);
       dispatch(setLoader(true));
       try {
         const res = await LeaveServices.filterLeaves(data);
@@ -164,7 +167,9 @@ const LeaveHistory = () => {
                     key={index}
                     className="text-center border-t hover:bg-gray-50"
                   >
-                    <td className="py-2 px-4 border">{index + 1}</td>
+                    <td className="py-2 px-4 border">
+                      
+                      {index + 1}</td>
                     {isAdminPage && (
                       <td className="py-2 capitalize px-4 border text-blue-600 font-medium">
                         {item.employeeName}
@@ -172,12 +177,16 @@ const LeaveHistory = () => {
                     )}
 
                     <td className="py-2 px-4 border text-cyan-700 font-medium">
+                     {
+                       item.emergency &&  <span className="px-1.5 py-1 rounded-lg text-[20px] text-red-500 ">*</span>
+                     }
                       {item.leaveType}
                     </td>
                     <td className="py-2 px-4 border">{item.fromDate}</td>
                     <td className="py-2 px-4 border">{item.toDate}</td>
                     <td className="py-2 px-4 border">{item.totalDays}</td>
                     <td className="py-2 px-4 border ">
+                      
                       <span
                         className={`px-2 py-1  rounded-xl text-sm capitalize text-white font-semibold ${
                           item.status == "pending"
@@ -191,6 +200,7 @@ const LeaveHistory = () => {
                       </span>
                     </td>
                     <td className="py-2 px-4 border font-semibold">
+                      
                       <Link to={`/leavedetails/${index}`}>
                         <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
                           View
@@ -209,6 +219,8 @@ const LeaveHistory = () => {
             </tbody>
           </table>
         </div>
+
+
 
         {/* 📱 Mobile Card View */}
         <div className="sm:hidden space-y-4 mt-5 px-3">
@@ -235,6 +247,10 @@ const LeaveHistory = () => {
         <div className="flex justify-between">
           <span className="text-gray-600 font-semibold">Leave Type:</span>
           <span className="text-cyan-700 font-medium">{leave.leaveType}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-600 font-semibold">Leave Day:</span>
+          <span className="text-cyan-700 font-medium">{leave.leaveDay}</span>
         </div>
 
         <div className="flex justify-between">
@@ -272,7 +288,10 @@ const LeaveHistory = () => {
           </span>
         </div>
 
-        <div className="flex justify-end">
+        <div className={`flex ${leave.emergency ? "justify-between" : "justify-end"} gap-5`}>
+          {
+            leave.emergency && <span className="bg-red-400 rounded-lg px-2 py-1 text-xs text-white">emergency</span>
+          }
           <Link to={`/leavedetails/${index}`}>
             <button className="px-3 py-1 bg-teal-500 text-sm rounded-lg hover:bg-teal-600 text-white">
               View

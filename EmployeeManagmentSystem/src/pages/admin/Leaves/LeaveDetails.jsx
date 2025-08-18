@@ -61,6 +61,11 @@ const LeaveDetails = () => {
       value: leave?.leaveType,
       className: "text-blue-500 font-semibold",
     },
+    {
+      label: "Leave Day",
+      value: leave?.leaveDay,
+      className: "text-blue-500 font-semibold",
+    },
     { label: "From Date", value: leave?.fromDate },
     { label: "To Date", value: leave?.toDate },
     { label: "Total Days", value: leave?.totalDays },
@@ -131,6 +136,9 @@ const LeaveDetails = () => {
           )}
 
           <div className="space-y-4 text-sm">
+            {
+              leave.emergency && <span className="bg-red-400 px-2 py-1 rounded-lg text-sm text-white text-center font-medium">Emergency</span>
+            }
             {leaveFields.map((item, index) => (
               <DetailRow
                 key={index}

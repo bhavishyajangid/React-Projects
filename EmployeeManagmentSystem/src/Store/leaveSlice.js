@@ -30,6 +30,11 @@ const leaveSlice = createSlice({
     setStoreLeaves: (state, action) => {
       console.log("leaves set in the obj and allleaves");
       const { empId, leaves, isAdminPage } = action.payload;
+      
+leaves.sort((a, b) => {
+  // true should come before false
+  return (b.emergency === true) - (a.emergency === true);
+});
       if (isAdminPage) {
         state.storedLeaves = setStoreLeaveInObj(leaves);
         state.allLeave = Object.values(state.storedLeaves).flat();
@@ -59,7 +64,11 @@ const leaveSlice = createSlice({
       console.log("leaves set by real time ");
 
       if (state.storedLeaves[empId]) {
-        state.storedLeaves[empId].push(leave);
+        if(leave.emergency){
+          state.storedLeaves[empId].unshift(leave);
+        }else{
+          state.storedLeaves[empId].push(leave)
+        }
       }
 
       if (!state.storedLeaves[empId]) {
@@ -69,7 +78,11 @@ const leaveSlice = createSlice({
       const currentViewedEmpId = state.prevEmpId; // you store this in your slice
 
       if (isAdminPage || empId === currentViewedEmpId) {
-        state.allLeave.push(leave);
+       if(leave.emergency){
+           state.allLeave.unshift(leave)
+       }else{
+           state.allLeave.push(leave)
+       }  
       }
     },
 

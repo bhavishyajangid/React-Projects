@@ -7,7 +7,7 @@ import attendenceServices from "../../Appwrite/Attendence";
 import { setAttendence } from "../../Store/attendenceSlice";
 import { useAttendence } from "../../utlity/hook/useAttendence";
 const EmployeeDashboard = () => {
-  const { attendenceMarkedIn , attendenceMarkedOut , firstRender } = useSelector((state) => state.attendenceSlice);
+  const { attendenceMarkedIn , attendenceMarkedOut , firstRender , storedAttendence } = useSelector((state) => state.attendenceSlice);
   const [loader, setLoader] = useState(false);
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const { getData, error } = useVisitorData(
@@ -60,13 +60,13 @@ const EmployeeDashboard = () => {
 
       await markAttendence(status, visitor.visitorId, currentUserDetails);
     } catch (error) {
-      alert(error)
-      console.error(error);
       toast.error(error); 
+      console.error(error);
     } finally {
       setLoader(false);
     }
   };
+
 
   if (loader) return (
     <div class="sm:px-4 py-8 animate-pulse">

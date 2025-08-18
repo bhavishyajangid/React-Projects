@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const attendenceSlice = createSlice({
   name: "attendence",
@@ -13,30 +13,30 @@ const attendenceSlice = createSlice({
   },
   reducers: {
     setAttendenceMarkedIn: (state, action) => {
-      state.attendenceMarkedIn = action.payload;
+      state.attendenceMarkedIn = true
+      state.attendenceInData = action.payload
     },
+    
     setAttendenceMarkedOut: (state, action) => {
-      state.attendenceMarkedOut = action.payload;
+      const {date , attendence} = action.payload
+      let month = new Date().getMonth() + 1
+console.log(state.storedAttendence[month][date]);
+
+      if(state.storedAttendence[month][date]){
+         state.storedAttendence[month][date] = attendence
+      }
+      state.attendenceMarkedOut = true;
     },
+
     setAttendence: (state, action) => {
         state.firstRender = false
-         let currentMonth = new Date().getMonth() + 1
       if (action.payload?.in) {
         state.attendenceMarkedIn = true;
         state.attendenceInData = action.payload;
-        state.storedAttendence[currentMonth]?.push(action.payload)
       }
-
       if (action.payload?.out) {
-       
-         if(state.storedAttendence[currentMonth]){
-          let arr  =  state.storedAttendence[currentMonth]
-           arr[arr.length] = action.payload
-         }
         state.attendenceMarkedOut = true;
       }
-
-
     },
     setStoredAttendence: (state, action) => {
       const { result, month } = action.payload;

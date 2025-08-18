@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import attendenceServices from "../../Appwrite/Attendence";
-import { setAllAttendence, setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
+import { setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
 import AttendenceSkeleton from "../../components/skeleton/AttendenceSkeleton";
 import { selectCLR, storedInObj } from "../../utlity/AttendenceShowClr";
 const months = [
@@ -21,7 +21,7 @@ const months = [
 
 const AttendenceHistory = () => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
-  const {loader , allAttendence ,storedAttendence } = useSelector(state => state.attendenceSlice)
+  const {loader  ,storedAttendence } = useSelector(state => state.attendenceSlice)
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth() + 1);
   const dispatch = useDispatch()
   

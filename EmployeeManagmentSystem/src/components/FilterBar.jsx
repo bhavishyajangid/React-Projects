@@ -31,7 +31,7 @@ const FilterBar = ({ filterTask, resetTask, dropDownOption, dropDownName }) => {
               <DatePicker
                 {...field}
                 wrapperClassName="w-full"
-                dateFormat="yyyy/MM/dd"
+                dateFormat="dd/MM/yyyy"
                 placeholderText="Select start date"
                 className="w-full border px-3 py-2 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
                 selected={field.value}
@@ -53,7 +53,7 @@ const FilterBar = ({ filterTask, resetTask, dropDownOption, dropDownName }) => {
               <DatePicker
                 {...field}
                 wrapperClassName="w-full"
-                dateFormat="yyyy/MM/dd"
+                dateFormat="dd/MM/yyyy"
                 placeholderText="Select end date"
                 className="w-full border px-3 py-2 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
                 selected={field.value}

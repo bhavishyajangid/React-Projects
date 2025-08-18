@@ -33,6 +33,7 @@ export  function storedInObj(arr){
     if (month == currentMonth && date >= todayDate) {
       return "bg-gray-400";
     }
+    
     return "bg-red-400"; // No record found
   }
 

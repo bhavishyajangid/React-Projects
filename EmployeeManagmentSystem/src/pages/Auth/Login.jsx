@@ -8,6 +8,7 @@ import Input from "../../components/Input";
 import { Button, HomeSkeleton } from "../../export";
 import { login, setAllEmployeeCount } from "../../Store/authSlice";
 import { showError, showSuccess } from "../../utlity/Error&Sucess";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -30,8 +31,9 @@ const Login = () => {
       navigate('/')
       showSuccess("Login sucessfully");
     } catch (error) {
-      alert(error)
-      showError(error)
+      console.log(error);
+      
+      toast.error(error.message)
     } finally {
       setLoader(false);
     }

@@ -1,43 +1,42 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import attendenceServices from "../../Appwrite/Attendence";
-import { setAttendence, setAttendenceMarkedOut } from "../../Store/attendenceSlice";
+import {
+  setAttendence,
+  setAttendenceMarkedIn,
+  setAttendenceMarkedOut,
+} from "../../Store/attendenceSlice";
 import conf from "../../config/config";
 import { getDistanceInMeters } from "../locationCordinates";
 
 export const useAttendence = () => {
   const getTodayDate = () => new Date().toISOString().slice(0, 10);
   const dispatch = useDispatch();
-  const {attendenceInData} = useSelector(state => state.attendenceSlice)
+  const { attendenceInData } = useSelector((state) => state.attendenceSlice);
+  
   const markAttendence = async (status, fingerprintId, user) => {
     const todayDate = getTodayDate();
 
     try {
-     
-      const { deviceTotal , checkDeviceDocument } =
+      const { deviceTotal, checkDeviceDocument } =
         await attendenceServices.checkDevice(fingerprintId);
-console.log(attendenceInData);
+      console.log(attendenceInData);
 
-      
-        if (
-          status == "out" &&
-          user.userId == checkDeviceDocument?.employeeId
-        ) {
-          const markOut = await attendenceServices.updateTheAttendence(
-           attendenceInData?.$id
-          );
+      if (status == "out" && user.userId == checkDeviceDocument?.employeeId) {
+        const markOut = await attendenceServices.updateTheAttendence(
+          attendenceInData?.$id
+        );
 
-          if (markOut) {
-            dispatch(setAttendenceMarkedOut(true))
-            toast.success("OUT Sucessfully Marked");
-            return;
-          }
+        if (markOut) {
+          dispatch(setAttendenceMarkedOut({date : todayDate.slice(-2) , attendence : markOut}));
+          toast.success("OUT Sucessfully Marked");
+          return;
         }
-        
-          const response = await fetch("https://ipwho.is/");
-    const data = await response.json()
-    console.log(data);
-    
+      }
+
+      const response = await fetch("https://ipwho.is/");
+      const data = await response.json();
+      console.log(data);
 
       if (deviceTotal > 0) {
         toast.error("Cannot Mark Two Attendence With Same Device ");
@@ -61,7 +60,6 @@ console.log(attendenceInData);
             conf.OFFICE_LNG
           );
 
-          alert(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG)
           if (distance > conf.ALLOWED_RADIUS) {
             toast.error("You are not at the office");
             console.log(latitude, longitude, conf.OFFICE_LAT, conf.OFFICE_LNG);
@@ -80,12 +78,10 @@ console.log(attendenceInData);
           });
 
           if (attendence) {
-            console.log(attendence , 'attendence');
-            
-            dispatch(setAttendence(attendence));
-          toast.success(
-            `✅ Attendance ${status === "in" ? "IN" : "OUT"} successful`
-          );
+            dispatch(setAttendenceMarkedIn(attendence))
+            toast.success(
+              `✅ Attendance ${status === "in" ? "IN" : "OUT"} successful`
+            );
           }
         },
         (err) => {
