@@ -46,29 +46,29 @@ const AddLeave = () => {
   const onSubmit = async (data) => {
     data.fromDate = formatDate(data.fromDate);
     data.toDate = formatDate(data.toDate);
-    let todayDate = formatDate(new Date().toISOString().slice(0, 10));
     data.emergency = data.emergency === "true" ? true : false;
+    // let todayDate = formatDate(new Date().toISOString().slice(0, 10));
 
 
-    if (
-      todayDate == data.fromDate &&
-      attendenceMarkedIn &&
-      attendenceMarkedOut
-    ) {
-      toast.error("Today Attendence Is Marked Cannot Apply Today  Leave");
-      return;
-    }
+    // if (
+    //   todayDate == data.fromDate &&
+    //   attendenceMarkedIn &&
+    //   attendenceMarkedOut
+    // ) {
+    //   toast.error("Today Attendence Is Marked Cannot Apply Today  Leave");
+    //   return;
+    // }
 
-    if (
-      todayDate == data.fromDate &&
-      attendenceMarkedIn &&
-      data.leaveDay == "Full Day"
-    ) {
-      toast.error(
-        "You Marked Today Attendence So You Cannot Take Full Day Leave"
-      );
-      return;
-    }
+    // if (
+    //   todayDate == data.fromDate &&
+    //   attendenceMarkedIn &&
+    //   data.leaveDay == "Full Day"
+    // ) {
+    //   toast.error(
+    //     "You Marked Today Attendence So You Cannot Take Full Day Leave"
+    //   );
+    //   return;
+    // }
 
     let completeData = {
       ...data,

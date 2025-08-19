@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import attendenceServices from "../../Appwrite/Attendence";
 import { setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
 import AttendenceSkeleton from "../../components/skeleton/AttendenceSkeleton";
-import { selectCLR, storedInObj } from "../../utlity/AttendenceShowClr";
+import { selectCLR, storedInObj, storeLeaveInObj } from "../../utlity/AttendenceShowClr";
+import LeaveServices from "../../Appwrite/Leave";
 const months = [
   "January",
   "February",
@@ -52,6 +53,10 @@ console.log(storedAttendence , monthIndex);
           days
         );
        
+        const leave = await LeaveServices.fetchApprovedLeaves(currentUserDetails.userId)
+        console.log(leave , 'leaves');
+        
+        const leaveObj = storeLeaveInObj(leave)
         const obj = storedInObj(result)
         dispatch(setStoredAttendence({month: monthIndex, result: obj }))
         console.log(result);

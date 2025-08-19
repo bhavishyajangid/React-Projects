@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import attendenceServices from "../../Appwrite/Attendence";
 import { setAttendence } from "../../Store/attendenceSlice";
 import { useAttendence } from "../../utlity/hook/useAttendence";
+import LeaveServices from "../../Appwrite/Leave";
+import { setStoreLeaves } from "../../Store/leaveSlice";
 const EmployeeDashboard = () => {
   const { attendenceMarkedIn , attendenceMarkedOut , firstRender , storedAttendence } = useSelector((state) => state.attendenceSlice);
   const [loader, setLoader] = useState(false);
@@ -25,6 +27,7 @@ const EmployeeDashboard = () => {
     alert('Use Mobile For Mark Attendece SomeTime Laptop Cannot Recornosize Location ')
          try {
             const result = await attendenceServices.checkAttendence(currentUserDetails.userId)
+
              dispatch(setAttendence(result))
          } catch (error) {
              console.log(error);

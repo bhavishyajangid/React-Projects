@@ -8,6 +8,8 @@ import {
 } from "../../Store/attendenceSlice";
 import conf from "../../config/config";
 import { getDistanceInMeters } from "../locationCordinates";
+import LeaveServices from "../../Appwrite/Leave";
+import { formatDate } from "../formateDate";
 
 export const useAttendence = () => {
   const getTodayDate = () => new Date().toISOString().slice(0, 10);
@@ -18,6 +20,17 @@ export const useAttendence = () => {
     const todayDate = getTodayDate();
 
     try {
+   let date = formatDate(todayDate)
+   const todayLeaveFound = await LeaveServices.checkLeave(date)
+   console.log(todayLeaveFound);
+   
+   if(todayLeaveFound){
+     toast.error('Cannot Mark Attendece Because Leave Applyed of Today'
+     )
+     return
+   }
+
+
       const { deviceTotal, checkDeviceDocument } =
         await attendenceServices.checkDevice(fingerprintId);
       console.log(attendenceInData);

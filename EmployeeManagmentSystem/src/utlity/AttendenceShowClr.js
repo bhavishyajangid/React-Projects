@@ -10,6 +10,36 @@ export  function storedInObj(arr){
          }
    return obj
 }
+
+export function storeLeaveInObj(arr){
+  let obj = {}
+  
+  for (let i = 0; i < arr.length; i++) {
+      let start = parseInt(arr[i].totalDays)
+       let startDate = parseInt(arr[i].fromDate.slice(0,2))
+ 
+
+       if(start == 0){
+          if(!obj[startDate]){
+             obj[startDate] = arr[i]
+          }
+       }else{
+          while(start > 0){
+             if(!obj[startDate]){
+               obj[startDate] = arr[i]
+             }
+             startDate++
+             start--
+          }
+       }
+
+     
+      
+    }
+console.log(obj);
+
+}
+
  export function selectCLR(date, month , monthRecords) {
     const todayDate = parseInt(new Date().toISOString().slice(8, 10))
     const currentMonth = parseInt(new Date().toISOString().slice(6, 7))
