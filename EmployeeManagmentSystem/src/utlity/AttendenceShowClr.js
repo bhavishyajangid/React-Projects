@@ -1,73 +1,67 @@
-import { Result } from "postcss";
-import { useSelector } from "react-redux";
 
-export  function storedInObj(arr){
-         let obj = {}
-         
-         for (let i = 0; i < arr.length; i++) {
-          let date = parseInt(arr[i].date.slice(-2))
-            obj[date]  = arr[i]  
-         }
-   return obj
-}
+export function mergeAttendanceAndLeave(attendanceArr, leaveArr, days, month) {
+  let obj = { a: {}, l: {} };
+  let currentMonth = parseInt(month);
 
-export function storeLeaveInObj(arr){
-  let obj = {}
-  
-  for (let i = 0; i < arr.length; i++) {
-      let start = parseInt(arr[i].totalDays)
-       let startDate = parseInt(arr[i].fromDate.slice(0,2))
- 
-
-       if(start == 0){
-          if(!obj[startDate]){
-             obj[startDate] = arr[i]
-          }
-       }else{
-          while(start > 0){
-             if(!obj[startDate]){
-               obj[startDate] = arr[i]
-             }
-             startDate++
-             start--
-          }
-       }
-
-     
-      
+  // ---- Attendance ----
+  for (let i = 0; i < attendanceArr.length; i++) {
+    let date = parseInt(attendanceArr[i].date.slice(-2));
+    if(!obj.a[date]){
+      obj.a[date] = attendanceArr[i];
     }
-console.log(obj);
+  }
 
+  // ---- Leave ----
+  for (let i = 0; i < leaveArr.length; i++) {
+    let startDate = parseInt(leaveArr[i].fromDate.slice(8, 10));
+    let endDate = parseInt(leaveArr[i].toDate.slice(8, 10));
+    let startDateMonth = parseInt(leaveArr[i].fromDate.slice(5, 7));
+    let endDateMonth = parseInt(leaveArr[i].toDate.slice(5, 7));
+
+    if (currentMonth !== endDateMonth) {
+      endDate = days; // leave continues till end of this month
+    } else if (currentMonth > startDateMonth) {
+      startDate = 1; // leave started before this month
+    }
+
+    for (let j = startDate; j <= endDate; j++) {
+     if(!obj.l[j]){
+      obj.l[j] = leaveArr[i];
+    }
+    }
+  }
+
+  return obj;
 }
 
- export function selectCLR(date, month , monthRecords) {
-    const todayDate = parseInt(new Date().toISOString().slice(8, 10))
-    const currentMonth = parseInt(new Date().toISOString().slice(6, 7))
-    
 
-    // console.log(month , date , monthRecords);
 
-    if (!monthRecords || Object.keys(monthRecords).length === 0) {
+export function selectCLR(date, month, monthRecords) {
+  const todayDate = parseInt(new Date().toISOString().slice(8, 10));
+  const currentMonth = parseInt(new Date().toISOString().slice(6, 7));
+
+  // console.log(month , date , monthRecords);
+
+  if (!monthRecords || Object.keys(monthRecords).length === 0) {
     return "bg-gray-400";
   }
-    
-    const record = monthRecords?.[date]
-   
-  
 
-     if (!record) {
+  console.log(monthRecords , 'monthresord');
+  
+  const record = monthRecords?.[date];
+
+  if (!record) {
     // Future date of current month → gray
 
-    console.log(month , currentMonth , date , todayDate);
-    
+    // console.log(month , currentMonth , date , todayDate);
+
     if (month == currentMonth && date >= todayDate) {
       return "bg-gray-400";
     }
-    
+
     return "bg-red-400"; // No record found
   }
 
-  
   if (record.in && record.out) {
     let { hours, minutes } = calculateTime(record.inTime, record.outTime);
 
@@ -87,7 +81,6 @@ console.log(obj);
 
   return "bg-gray-400"; // Missing in or out time
 }
-
 
 function calculateTime(inTime, outTime) {
   const parseTime = (timeStr) => {

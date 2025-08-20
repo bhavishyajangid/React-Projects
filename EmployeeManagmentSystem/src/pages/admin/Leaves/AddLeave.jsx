@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { Button, Input, Loader } from "../../../export";
 import { handleAddLeave } from "../../../Store/leaveSlice";
 import { formatDate } from "../../../utlity/formateDate";
+import LeaveServices from "../../../Appwrite/Leave";
 const departments = ["Tech", "HR", "Marketing", "Database"];
 const leaveTypes = [
   "Sick Leave",
@@ -44,10 +45,32 @@ const AddLeave = () => {
   };
 
   const onSubmit = async (data) => {
-    data.fromDate = formatDate(data.fromDate);
-    data.toDate = formatDate(data.toDate);
+    console.log(data);
+    // formate the date because the date receive one day back from datepicker yyyy-mm-dd
+    data.fromDate = formatDate(data.fromDate)
+    data.toDate = formatDate(data.toDate)
+    
+    if(data.fromDate > data.toDate){
+       toast.error('Cannot Apply Leave For Before Date')
+       return
+    }
+
+    // try {
+    //   const result = await LeaveServices.leaveAlreadyPresent(data.fromDate , data.toDate , currentUserDetails.userId)
+
+    //   if(result > 0){
+    //      toast.error('Already Applied Leave For These Date')
+    //      return
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //         toast.error(error)
+    // }
+
+
+    let todayDate = new Date().toISOString().slice(0, 10)
     data.emergency = data.emergency === "true" ? true : false;
-    // let todayDate = formatDate(new Date().toISOString().slice(0, 10));
+
 
 
     // if (
@@ -185,7 +208,7 @@ const AddLeave = () => {
                 <DatePicker
                   {...field}
                   wrapperClassName="w-full"
-                  dateFormat="dd/MM/yyyy"
+                  dateFormat="yyyy/MM/dd"
                   placeholderText="Select start date"
                   selected={field.value}
                   onChange={(date) => field.onChange(date)}
@@ -224,7 +247,7 @@ const AddLeave = () => {
                 <DatePicker
                   {...field}
                   wrapperClassName="w-full"
-                  dateFormat="dd/MM/yyyy"
+                  dateFormat="yyyy/MM/dd"
                   placeholderText="Select start date"
                   selected={field.value}
                   onChange={(date) => field.onChange(date)}

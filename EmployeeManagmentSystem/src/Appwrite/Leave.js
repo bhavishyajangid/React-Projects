@@ -162,17 +162,44 @@ export class leaveService {
     }
   }
 
-  async fetchApprovedLeaves(userId){
+  async fetchApprovedLeaves(userId , month , lastDay){
+    console.log(userId , month , lastDay);
+    let startOfMonth = `2025-${month}-01`
+    let endOfMonth = `2025-${month}-${lastDay}`
     try {
       const res = await this.Leave.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteLeaveCollectionId,
-        [Query.equal('status' , 'approved')]
+       [
+  Query.equal("employeeId", userId),
+  Query.equal("status", "approved"),
+  Query.lessThanEqual("fromDate", endOfMonth),
+  Query.greaterThanEqual("toDate", startOfMonth)
+       ]
       )
       return res.documents
     } catch (error) {
       throw error
     }
+  }
+
+  async leaveAlreadyPresent(fromDate , toDate , userId){
+      try {
+        const res = await this.Leave.listDocuments(
+          conf.appwriteDatabaseId,
+          conf.appwriteLeaveCollectionId,
+          [
+            Query.equal('employeeId' , userId),
+            Query.notEqual('status' , 'rejected'),
+             Query.lessThanEqual("fromDate", fromDate),
+             Query.greaterThanEqual("toDate", toDate)
+          ]
+        )
+        console.log(res);
+        return res.total
+      } catch (error) {
+        throw error
+      }
   }
 }
 

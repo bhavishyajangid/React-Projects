@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import attendenceServices from "../../Appwrite/Attendence";
+import LeaveServices from "../../Appwrite/Leave";
 import { setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
 import AttendenceSkeleton from "../../components/skeleton/AttendenceSkeleton";
-import { selectCLR, storedInObj, storeLeaveInObj } from "../../utlity/AttendenceShowClr";
-import LeaveServices from "../../Appwrite/Leave";
+import { mergeAttendanceAndLeave, selectCLR } from "../../utlity/AttendenceShowClr";
 const months = [
   "January",
   "February",
@@ -47,19 +47,19 @@ console.log(storedAttendence , monthIndex);
       let days = getDaysInMonth(monthIndex);
 
       try {
-        const result = await attendenceServices.allAttendence(
+        const attendence = await attendenceServices.allAttendence(
           currentUserDetails.userId,
           monthUpdated,
           days
         );
        
-        const leave = await LeaveServices.fetchApprovedLeaves(currentUserDetails.userId)
+        const leave = await LeaveServices.fetchApprovedLeaves(currentUserDetails.userId , monthUpdated , days)
         console.log(leave , 'leaves');
         
-        const leaveObj = storeLeaveInObj(leave)
-        const obj = storedInObj(result)
-        dispatch(setStoredAttendence({month: monthIndex, result: obj }))
-        console.log(result);
+        const mergeObj = mergeAttendanceAndLeave(attendence , leave , days , monthIndex)
+        console.log(mergeObj);
+        
+        dispatch(setStoredAttendence({month: monthIndex, result: mergeObj }))
       } catch (error) {
         console.log(error);
       }
