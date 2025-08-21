@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import attendenceServices from "../../Appwrite/Attendence";
 import LeaveServices from "../../Appwrite/Leave";
@@ -25,6 +25,16 @@ const AttendenceHistory = () => {
   const {loader  ,storedAttendence } = useSelector(state => state.attendenceSlice)
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth() + 1);
   const dispatch = useDispatch()
+ const total = useRef({
+  fullDayLeave: 0,
+  halfDayLeave: 0,
+  fullDayAtt: 0,
+  halfDayAtt: 0,
+  overtimeHours: 0,
+  forgetToMark: 0,
+  totalLeave: 0,
+  totalAttendance: 0,
+});
   
 
   const getDaysInMonth = (month) => {
@@ -34,6 +44,17 @@ const AttendenceHistory = () => {
   useEffect(() => {
     const fetchAttendence = async () => {
 console.log(storedAttendence , monthIndex);
+
+total.current = {
+        fullDayLeave: 0,
+  halfDayLeave: 0,
+  fullDayAtt: 0,
+  halfDayAtt: 0,
+  overtime: 0,
+  forgetToMark: 0,
+  totalLeave: 0,
+  totalAttendance: 0,
+    };
 
       if(storedAttendence[monthIndex]){
            return
@@ -70,6 +91,7 @@ console.log(storedAttendence , monthIndex);
 
  
 
+
 console.log(storedAttendence , monthIndex);
   if(loader) return <AttendenceSkeleton/>
 
@@ -104,20 +126,38 @@ console.log(storedAttendence , monthIndex);
 
         <div className="flex gap-3 flex-wrap mt-10">
           {Array.from({ length: getDaysInMonth(monthIndex) }, (_, index) => {
-            const colorClass = selectCLR(index+ 1 , monthIndex , storedAttendence?.[monthIndex]  || {})
-            
-            return (
-            <div
-              key={index}
-              className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg transition-all transform hover:scale-105 cursor-pointer shadow-sm border flex items-center  justify-center text-xs sm:text-sm font-semibold text-white ${colorClass}`}
-            >
-              {index + 1}
-            </div>
-            )
+  const { color, reason } = selectCLR(
+    index + 1,
+    monthIndex,
+    storedAttendence?.[monthIndex] || {},
+    total.current
+  );
+
+  return (
+    <div key={index} className="relative group">
+      <div
+        className={`relative w-8 sm:w-10 h-8 sm:h-10 rounded-lg transition-all transform hover:scale-105 cursor-pointer shadow-sm border flex items-center justify-center text-xs sm:text-sm font-semibold text-white ${color}`}
+      >
+        {index + 1}
+
+        {
+          reason &&  <div
+      className="absolute -top-16 left-1/2 -translate-x-1/2 w-max max-w-[150px] bg-white text-gray-700 text-xs rounded-lg shadow-md p-2 
+                 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50"
+    >
+      {reason}
+    </div>
+        }
+        
+      </div>
+    </div>
+  );
 })}
+
         </div>
         <div className="flex flex-wrap gap-6 mt-6 text-sm sm:text-base border-t border-gray-200 pt-4">
           <div className="flex items-center gap-2">
+            {console.log(total)}
             <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-green-400 border border-green-600"></span>{" "}
             Present
           </div>
@@ -143,4 +183,4 @@ console.log(storedAttendence , monthIndex);
   );
 };
 
-export default AttendenceHistory;
+export default memo(AttendenceHistory) ;

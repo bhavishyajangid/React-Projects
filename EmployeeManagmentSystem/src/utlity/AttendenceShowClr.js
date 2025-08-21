@@ -1,33 +1,39 @@
+import { useDispatch } from "react-redux";
+import { setTotal } from "../Store/attendenceSlice";
 
 export function mergeAttendanceAndLeave(attendanceArr, leaveArr, days, month) {
-  let obj = { a: {}, l: {} };
+  let obj = { a: {}, l: {}};
   let currentMonth = parseInt(month);
 
-  // ---- Attendance ----
-  for (let i = 0; i < attendanceArr.length; i++) {
-    let date = parseInt(attendanceArr[i].date.slice(-2));
-    if(!obj.a[date]){
-      obj.a[date] = attendanceArr[i];
-    }
-  }
+  let maxLen = Math.max(attendanceArr.length, leaveArr.length);
 
-  // ---- Leave ----
-  for (let i = 0; i < leaveArr.length; i++) {
-    let startDate = parseInt(leaveArr[i].fromDate.slice(8, 10));
-    let endDate = parseInt(leaveArr[i].toDate.slice(8, 10));
-    let startDateMonth = parseInt(leaveArr[i].fromDate.slice(5, 7));
-    let endDateMonth = parseInt(leaveArr[i].toDate.slice(5, 7));
-
-    if (currentMonth !== endDateMonth) {
-      endDate = days; // leave continues till end of this month
-    } else if (currentMonth > startDateMonth) {
-      startDate = 1; // leave started before this month
+  for (let i = 0; i < maxLen; i++) {
+    // ---- Attendance ----
+    if (i < attendanceArr.length) {
+      let date = parseInt(attendanceArr[i].date.slice(-2));
+      if (!obj.a[date]) {
+        obj.a[date] = attendanceArr[i];
+      }
     }
 
-    for (let j = startDate; j <= endDate; j++) {
-     if(!obj.l[j]){
-      obj.l[j] = leaveArr[i];
-    }
+    // ---- Leave ----
+    if (i < leaveArr.length) {
+      let startDate = parseInt(leaveArr[i].fromDate.slice(8, 10));
+      let endDate = parseInt(leaveArr[i].toDate.slice(8, 10));
+      let startDateMonth = parseInt(leaveArr[i].fromDate.slice(5, 7));
+      let endDateMonth = parseInt(leaveArr[i].toDate.slice(5, 7));
+
+      if (currentMonth !== endDateMonth) {
+        endDate = days; // leave continues till end of this month
+      } else if (currentMonth > startDateMonth) {
+        startDate = 1; // leave started before this month
+      }
+
+      for (let j = startDate; j <= endDate; j++) {
+        if (!obj.l[j]) {
+          obj.l[j] = leaveArr[i];
+        }
+      }
     }
   }
 
@@ -36,50 +42,93 @@ export function mergeAttendanceAndLeave(attendanceArr, leaveArr, days, month) {
 
 
 
-export function selectCLR(date, month, monthRecords) {
+export function selectCLR(date, month, monthRecords , total) {
+
   const todayDate = parseInt(new Date().toISOString().slice(8, 10));
-  const currentMonth = parseInt(new Date().toISOString().slice(6, 7));
+  const currentMonth = new Date().getMonth() + 1;
 
-  // console.log(month , date , monthRecords);
-
-  if (!monthRecords || Object.keys(monthRecords).length === 0) {
-    return "bg-gray-400";
+  if (
+    Object.keys(monthRecords.a).length === 0 &&
+    Object.keys(monthRecords.l).length === 0
+  ) {
+    return { color: "bg-gray-400" };
   }
 
-  console.log(monthRecords , 'monthresord');
-  
-  const record = monthRecords?.[date];
+  const leaveRecord = monthRecords?.l[date];
+  const attendenceRecord = monthRecords?.a[date];
 
-  if (!record) {
-    // Future date of current month → gray
-
-    // console.log(month , currentMonth , date , todayDate);
-
-    if (month == currentMonth && date >= todayDate) {
-      return "bg-gray-400";
+  // ---- Leave ----
+  if (leaveRecord?.leaveDay === "Full Day") {
+   total.fullDayLeave += 1;
+   total.totalLeave += 1
+    return { color: "bg-red-400", reason: "leave" };
+  } else if (leaveRecord?.leaveDay === "Half Day") {
+    if (attendenceRecord) {
+      let { hours } = calculateTime(attendenceRecord.inTime, attendenceRecord.outTime);
+      if (hours >= 4) {
+        return { color: "bg-yellow-400", reason: "leave" };
+      }
     }
 
-    return "bg-red-400"; // No record found
+   total.halfDayLeave += 1;
+   total.totalLeave += 0.50
+    return {
+      color: "bg-red-400",
+      reason: "half day leave but no attendence",
+    };
   }
 
-  if (record.in && record.out) {
-    let { hours, minutes } = calculateTime(record.inTime, record.outTime);
+  // ---- Future / past blank days ----
+  if (
+    (parseInt(month) === currentMonth && date >= todayDate) ||
+    parseInt(month) > currentMonth ||
+    (parseInt(month) < currentMonth && !attendenceRecord)
+  ) {
+    return { color: "bg-gray-400" };
+  }
 
-    // Round up minutes
-    if (minutes > 0) hours += 1;
+  // ---- Attendance ----
+  if (attendenceRecord?.in && attendenceRecord?.out) {
+    let { hours, minutes } = calculateTime(
+      attendenceRecord.inTime,
+      attendenceRecord.outTime
+    );
 
-    if (hours < 2 && record?.out) {
-      return "bg-red-400";
-    } else if (hours < 5) {
-      return "bg-yellow-400";
-    } else if (hours < 9) {
-      return "bg-green-400";
+    if (minutes > 50) hours += 1;
+
+    if (hours < 2) {
+       total.fullDayLeave += 1;
+          total.totalLeave += 1
+      return { color: "bg-red-400", reason: "attendence < 2h" };
+
+    } else if (hours > 3 && hours < 5) {
+      if (!leaveRecord) total.halfDayLeave += 0.50;
+      total.totalAttendance += 0.50
+      return { color: "bg-yellow-400", reason: "attendence < 5h" };
+
+    } else if (hours < 10) {
+      total.fullDayAtt += 1
+        total.totalAttendance += 1
+      return { color: "bg-green-400", reason: "normal attendence" };
+
     } else {
-      return "bg-blue-400";
+      // ✅ Overtime condition
+      if(Math.abs(hours - 8) > 3 && Math.abs(hours - 8) < 5){
+        total.totalAttendance += 0.50
+      }else{
+        total.totalAttendance += 1
+      }
+          total.overtime += 1;
+          console.log(hours);
+          
+      return { color: "bg-blue-400", reason: `overtime 8 + ${hours-8}` };
     }
   }
 
-  return "bg-gray-400"; // Missing in or out time
+  // ---- No leave, no attendance ----
+total.forgetToMark += 1
+  total.totalLeave += 1
+  return { color: "bg-red-400", reason: "no leave & no attendence" };
 }
 
 function calculateTime(inTime, outTime) {
