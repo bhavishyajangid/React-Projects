@@ -17,10 +17,12 @@
     pathname.startsWith("/salaryhistory")
   ) {
     return 6;
-  } else if (pathname === "/h") {
+  } else if (pathname.startsWith("/attendenceHistory/")) {
     return 7;
-  } else {
-    return null; // default: no active tab
+  } else if(pathname === "/setting") {
+    return 8; 
+  }else{
+    return null
   }
 }
 

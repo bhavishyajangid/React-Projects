@@ -2,13 +2,27 @@ import { memo } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useForm } from 'react-hook-form';
-import Button from './Button'; // You can replace this with a native <button> if needed
 
-const FilterBar = ({ filterTask, resetTask, dropDownOption, dropDownName }) => {
-  const { register, handleSubmit, reset, control } = useForm();
+
+const FilterBar = ({ filterTask, resetTask, dropDownOption, dropDownName, fieldData }) => {
+  console.log(filterTask, resetTask, dropDownOption, dropDownName, fieldData);
+  
+  const { register, handleSubmit, reset, control } = useForm({
+    defaultValues: {
+      status: fieldData.status || "",
+      employeeId: fieldData.employeeId || "",
+      startDate: fieldData.startDate ? new Date(fieldData.startDate) : null,
+      endDate: fieldData.endDate ? new Date(fieldData.endDate) : null,
+    },
+  });
 
   const taskReset = () => {
-    reset();
+    reset({
+      status: "",
+      employeeId: "",
+      startDate: null,
+      endDate: null,
+    });
     resetTask();
   };
 
@@ -74,7 +88,7 @@ const FilterBar = ({ filterTask, resetTask, dropDownOption, dropDownName }) => {
               className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
             >
               <option value="">{dropDownName}</option>
-              {dropDownOption.map((item, index) => (
+              {dropDownOption?.map((item, index) => (
                 <option
                   key={item.$id || index}
                   value={item.userId || item.userName}

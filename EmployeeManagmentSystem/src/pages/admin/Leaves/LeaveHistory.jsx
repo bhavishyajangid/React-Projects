@@ -28,9 +28,8 @@ const LeaveHistory = () => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
   const [showFilter, setShowFilter] = useState(false);
   const [filterLeaves, setFilterLeaves] = useState(null);
-  const [leave, setLeave] = useState([]);
   let filterData = filterLeaves !== null ? filterLeaves : allLeave;
-
+  const fieldData = useRef({})
   const location = useLocation();
 
   const isAdminPage = location.pathname.includes("/admin/leavehistory");
@@ -41,12 +40,11 @@ const LeaveHistory = () => {
         toast.info("Please select at least one filter.");
         return;
       }
-      data.startDate = formatDate(data.startDate)
-      data.endDate = formatDate(data.endDate)
+    fieldData.current = data
       console.log(data);
       dispatch(setLoader(true));
       try {
-        const res = await LeaveServices.filterLeaves(data);
+        const res = await LeaveServices.filterLeaves(data , currentUserDetails.userId);
         if (res) setFilterLeaves(res);
       } catch (error) {
         toast.error(error);
@@ -59,12 +57,13 @@ const LeaveHistory = () => {
 
   const reset = useCallback(() => {
     setFilterLeaves(null);
+    fieldData.current = {}
   }, [dispatch]);
 
-  console.log("componetn rerender");
+
 
   useEffect(() => {
-    console.log("useEffect run ");
+
 
     const isLeavesAlreadyFetched = isAdminPage
       ? Object.keys(storedLeaves).length > 0 // Admin view
@@ -139,6 +138,7 @@ const LeaveHistory = () => {
             resetTask={reset}
             dropDownName={"Status"}
             dropDownOption={dropDownOption}
+            fieldData = {fieldData.current}
           />
         )}
 

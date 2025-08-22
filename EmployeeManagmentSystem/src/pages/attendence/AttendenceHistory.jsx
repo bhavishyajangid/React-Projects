@@ -4,7 +4,11 @@ import attendenceServices from "../../Appwrite/Attendence";
 import LeaveServices from "../../Appwrite/Leave";
 import { setLoader, setStoredAttendence } from "../../Store/attendenceSlice";
 import AttendenceSkeleton from "../../components/skeleton/AttendenceSkeleton";
-import { mergeAttendanceAndLeave, selectCLR } from "../../utlity/AttendenceShowClr";
+import {
+  mergeAttendanceAndLeave,
+  selectCLR,
+} from "../../utlity/AttendenceShowClr";
+import { LegendItem, TotalSummary } from "../../export";
 const months = [
   "January",
   "February",
@@ -22,20 +26,18 @@ const months = [
 
 const AttendenceHistory = () => {
   const { currentUserDetails } = useSelector((state) => state.authSlice);
-  const {loader  ,storedAttendence } = useSelector(state => state.attendenceSlice)
+  const { loader, storedAttendence } = useSelector(
+    (state) => state.attendenceSlice
+  );
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth() + 1);
-  const dispatch = useDispatch()
- const total = useRef({
-  fullDayLeave: 0,
-  halfDayLeave: 0,
-  fullDayAtt: 0,
-  halfDayAtt: 0,
-  overtimeHours: 0,
-  forgetToMark: 0,
-  totalLeave: 0,
-  totalAttendance: 0,
-});
-  
+  const dispatch = useDispatch();
+  const total = useRef({
+    halfDay: 0,
+    overtime: 0,
+    forgetToMark: 0,
+    totalLeave: 0,
+    totalAttendance: 0,
+  });
 
   const getDaysInMonth = (month) => {
     return new Date(2025, month, 0).getDate();
@@ -43,25 +45,22 @@ const AttendenceHistory = () => {
 
   useEffect(() => {
     const fetchAttendence = async () => {
-console.log(storedAttendence , monthIndex);
 
-total.current = {
-        fullDayLeave: 0,
-  halfDayLeave: 0,
-  fullDayAtt: 0,
-  halfDayAtt: 0,
-  overtime: 0,
-  forgetToMark: 0,
-  totalLeave: 0,
-  totalAttendance: 0,
-    };
 
-      if(storedAttendence[monthIndex]){
-           return
+      if (storedAttendence[monthIndex]) {
+        return;
       }
 
-      dispatch(setLoader(true))
-      
+      total.current = {
+        halfDay: 0,
+        overtime: 0,
+        forgetToMark: 0,
+        totalLeave: 0,
+        totalAttendance: 0,
+      };
+
+      dispatch(setLoader(true));
+
       const monthUpdated =
         monthIndex <= 9 ? String(monthIndex).padStart(2, "0") : monthIndex;
 
@@ -73,15 +72,24 @@ total.current = {
           monthUpdated,
           days
         );
-       
-        const leave = await LeaveServices.fetchApprovedLeaves(currentUserDetails.userId , monthUpdated , days)
-        console.log(leave , 'leaves');
-        
-        const mergeObj = mergeAttendanceAndLeave(attendence , leave , days , monthIndex)
-        console.log(mergeObj);
-        
-        dispatch(setStoredAttendence({month: monthIndex, result: mergeObj }))
+
+        const leave = await LeaveServices.fetchApprovedLeaves(
+          currentUserDetails.userId,
+          monthUpdated,
+          days
+        );
+        console.log(leave, "leaves");
+
+        const mergeObj = mergeAttendanceAndLeave(
+          attendence,
+          leave,
+          days,
+          monthIndex
+        );
+
+        dispatch(setStoredAttendence({ month: monthIndex, result: mergeObj }));
       } catch (error) {
+        toast.error(error)
         console.log(error);
       }
     };
@@ -89,12 +97,9 @@ total.current = {
     fetchAttendence();
   }, [monthIndex]);
 
- 
 
 
-console.log(storedAttendence , monthIndex);
-  if(loader) return <AttendenceSkeleton/>
-
+  if (loader) return <AttendenceSkeleton />;
 
   return (
     <div className="sm:p-8 py-2  mx-auto  rounded-3xl">
@@ -126,61 +131,57 @@ console.log(storedAttendence , monthIndex);
 
         <div className="flex gap-3 flex-wrap mt-10">
           {Array.from({ length: getDaysInMonth(monthIndex) }, (_, index) => {
-  const { color, reason } = selectCLR(
-    index + 1,
-    monthIndex,
-    storedAttendence?.[monthIndex] || {},
-    total.current
-  );
+            const { color, reason } = selectCLR(
+              index + 1,
+              monthIndex,
+              storedAttendence?.[monthIndex] || {},
+              total.current
+            );
 
-  return (
-    <div key={index} className="relative group">
-      <div
-        className={`relative w-8 sm:w-10 h-8 sm:h-10 rounded-lg transition-all transform hover:scale-105 cursor-pointer shadow-sm border flex items-center justify-center text-xs sm:text-sm font-semibold text-white ${color}`}
-      >
-        {index + 1}
+            return (
+              <div key={index} className="relative group">
+                <div
+                  className={`relative w-8 sm:w-10 h-8 sm:h-10 rounded-lg transition-all transform hover:scale-105 cursor-pointer shadow-sm border flex items-center justify-center text-xs sm:text-sm font-semibold text-white ${color}`}
+                >
+                  {index + 1}
 
-        {
-          reason &&  <div
-      className="absolute -top-16 left-1/2 -translate-x-1/2 w-max max-w-[150px] bg-white text-gray-700 text-xs rounded-lg shadow-md p-2 
+                  {reason && (
+                    <div
+                      className="absolute -top-14 left-1/2 -translate-x-1/2 w-max max-w-[150px] bg-white text-gray-700 text-xs rounded-lg shadow-md p-2 
                  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50"
-    >
-      {reason}
-    </div>
-        }
-        
-      </div>
-    </div>
-  );
-})}
+                    >
+                      {reason}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-        </div>
         <div className="flex flex-wrap gap-6 mt-6 text-sm sm:text-base border-t border-gray-200 pt-4">
-          <div className="flex items-center gap-2">
-            {console.log(total)}
-            <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-green-400 border border-green-600"></span>{" "}
-            Present
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-red-400 border border-red-600"></span>{" "}
-            Absent
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-yellow-400 border border-yellow-400"></span>{" "}
-            Half Day
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-blue-400 border border-blue-500"></span>{" "}
-            OverTime 
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 sm:w-4 sm:h-4 sm:rounded-md  rounded-sm bg-gray-400 border border-gray-500"></span>{" "}
-            No Record
-          </div>
+          <LegendItem
+            color="bg-green-400 border border-green-600"
+            label="Present"
+          />
+          <LegendItem color="bg-red-400 border border-red-600" label="Absent" />
+          <LegendItem
+            color="bg-yellow-400 border border-yellow-400"
+            label="Half Day"
+          />
+          <LegendItem
+            color="bg-blue-400 border border-blue-500"
+            label="Overtime"
+          />
+          <LegendItem
+            color="bg-gray-400 border border-gray-500"
+            label="No Record"
+          />
         </div>
       </div>
+      <TotalSummary totals={total.current} />
     </div>
   );
 };
 
-export default memo(AttendenceHistory) ;
+export default memo(AttendenceHistory);

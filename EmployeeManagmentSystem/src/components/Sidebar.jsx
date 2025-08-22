@@ -64,7 +64,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Attendence",
       icon: <FaMoneyBill />,
       link: `/attendenceHistory/${currentUserDetails.userId}`,
-      visible: true,
+      visible: !currentUserDetails.admin,
     },
     { id: 8, label: "Setting", icon: <FaCog />, link: "/setting", visible: true },
   ];

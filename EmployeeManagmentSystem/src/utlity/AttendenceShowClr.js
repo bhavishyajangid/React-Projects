@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { setTotal } from "../Store/attendenceSlice";
 
 export function mergeAttendanceAndLeave(attendanceArr, leaveArr, days, month) {
-  let obj = { a: {}, l: {}};
+  let obj = { a: {}, l: {} };
   let currentMonth = parseInt(month);
 
   let maxLen = Math.max(attendanceArr.length, leaveArr.length);
@@ -40,18 +40,13 @@ export function mergeAttendanceAndLeave(attendanceArr, leaveArr, days, month) {
   return obj;
 }
 
-
-
-export function selectCLR(date, month, monthRecords , total) {
-
+export function selectCLR(date, month, monthRecords, total) {
   const todayDate = parseInt(new Date().toISOString().slice(8, 10));
   const currentMonth = new Date().getMonth() + 1;
+  console.log(monthRecords);
 
-  if (
-    Object.keys(monthRecords.a).length === 0 &&
-    Object.keys(monthRecords.l).length === 0
-  ) {
-    return { color: "bg-gray-400" };
+  if (Object.keys(monthRecords).length === 0) {
+    return { color: "bg-gray-400", reason: "No Record" };
   }
 
   const leaveRecord = monthRecords?.l[date];
@@ -59,32 +54,51 @@ export function selectCLR(date, month, monthRecords , total) {
 
   // ---- Leave ----
   if (leaveRecord?.leaveDay === "Full Day") {
-   total.fullDayLeave += 1;
-   total.totalLeave += 1
+    total.totalLeave += 1;
     return { color: "bg-red-400", reason: "leave" };
   } else if (leaveRecord?.leaveDay === "Half Day") {
-    if (attendenceRecord) {
-      let { hours } = calculateTime(attendenceRecord.inTime, attendenceRecord.outTime);
+    console.log(leaveRecord);
+
+    total.halfDay += 1;
+    total.totalLeave += 0.5;
+
+    if (
+      attendenceRecord &&
+      date < todayDate &&
+      parseInt(month) === currentMonth
+    ) {
+      let { hours } = calculateTime(
+        attendenceRecord.inTime,
+        attendenceRecord.outTime
+      );
+
       if (hours >= 4) {
-        return { color: "bg-yellow-400", reason: "leave" };
+        total.totalAttendance += 0.5;
+        return { color: "bg-yellow-400", reason: "Half Day" };
+      } else {
+        total.halfDay += 1;
+        total.totalLeave += 0.5;
+        return {
+          color: "bg-red-400",
+          reason: "half day leave but no attendence",
+        };
       }
     }
 
-   total.halfDayLeave += 1;
-   total.totalLeave += 0.50
     return {
-      color: "bg-red-400",
-      reason: "half day leave but no attendence",
+      color: "bg-yellow-400",
+      reason: "Half Day Leave Remain Attendence < 4",
     };
   }
 
   // ---- Future / past blank days ----
+  
   if (
     (parseInt(month) === currentMonth && date >= todayDate) ||
     parseInt(month) > currentMonth ||
     (parseInt(month) < currentMonth && !attendenceRecord)
   ) {
-    return { color: "bg-gray-400" };
+    return { color: "bg-gray-400", reason: "No record" };
   }
 
   // ---- Attendance ----
@@ -97,37 +111,33 @@ export function selectCLR(date, month, monthRecords , total) {
     if (minutes > 50) hours += 1;
 
     if (hours < 2) {
-       total.fullDayLeave += 1;
-          total.totalLeave += 1
+      total.totalLeave += 1;
       return { color: "bg-red-400", reason: "attendence < 2h" };
-
     } else if (hours > 3 && hours < 5) {
-      if (!leaveRecord) total.halfDayLeave += 0.50;
-      total.totalAttendance += 0.50
-      return { color: "bg-yellow-400", reason: "attendence < 5h" };
-
+      total.halfDay += 1;
+      total.totalAttendance += 0.5;
+      return { color: "bg-yellow-400", reason: "Half Day" };
     } else if (hours < 10) {
-      total.fullDayAtt += 1
-        total.totalAttendance += 1
-      return { color: "bg-green-400", reason: "normal attendence" };
-
+      total.totalAttendance += 1;
+      return { color: "bg-green-400", reason: "Full Day Leave" };
     } else {
       // ✅ Overtime condition
-      if(Math.abs(hours - 8) > 3 && Math.abs(hours - 8) < 5){
-        total.totalAttendance += 0.50
-      }else{
-        total.totalAttendance += 1
+      if (Math.abs(hours - 8) > 3 && Math.abs(hours - 8) < 5) {
+        total.totalAttendance += 0.5;
+        total.overtime += 1;
+      } else if (Math.abs(hours - 8) > 7) {
+        total.totalAttendance += 1;
+        total.overtime += 1;
       }
-          total.overtime += 1;
-          console.log(hours);
-          
-      return { color: "bg-blue-400", reason: `overtime 8 + ${hours-8}` };
+
+      return { color: "bg-blue-400", reason: `overtime 8h + ${hours - 8}h` };
     }
   }
 
   // ---- No leave, no attendance ----
-total.forgetToMark += 1
-  total.totalLeave += 1
+  total.forgetToMark += 1;
+  total.totalLeave += 1;
+
   return { color: "bg-red-400", reason: "no leave & no attendence" };
 }
 

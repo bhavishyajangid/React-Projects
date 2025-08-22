@@ -73,10 +73,12 @@ export class leaveService {
     }
   }
 
-  async filterLeaves(data) {
+  async filterLeaves(data , userId) {
     console.log(data);
 
-    let query = [];
+    let query = [
+      Query.equal('employeeId' , userId)
+    ];
 
     if (data.startDate) {
       query.push(Query.greaterThanEqual("fromDate", data.startDate));
@@ -163,7 +165,6 @@ export class leaveService {
   }
 
   async fetchApprovedLeaves(userId , month , lastDay){
-    console.log(userId , month , lastDay);
     let startOfMonth = `2025-${month}-01`
     let endOfMonth = `2025-${month}-${lastDay}`
     try {

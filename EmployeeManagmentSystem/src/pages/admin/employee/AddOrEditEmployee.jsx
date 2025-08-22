@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { editUser } from "../../../Store/thunks/userThunk";
 
 const AddOrEditEmployee = ({ employee }) => {
+  console.log(employee);
+  
   const {
     register,
     handleSubmit,
@@ -89,6 +91,29 @@ if (!data.profileUrl || data.profileUrl.length === 0 || data.profileUrl[0]?.size
 
 
   };
+
+  const genderOptions = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+];
+
+const maritalStatusOptions = [
+  { value: "Single", label: "Single" },
+  { value: "Married", label: "Married" },
+  { value: "Divorced", label: "Divorced" },
+];
+
+const departmentOptions = [
+  { value: "HR", label: "HR" },
+  { value: "IT", label: "IT" },
+  { value: "Finance", label: "Finance" },
+  { value: "Marketing", label: "Marketing" },
+];
+
+const roleOptions = [
+  { value: "Admin", label: "Admin" },
+  { value: "Employee", label: "Employee" },
+];
 
   console.log(loader, 'loader');
 

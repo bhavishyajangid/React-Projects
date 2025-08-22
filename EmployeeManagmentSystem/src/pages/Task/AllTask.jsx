@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Button, CardSkeleton, FilterBar, TaskCard } from "../../export";
 
 import { FiFilter } from "react-icons/fi";
@@ -10,7 +10,9 @@ import { getCorrectTaskList } from "../../utlity/getCorrectTaskList";
 
 const AllTask = ({ tasks, heading }) => {
   const taskSlice = useSelector((state) => state.taskSlice);
-  const { currentUserDetails , allEmployee } = useSelector((state) => state.authSlice);
+  const { currentUserDetails, allEmployee } = useSelector(
+    (state) => state.authSlice
+  );
   const location = useLocation();
   const currentPath = location.pathname;
   const [showFilters, setShowFilters] = useState(false);
@@ -19,15 +21,19 @@ const AllTask = ({ tasks, heading }) => {
   const dispatch = useDispatch();
   let you = currentUserDetails.admin ? "admin" : "user";
   let other = currentUserDetails.admin ? "user" : "admin";
-
+  const fieldData = useRef({});
   useEffect(() => {
     setAllFilterTask(tasks);
   }, [tasks]);
 
   const filterTask = useCallback(
     async (data) => {
-      if (data.employeeId == "" && data.startDate == "" && data.endDate == "")
+      if (data.employeeId == "" && data.startDate == "" && data.endDate == "") {
+        toast.info("Please select at least one filter.");
         return;
+      }
+
+      fieldData.current = data;
 
       try {
         const result = await dispatch(handleFilterTask(data)).unwrap();
@@ -44,6 +50,7 @@ const AllTask = ({ tasks, heading }) => {
   const resetTask = useCallback(() => {
     let task = getCorrectTaskList(heading, taskSlice);
     setAllFilterTask(task);
+    fieldData.current = {};
   }, [heading, taskSlice]);
 
   const filterRejectedTask = (value) => {
@@ -59,8 +66,8 @@ const AllTask = ({ tasks, heading }) => {
 
   return (
     <div className=" md:px-5 flex flex-col gap-5  ">
-      <div className="flex justify-between items-center  ">
-        <h1 className="text-xl md:text-2xl font-semibold text-gray-700 max-md:mt-10 md:mb-5 ">
+      <div className="flex justify-between items-center  max-md:mt-10">
+        <h1 className="text-xl md:text-2xl font-semibold text-gray-700 ">
           {heading}
         </h1>
         {currentPath == "/rejectedTask" && (
@@ -75,29 +82,37 @@ const AllTask = ({ tasks, heading }) => {
             </select>
           </div>
         )}
-        {(currentPath == "/task" && currentUserDetails.admin) && (
-          <div className="flex gap-5">
+       
+          <div className="flex gap-5 max-md:gap-3">
+            {
+              currentPath == "/task"  &&
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5  rounded-md flex items-center gap-2 "
+              className=" text-white font-medium bg-sky-500 hover:bg-sky-300 hover:text-gray-800 px-4 py-1.5 max-sm:px-2 max-sm:py-1  rounded-md flex items-center gap-2 "
             >
               <FiFilter />
-              Filter
+              <span className="max-sm:hidden">Filter</span>
             </button>
-
-         
-              <div className="flex justify-end items-center">
-                <Link to="/addTask">
-                  <Button label="Add Task" type=""/>
-                </Link>
-              </div>
-          
-          </div>
+            }
+            
+  {currentPath == "/task" && currentUserDetails.admin &&( 
+            <div className="flex justify-end items-center">
+              <Link to="/addTask">
+                <Button label="Add Task" plus={true} type="" />
+              </Link>
+            </div>
         )}
+          </div>
       </div>
 
       {showFilters && (
-        <FilterBar filterTask={filterTask} resetTask={resetTask} dropDownOption={allEmployee} dropDownName={"Employee"} />
+        <FilterBar
+          filterTask={filterTask}
+          resetTask={resetTask}
+          dropDownOption={currentUserDetails.admin ? allEmployee : null }
+          dropDownName={currentUserDetails.admin ? "Employee" : null}
+          fieldData={fieldData.current}
+        />
       )}
 
       {loading ? (

@@ -50,8 +50,6 @@ export class attendenceService {
   }
 
   async allAttendence(userId , month  ,lastDay){
-    console.log(userId , month ,`2025-${month}-01` , `2025-${month}-${lastDay}` );
-    
      try {
        const res = await this.attendence.listDocuments(
         conf.appwriteDatabaseId,

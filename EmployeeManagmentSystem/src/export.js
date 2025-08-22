@@ -46,6 +46,8 @@ import AddOrEditEmployee from "./pages/admin/employee/AddOrEditEmployee.jsx";
 import EmployeeInfo from "./pages/admin/employee/EmployeeInfo.jsx";
 import EmployeeInfoProvider from "./pages/admin/employee/EmployeeInfoProvider.jsx";
 import AllemployeeShimmer from "./components/skeleton/AllemployeeShimmer.jsx";
+import TotalSummary from "./pages/attendence/TotalSummary.jsx";
+import LegendItem from "./pages/attendence/LegendItem .jsx";
 export  {
     Login, 
     Signup,
@@ -93,6 +95,8 @@ export  {
      EmployeeInfo,
      EmployeeInfoProvider,
      AddOrEditEmployee,
-     AllemployeeShimmer
+     AllemployeeShimmer,
+     TotalSummary,
+     LegendItem
    
 }

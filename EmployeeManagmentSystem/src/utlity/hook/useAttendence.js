@@ -20,8 +20,10 @@ export const useAttendence = () => {
     const todayDate = getTodayDate();
 
     try {
-   let date = formatDate(todayDate)
-   const todayLeaveFound = await LeaveServices.checkLeave(date)
+      console.log(todayDate);
+      
+  //  let date = formatDate(todayDate)
+   const todayLeaveFound = await LeaveServices.checkLeave(todayDate)
    console.log(todayLeaveFound);
    
    if(todayLeaveFound){
