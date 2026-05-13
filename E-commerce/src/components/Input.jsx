@@ -1,20 +1,39 @@
-import React from 'react'
+import React from "react";
 
-const Input = React.forwardRef(function({
-    label = "" ,
-    placeholder = 'Enter your email' ,
-    className = '' ,
-    type ="text" ,
+const Input = React.forwardRef(function (
+  {
+    label = "",
+    placeholder = "Enter your email",
+    className = "",
+    type = "text",
+    id,
+    error,
     ...props
-} , ref) {
+  },
+  ref,
+) {
   return (
-   <>
-        {
-            label && <label id='1'>{label}</label>
-        }
-        <input ref={ref} className={`${className}`} type={type} placeholder={placeholder} id='1' ${...props} />
-        </>
-  )
-})
+    <>
+      <div className="flex gap-2 items-center">
+        {label && (
+          <label htmlFor={id} className="text-sm capitalize">
+            {label}
+          </label>
+        )}
 
-export default Input
+        {error && <p className="text-red-600 text-xs">{error}</p>}
+      </div>
+      <input
+        ref={ref}
+        className={`${className}`}
+        type={type}
+        placeholder={placeholder}
+        id="1"
+        $
+        {...props}
+      />
+    </>
+  );
+});
+
+export default Input;
