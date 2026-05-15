@@ -1,4 +1,4 @@
-import React, { memo, useId, useReducer, useRef, useState } from "react";
+import React, { memo, useCallback, useId, useReducer, useRef, useState } from "react";
 import authService from "../appwrite/auth";
 import { Button, Input } from "../export";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,8 +9,10 @@ import VerifyOtp from "./VerifyOtp";
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [sendOtp , setSendOtp] = useState(true)
   const [error, setError] = useState("");
+  const [showOtpOption , setShowOtpOption] = useState(false)
+  const [otpVerify , setOtpVerify] = useState(false);
+  const [otpSendToUser , setOtpSendToUser] = useState("12345");
   // using react-form library for handle form
   const {
     register,
@@ -18,21 +20,36 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
+
+
   // making signup funcationalty
   const Signup = async (data) => {
     console.log(data);
-    setError("");
-    try {
-      const userData = await authService.createAccount(data);
-      if (userData) {
-        const userData = await authService.getCurrentUser();
-        if (userData) dispatch(login(userData));
-        navigate("/");
-      }
-    } catch (error) {
-      setError(error.message);
+
+    if(!otpVerify){
+      setShowOtpOption(prev => !prev)
     }
+    // setError("");
+    // try {
+    //   const userData = await authService.createAccount(data);
+    //   if (userData) {
+    //     const userData = await authService.getCurrentUser();
+    //     if (userData) dispatch(login(userData));
+    //     navigate("/");
+    //   }
+    // } catch (error) {
+    //   setError(error.message);
+    // }
   };
+
+  const validateOtp = useCallback((userEnterOtp) => {
+           if(userEnterOtp === otpSendToUser){
+            setOtpVerify(true)
+            setShowOtpOption(false)
+           }else{
+            console.log("Otp not match");
+           }
+  },[otpSendToUser])
 
   let options = [
     {
@@ -104,11 +121,11 @@ const Signup = () => {
                 type={option.type}
                 {...register(option.label, option.registerOptions)}
               />
-                {
-                    sendOtp && <VerifyOtp/>
-                }
+                
             </div>
           ))}
+
+          { showOtpOption && <VerifyOtp validateOtp={validateOtp}/>}
 
           <div className="w-full flex items-center justify-between ">
             <Link to="/login">
@@ -117,7 +134,8 @@ const Signup = () => {
           </div>
 
           <Button
-            className="w-96 h-10 rounded-md bg-black text-white"
+            disabled={showOtpOption && !otpVerify}
+            className={`${showOtpOption && !otpVerify ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
             type="submit"
           >
             Sign Up

@@ -1,34 +1,89 @@
-import React from 'react'
-import Input from './Input'
+import React, { memo, useEffect, useRef, useState } from "react";
+import Input from "./Input";
+import useCountDown from "../hooks/useCountdown";
 
-const VerifyOtp = () => {
-   
-let option = {
-      id: "otp",
-        label: "otp",
-        placeholder: "Enter your otp",
-        type: "text",
-        registerOptions: {
-            required: "Otp is required",
-            validate : {
-                matchPatern : (value) => /^\d{6}$/.test(value) || "Otp must be a 6 digit number"
-            }
-        },
+const VerifyOtp = ({validateOtp}) => {
+  const [error, setError] = useState("");
+  const userEnterOtp = useRef("");
+  const [countDown, setCountDown] = useState(60);
+  
+  const {
+    formattedTime,
+    setSeconds
+  } = useCountDown(60);
+
+  useEffect(() => {
+    setCountDown(formattedTime)
+  } , [formattedTime])
+ 
+
+  const checkOtp = () => {
+    if (userEnterOtp.current.length < 6) {
+      setError("Otp must be 6 digit");
+    } else {
+      setError("");
+      validateOtp(userEnterOtp.current)
     }
+  };
+
+  const handleInput = (e) => {
+    userEnterOtp.current = e.target.value.replace(/\D/g, "").slice(0, 6);
+  };
+
+
+  const handleResendOtp = () => {
+    if(countDown == "00:00"){
+      setSeconds(60)
+    }
+  }
 
   return (
-    <div>
-       <Input
-                 id={option.id}
-                 label={option.label}
-                 error={errors[option.label] && errors[option.label].message}
-                className="w-96 h-10 border border-black border-solid outline-none px-2 placeholder:text-sm"
-                placeholder={option.placeholder}
-                type={option.type}
-                {...register(option.label, option.registerOptions)}
-        />
-    </div>
-  )
-}
+    <div className="flex flex-col gap-2 items-start">
+      <div className="flex gap-2 items-start">
+        <label htmlFor={"otp"} className="text-sm capitalize">
+          Otp
+        </label>
+        {error && <p className="text-red-600 text-xs">{error}</p>}
+      </div>
 
-export default VerifyOtp
+      <div className="w-96 h-10 border border-black border-solid flex">
+        <input
+          ref={userEnterOtp}
+          onChange={(e) => {
+            handleInput(e);
+          }}
+          type="number"
+          placeholder="Enter Otp"
+          name="otp"
+          className="h-full w-full outline-none px-2 placeholder:text-sm"
+        />
+        <span
+          onClick={() => {
+            checkOtp()
+          }}
+          className="p-3 text-sm bg-gray-900 text-white flex items-center justify-center cursor-pointer"
+        >
+          Verify
+        </span>
+      </div>
+      <div className="w-full flex justify-between items-center">
+        
+
+        <button>
+          {
+            countDown == "00:00" &&  <span className={`  text-xs text-gray-500 cursor-pointer`} onClick={() => handleResendOtp()}>
+          Resend Otp
+        </span>
+          }
+        </button>
+          
+        {
+            countDown != "00:00" &&  <span className="text-xs text-gray-500">{countDown }</span>
+        }
+       
+      </div>
+    </div>
+  );
+};
+
+export default memo(VerifyOtp);
