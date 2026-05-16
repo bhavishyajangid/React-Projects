@@ -6,12 +6,13 @@ import { useForm } from "react-hook-form";
 import { login } from "../Store/authSlice";
 import { useDispatch } from "react-redux";
 import VerifyOtp from "./VerifyOtp";
+  import { toast } from 'react-toastify';
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showOtpOption , setShowOtpOption] = useState(false)
-  const [otpVerify , setOtpVerify] = useState(false);
+  const [otpVerified , setOtpVerified] = useState(false);
   const [otpSendToUser , setOtpSendToUser] = useState("12345");
   // using react-form library for handle form
   const {
@@ -26,8 +27,19 @@ const Signup = () => {
   const Signup = async (data) => {
     console.log(data);
 
-    if(!otpVerify){
-      setShowOtpOption(prev => !prev)
+    if(!otpVerified){
+      try {
+         const otp = await authService.sendOtp(data)
+         if(otp){
+          setShowOtpOption(prev => !prev)
+          setOtpSendToUser(otp)
+         toast.success("Otp send to your email")
+         return
+         } 
+      } catch (error) {
+        console.log("Signup :: error", error);
+        toast.error(error.message || "Failed to send otp")
+      }
     }
     // setError("");
     // try {
@@ -43,13 +55,15 @@ const Signup = () => {
   };
 
   const validateOtp = useCallback((userEnterOtp) => {
-           if(userEnterOtp === otpSendToUser){
-            setOtpVerify(true)
+           if(parseInt(userEnterOtp) == parseInt(otpSendToUser)){
+            setOtpVerified(true)
             setShowOtpOption(false)
            }else{
             console.log("Otp not match");
            }
   },[otpSendToUser])
+
+  console.log("rereder" , showOtpOption)
 
   let options = [
     {
@@ -134,8 +148,8 @@ const Signup = () => {
           </div>
 
           <Button
-            disabled={showOtpOption && !otpVerify}
-            className={`${showOtpOption && !otpVerify ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
+            disabled={showOtpOption && !otpVerified}
+            className={`${showOtpOption && !otpVerified ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
             type="submit"
           >
             Sign Up

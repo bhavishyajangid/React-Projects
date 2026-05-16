@@ -5,7 +5,7 @@ import useCountDown from "../hooks/useCountdown";
 const VerifyOtp = ({validateOtp}) => {
   const [error, setError] = useState("");
   const userEnterOtp = useRef("");
-  const [countDown, setCountDown] = useState(60);
+  const [countDown, setCountDown] = useState();
   
   const {
     formattedTime,
@@ -69,13 +69,13 @@ const VerifyOtp = ({validateOtp}) => {
       <div className="w-full flex justify-between items-center">
         
 
-        <button>
+        <span>
           {
-            countDown == "00:00" &&  <span className={`  text-xs text-gray-500 cursor-pointer`} onClick={() => handleResendOtp()}>
+            countDown == "00:00" &&  <span className={`  text-xs text-gray-500 cursor-pointer`}  type="button" onClick={() => handleResendOtp()}>
           Resend Otp
         </span>
           }
-        </button>
+        </span>
           
         {
             countDown != "00:00" &&  <span className="text-xs text-gray-500">{countDown }</span>
