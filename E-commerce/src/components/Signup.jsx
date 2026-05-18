@@ -7,13 +7,19 @@ import { login } from "../Store/authSlice";
 import { useDispatch } from "react-redux";
 import VerifyOtp from "./VerifyOtp";
   import { toast } from 'react-toastify';
+import useOtp from "../hooks/useOtp";
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [showOtpOption , setShowOtpOption] = useState(false)
-  const [otpVerified , setOtpVerified] = useState(false);
-  const [otpSendToUser , setOtpSendToUser] = useState("12345");
+
+
+   const {
+  sendOtp,
+  otpVerified,
+  otpLoading,
+  showOtpField,
+  formLocked
+} = useOtp();
   // using react-form library for handle form
   const {
     register,
@@ -25,21 +31,8 @@ const Signup = () => {
 
   // making signup funcationalty
   const Signup = async (data) => {
-    console.log(data);
-
     if(!otpVerified){
-      try {
-         const otp = await authService.sendOtp(data)
-         if(otp){
-          setShowOtpOption(prev => !prev)
-          setOtpSendToUser(otp)
-         toast.success("Otp send to your email")
-         return
-         } 
-      } catch (error) {
-        console.log("Signup :: error", error);
-        toast.error(error.message || "Failed to send otp")
-      }
+      await sendOtp(data)
     }
     // setError("");
     // try {
@@ -51,19 +44,12 @@ const Signup = () => {
     //   }
     // } catch (error) {
     //   setError(error.message);
-    // }
+    // }finally{
+      //   setLoader(false)
+      // }
   };
 
-  const validateOtp = useCallback((userEnterOtp) => {
-           if(parseInt(userEnterOtp) == parseInt(otpSendToUser)){
-            setOtpVerified(true)
-            setShowOtpOption(false)
-           }else{
-            console.log("Otp not match");
-           }
-  },[otpSendToUser])
 
-  console.log("rereder" , showOtpOption)
 
   let options = [
     {
@@ -114,7 +100,6 @@ const Signup = () => {
           Sign Up{" "}
           <span className="inline-block w-9 max-sm:h-[1.5px] h-[2px] bg-gray-900"></span>
         </h1>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
 
         <form
           onSubmit={handleSubmit(Signup)}
@@ -127,6 +112,7 @@ const Signup = () => {
               className="w-full flex flex-col gap-2 items-start"
             >
                  <Input
+                 disabled={formLocked}
                  id={option.id}
                  label={option.label}
                  error={errors[option.label] && errors[option.label].message}
@@ -139,7 +125,7 @@ const Signup = () => {
             </div>
           ))}
 
-          { showOtpOption && <VerifyOtp validateOtp={validateOtp}/>}
+          { showOtpField && <VerifyOtp/>}
 
           <div className="w-full flex items-center justify-between ">
             <Link to="/login">
@@ -148,11 +134,16 @@ const Signup = () => {
           </div>
 
           <Button
-            disabled={showOtpOption && !otpVerified}
-            className={`${showOtpOption && !otpVerified ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
+            disabled={formLocked}
+            className={`${formLocked ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
             type="submit"
           >
-            Sign Up
+            
+            
+              {
+              otpLoading ? <span className="loader"></span> : <span>Sign Up </span>
+              }
+            
           </Button>
         </form>
       </div>

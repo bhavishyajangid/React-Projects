@@ -86,6 +86,11 @@ export class AuthService {
       throw new Error("Failed to send OTP" , error);
     }
   }
+
+  async verifyOtp(generatedOtp, userOtp) {
+    console.log("Verifying OTP:", { generatedOtp, userOtp });
+    return parseInt(generatedOtp) === parseInt(userOtp);
+  }
  
 
 }
