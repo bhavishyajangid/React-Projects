@@ -1,12 +1,13 @@
 // hooks/useOtp.js
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import authService from "../appwrite/auth";
 
 const useOtp = () => {
   const [otpStatus, setOtpStatus] = useState("idle");
-  const [generatedOtp , setGeneratedOtp] = useState(null)
+  const generatedOtp = useRef("");
+  const userData = useRef(null)
   const [error , setError] = useState("");
   // idle
   // sending
@@ -20,11 +21,12 @@ const useOtp = () => {
   // ================= SEND OTP =================
 
   const sendOtp = useCallback(async (data) => {
+    userData.current = data
     try {
       setOtpStatus("sending");
      const otp =  await authService.sendOtp(data);
      console.log("Generated OTP:", otp);
-     setGeneratedOtp(otp)
+     generatedOtp.current = otp;
 
       setOtpStatus("sent");
 
@@ -40,9 +42,9 @@ const useOtp = () => {
 
   // ================= VERIFY OTP =================
 
-  const verifyOtp = useCallback(async (generatedOtp,userOtp) => {
+  const validateOtp = useCallback(async (generatedOtp,userOtp) => {
    console.log({userOtp , generatedOtp})
-     if(userOtp <= 6 || userOtp === ""){
+     if(userOtp.length !== 6 || userOtp === ""){
       setError("Please enter 6 digit otp")
       return
     };
@@ -100,7 +102,7 @@ const useOtp = () => {
 
   return {
     sendOtp,
-    verifyOtp,
+    validateOtp,
     resendOtp,
 
 

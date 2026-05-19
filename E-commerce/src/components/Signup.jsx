@@ -18,6 +18,11 @@ const Signup = () => {
   otpVerified,
   otpLoading,
   showOtpField,
+  generatedOtp,
+validateOtp,
+  resendOtp,
+  formattedTime,
+  error,
   formLocked
 } = useOtp();
   // using react-form library for handle form
@@ -125,7 +130,14 @@ const Signup = () => {
             </div>
           ))}
 
-          { showOtpField && <VerifyOtp/>}
+          { showOtpField && 
+          <VerifyOtp
+  validateOtp={validateOtp}
+  resendOtp={resendOtp}
+  formattedTime={formattedTime}
+  error={error}
+  generatedOtp={generatedOtp}
+/>}
 
           <div className="w-full flex items-center justify-between ">
             <Link to="/login">

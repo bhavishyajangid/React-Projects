@@ -3,28 +3,16 @@ import Input from "./Input";
 import useCountDown from "../hooks/useCountdown";
 import useOtp from "../hooks/useOtp";
 
-const VerifyOtp = () => {
+const VerifyOtp = ({validateOtp , resendOtp , formattedTime , error , generatedOtp}) => {
   const userEnterOtp = useRef("");
-  const [countdown, setCountdown] = useState(0);
- const {
-  verifyOtp,
-  resendOtp,
-  formattedTime,
-  error,
-  generatedOtp
-} = useOtp();
-
-
-useEffect(() => {
-  setCountdown(formattedTime)
-} , [formattedTime])
+console.log(formattedTime , 'form')
 
 
   const handleInput = (e) => {
     userEnterOtp.current = e.target.value
   }
 
-  console.log(generatedOtp , "verifying otp")
+  console.log(formattedTime , 'timer')
 
   return (
     <div className="flex flex-col gap-2 items-start">
@@ -51,7 +39,7 @@ useEffect(() => {
         <span
           onClick={() => {
             console.log(generatedOtp , 'gener')
-            verifyOtp(generatedOtp, userEnterOtp.current)
+            validateOtp(generatedOtp.current, userEnterOtp.current)
           }}
           className="p-3 text-sm bg-gray-900 text-white flex items-center justify-center cursor-pointer"
         >
@@ -60,17 +48,22 @@ useEffect(() => {
       </div>
       <div className="w-full flex justify-between items-center">
       
-        <span>
-          {
-            countdown == "00:00" &&  <span className={`  text-xs text-gray-500 cursor-pointer`}  type="submit">
-          Resend Otp
-        </span>
-          }
-        </span>
-          
-        {
-            countdown != "00:00" &&  <span className="text-xs text-gray-500">{countdown }</span>
-        }
+      
+         <button
+        onClick={() => {resendOtp()}}
+    className={`${formattedTime === "00:00" ? "opacity-100" : "opacity-0"} text-xs text-gray-500 `}
+      >
+        Resend Otp
+      </button>
+      
+        
+ {
+    formattedTime !== "00:00"  &&
+      <span className="text-xs text-gray-500">
+        {formattedTime}
+      </span>
+    
+  }
        
       </div>
     </div>
