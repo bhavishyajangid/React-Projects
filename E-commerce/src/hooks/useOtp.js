@@ -4,124 +4,156 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import authService from "../appwrite/auth";
 
-const useOtp = () => {
-  const [otpStatus, setOtpStatus] = useState("idle");
-  const generatedOtp = useRef("");
-  const userData = useRef(null)
-  const [error , setError] = useState("");
-  // idle
-  // sending
-  // sent
-  // verifying
-  // verified
-  // error
+const useOtp = (data) => {
+  const abortRef = useRef(null);
+  const [otpLoading , setOtpLoading] = useState(false);
+  const [allSettings, setAllSettings] = useState({
+    generatedOtp: "",
+    otpStatus: "idle",
+    seconds: 0,
+  });
 
-  const [seconds, setSeconds] = useState(0);
+  
+
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+    };
+  }, []);
 
   // ================= SEND OTP =================
 
-  const sendOtp = useCallback(async (data) => {
-    userData.current = data
-    try {
-      setOtpStatus("sending");
-     const otp =  await authService.sendOtp(data);
-     console.log("Generated OTP:", otp);
-     generatedOtp.current = otp;
+  const sendOtp = useCallback(
+    async (data) => {
+      try {
+        setOtpLoading(true);
+        // Abort previous pending request
+        abortRef.current?.abort();
 
-      setOtpStatus("sent");
+        // Create new controller
+        abortRef.current = new AbortController();
 
-      setSeconds(60);
-      
-      toast.success("Otp sent successfully");
-    } catch (error) {
-      setOtpStatus("error");
+        const otp = await authService.sendOtp(
+          data,
+          abortRef.current.signal
+        );
 
-      toast.error(error.message || "Failed to send otp");
-    }
-  }, []);
+        setAllSettings((prev) => ({
+          ...prev,
+          generatedOtp: otp,
+          otpStatus: "sent",
+          seconds: 60,
+        }));
+
+        toast.success("Otp sent successfully");
+      } catch (error) {
+        // Ignore aborted request errors
+        if (error.name === "AbortError") {
+          console.log("Request aborted");
+          return;
+        }
+
+        toast.error(error.message || "Failed to send otp");
+      }finally{
+        setOtpLoading(false);
+      }
+    },
+    []
+  );
 
   // ================= VERIFY OTP =================
 
-  const validateOtp = useCallback(async (generatedOtp,userOtp) => {
-   console.log({userOtp , generatedOtp})
-     if(userOtp.length !== 6 || userOtp === ""){
-      setError("Please enter 6 digit otp")
-      return
-    };
-
-    try {
-      setOtpStatus("verifying");
-
-      const response = await authService.verifyOtp(generatedOtp, userOtp);
-
-      if (response) {
-        setOtpStatus("verified");
-
-        toast.success("Otp verified successfully");
-
-        return true;
+  const validateOtp = useCallback(
+    async (generatedOtp, userOtp) => {
+      if (!/^\d{6}$/.test(userOtp)) {
+        toast.error("Please enter a valid 6-digit OTP");
+        return false;
       }
 
-      setOtpStatus("sent");
+      setOtpLoading(true);
+      try {
+        const response = await authService.verifyOtp(
+          generatedOtp,
+          userOtp
+        );
 
-      toast.error("Invalid otp");
+        if (response) {
+          setAllSettings((prev) => ({
+            ...prev,
+            otpStatus: "verified",
+            seconds: 0,
+          }));
 
-      return false;
-    } catch (error) {
-      setOtpStatus("sent");
+          toast.success("Otp verified successfully");
 
-      toast.error(error.message || "Otp verification failed");
+          return true;
+        }
 
-      return false;
-    }
-  }, []);
+        toast.error("Invalid otp");
+
+        return false;
+      } catch (error) {
+        toast.error(error.message || "Otp verification failed");
+
+        return false;
+      }finally{
+        setOtpLoading(false);
+      }
+    },
+    []
+  );
 
   // ================= RESEND OTP =================
 
   const resendOtp = useCallback(async () => {
-    if (seconds > 0) return;
+    if (allSettings.seconds > 0) return;
 
-    await sendOtp();
-  }, [seconds, sendOtp]);
+    await sendOtp(data);
+  }, [allSettings.seconds, sendOtp, data]);
 
   // ================= TIMER =================
 
   useEffect(() => {
-    if (seconds <= 0) return;
+    if (allSettings.seconds <= 0) return;
 
     const timer = setInterval(() => {
-      setSeconds((prev) => prev - 1);
+      setAllSettings((prev) => ({
+        ...prev,
+        seconds: prev.seconds - 1,
+      }));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [seconds]);
+  }, [allSettings.seconds]);
 
-  // ================= FORMATTED TIME =================
+  
 
-  const formattedTime = `00:${String(seconds).padStart(2, "0")}`;
+  const formattedTime = `00:${String(
+    allSettings.seconds
+  ).padStart(2, "0")}`;
+
+  // ================= RETURN =================
 
   return {
     sendOtp,
     validateOtp,
     resendOtp,
 
-
     formattedTime,
 
+    otpVerified:
+      allSettings.otpStatus === "verified",
+
     showOtpField:
-      otpStatus === "sent" ||
-      otpStatus === "verifying" ||
-      otpStatus === "verified",
+      allSettings.otpStatus === "sent",
 
-    otpVerified: otpStatus === "verified",
+    otpLoading,
 
-    otpLoading:
-      otpStatus === "sending" ||
-      otpStatus === "verifying",
+    formLocked:
+      allSettings.otpStatus === "sent" &&
+      allSettings.seconds > 0,
 
-    formLocked : otpStatus === "sent" ,
-error,
-      generatedOtp
+    generatedOtp: allSettings.generatedOtp,
   };
 };
 

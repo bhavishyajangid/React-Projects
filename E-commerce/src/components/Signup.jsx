@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useId, useReducer, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useId,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import authService from "../appwrite/auth";
 import { Button, Input } from "../export";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,25 +13,25 @@ import { useForm } from "react-hook-form";
 import { login } from "../Store/authSlice";
 import { useDispatch } from "react-redux";
 import VerifyOtp from "./VerifyOtp";
-  import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import useOtp from "../hooks/useOtp";
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-   const {
-  sendOtp,
-  otpVerified,
-  otpLoading,
-  showOtpField,
-  generatedOtp,
-validateOtp,
-  resendOtp,
-  formattedTime,
-  error,
-  formLocked
-} = useOtp();
+  const userData = useRef(null);
+  const abortRef = useRef(null);
+  const [loader, setLoader] = useState(false);
+  const {
+    sendOtp,
+    otpVerified,
+    showOtpField,
+    generatedOtp,
+    validateOtp,
+    resendOtp,
+    formattedTime,
+    formLocked,
+    otpLoading
+  } = useOtp(userData.current);
   // using react-form library for handle form
   const {
     register,
@@ -32,35 +39,34 @@ validateOtp,
     formState: { errors },
   } = useForm();
 
-
-
   // making signup funcationalty
   const Signup = async (data) => {
-    if(!otpVerified){
-      await sendOtp(data)
+    userData.current = data;
+    setLoader(true);
+    try {
+      if (!otpVerified) {
+        await sendOtp(data);
+        return;
+      }
+      const userData = await authService.createAccount(data);
+      if (userData) {
+        const userData = await authService.getCurrentUser();
+        if (userData) dispatch(login(userData));
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || "Signup failed");
+    } finally {
+      setLoader(false);
     }
-    // setError("");
-    // try {
-    //   const userData = await authService.createAccount(data);
-    //   if (userData) {
-    //     const userData = await authService.getCurrentUser();
-    //     if (userData) dispatch(login(userData));
-    //     navigate("/");
-    //   }
-    // } catch (error) {
-    //   setError(error.message);
-    // }finally{
-      //   setLoader(false)
-      // }
   };
-
-
 
   let options = [
     {
       id: "name",
       label: "name",
-       show : true,
+      show: true,
       placeholder: "Enter your name",
       type: "text",
       registerOptions: {
@@ -70,7 +76,7 @@ validateOtp,
     {
       id: "email",
       label: "email",
-       show : true,
+      show: true,
       placeholder: "Enter your email",
       type: "email",
       registerOptions: {
@@ -85,7 +91,7 @@ validateOtp,
     {
       id: "password",
       label: "password",
-       show : true,
+      show: true,
       placeholder: "Enter your password",
       type: "password",
       registerOptions: {
@@ -110,34 +116,36 @@ validateOtp,
           onSubmit={handleSubmit(Signup)}
           className=" flex flex-col gap-5 items-center"
         >
-          {options?.map((option) => (
-            option.show && 
-            <div
-              key={option.id}
-              className="w-full flex flex-col gap-2 items-start"
-            >
-                 <Input
-                 disabled={formLocked}
-                 id={option.id}
-                 label={option.label}
-                 error={errors[option.label] && errors[option.label].message}
-                className="w-96 h-10 border border-black border-solid outline-none px-2 placeholder:text-sm"
-                placeholder={option.placeholder}
-                type={option.type}
-                {...register(option.label, option.registerOptions)}
-              />
-                
-            </div>
-          ))}
+          {options?.map(
+            (option) =>
+              option.show && (
+                <div
+                  key={option.id}
+                  className="w-full flex flex-col gap-2 items-start"
+                >
+                  <Input
+                    disabled={formLocked}
+                    id={option.id}
+                    label={option.label}
+                    error={errors[option.label] && errors[option.label].message}
+                    className="w-96 h-10 border border-black border-solid outline-none px-2 placeholder:text-sm"
+                    placeholder={option.placeholder}
+                    type={option.type}
+                    {...register(option.label, option.registerOptions)}
+                  />
+                </div>
+              ),
+          )}
 
-          { showOtpField && 
-          <VerifyOtp
-  validateOtp={validateOtp}
-  resendOtp={resendOtp}
-  formattedTime={formattedTime}
-  error={error}
-  generatedOtp={generatedOtp}
-/>}
+          {showOtpField && !otpVerified && (
+            <VerifyOtp
+              validateOtp={validateOtp}
+              resendOtp={resendOtp}
+              formattedTime={formattedTime}
+              generatedOtp={generatedOtp}
+              setLoader={setLoader}
+            />
+          )}
 
           <div className="w-full flex items-center justify-between ">
             <Link to="/login">
@@ -147,15 +155,10 @@ validateOtp,
 
           <Button
             disabled={formLocked}
-            className={`${formLocked ? 'bg-gray-500' : 'bg-black'} w-96 h-10 rounded-md  text-white`}
+            className={`${formLocked ? "bg-gray-500" : "bg-black"} w-96 h-10 rounded-md  text-white`}
             type="submit"
           >
-            
-            
-              {
-              otpLoading ? <span className="loader"></span> : <span>Sign Up </span>
-              }
-            
+            {loader || otpLoading ? <span className="loader"></span> : <span>Sign Up </span>}
           </Button>
         </form>
       </div>
