@@ -6,15 +6,15 @@ import React, {
   useRef,
   useState,
 } from "react";
-import authService from "../appwrite/auth";
-import { Button, Input } from "../export";
+import authService from "../../appwrite/auth";
+import { Button, Input } from "../../export";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login } from "../Store/authSlice";
+import { login } from "../../Store/authSlice";
 import { useDispatch } from "react-redux";
-import VerifyOtp from "./VerifyOtp";
+import VerifyOtp from "../../components/VerifyOtp";
 import { toast } from "react-toastify";
-import useOtp from "../hooks/useOtp";
+import useOtp from "../../hooks/useOtp";
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -154,8 +154,8 @@ const Signup = () => {
           </div>
 
           <Button
-            disabled={formLocked}
-            className={`${formLocked ? "bg-gray-500" : "bg-black"} w-96 h-10 rounded-md  text-white`}
+            disabled={formLocked | loader | otpLoading}
+            className={`${formLocked | loader | otpLoading ? "bg-gray-500" : "bg-black"} w-96 h-10 rounded-md  text-white`}
             type="submit"
           >
             {loader || otpLoading ? <span className="loader"></span> : <span>Sign Up </span>}

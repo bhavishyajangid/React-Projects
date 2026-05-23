@@ -1,23 +1,22 @@
 import React from "react";
 import { useState } from "react";
-import authService from "../appwrite/auth";
-import { Button, Input } from "../export";
+import authService from "../../appwrite/auth";
+import { Button, Input } from "../../export";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login as authLogin } from "../Store/authSlice";
+import { login as authLogin } from "../../Store/authSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loader , setLoader] = useState(false)
 
   // use react-form-library for handle form 
   const { register, handleSubmit } = useForm();
-
-  const [error, setError] = useState("");
-
   // making login funcationalty
   const Login = async (data) => {
-    setError("");
+   setLoader(true);
     try {
       const session = await authService.login(data);
       if (session) {
@@ -26,7 +25,9 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message || "Login failed");
+    }finally{
+      setLoader(false);
     }
   };
   return (
@@ -36,7 +37,6 @@ const Login = () => {
           Log In{" "}
           <span className="inline-block w-9 max-sm:h-[1.5px] h-[2px] bg-gray-900"></span>
         </h1>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
         <form
           onClick={handleSubmit(Login)}
           className=" flex flex-col gap-5 items-center"
@@ -69,10 +69,11 @@ const Login = () => {
             </Link>
           </div>
           <Button
+           disabled={loader}
             className="w-96 h-10 rounded-md bg-black text-white"
             type="submit"
           >
-            Log In
+            {loader ? <span className="loader"></span> : <span>Log In  </span>}
           </Button>
         </form>
       </div>

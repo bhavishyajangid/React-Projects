@@ -19,8 +19,8 @@ import Review from "./components/Reviews/Review";
 import ReviewPage from "./Pages/ReviewPage";
 import ReletedProducts from "./Pages/ReletedProducts";
 import Button from "./components/Button";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
+import Signup from "./Pages/auth/Signup";
+import Login from "./Pages/auth/Login"
 import Allcart from "./Pages/Allcart";
 import Cart from "./components/Cart";
 import Loader from "./components/Loader";
