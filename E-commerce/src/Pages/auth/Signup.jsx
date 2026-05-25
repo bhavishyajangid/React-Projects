@@ -160,6 +160,15 @@ const Signup = () => {
           >
             {loader || otpLoading ? <span className="loader"></span> : <span>Sign Up </span>}
           </Button>
+          <Button
+            disabled={formLocked | loader | otpLoading}
+            className={`${formLocked | loader | otpLoading ? "bg-gray-500" : "bg-black"} w-96 h-10 rounded-md  text-white`}
+            type="submit"
+            onClick={() => {authService.signupWithGoogle({ authTitle: "google",
+      redirectUrl: "http://localhost:5173/signup"})}}
+          >
+            {loader || otpLoading ? <span className="loader"></span> : <span>Google </span>}
+          </Button>
         </form>
       </div>
     </div>

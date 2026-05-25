@@ -93,6 +93,7 @@ const handleSearchBar = () => {
             <li className="flex gap-4 max-sm:gap-2 ">
             <HeaderBtn path="/login" text="Log In"  />
             <HeaderBtn path="/signup" text="Sign up"  />
+            <HeaderBtn path="/admin" text="Admin"  />
           </li>
         )}
         <li>

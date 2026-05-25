@@ -30,7 +30,7 @@ export class AuthService {
     }
 
 
-    async login({email, password}) {
+    async login({email, password }) {
         try {
             return await this.account.createEmailPasswordSession(email, password);
         } catch (error) {
@@ -55,6 +55,18 @@ export class AuthService {
             await this.account.deleteSessions();
         } catch (error) {
             console.log("Appwrite serive :: logout :: error", error);
+        }
+    }
+
+    async signupWithGoogle({authTitle , redirectUrl}){
+        try{
+           await this.account.createOAuth2Session(
+                authTitle,
+                redirectUrl,
+                "http://localhost:5173/login"
+            )
+        }catch(error){
+            return error
         }
     }
 

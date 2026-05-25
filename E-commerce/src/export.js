@@ -39,6 +39,7 @@ import CategoryName from "./components/CategoryName";
 import PaymentLoader from "./Pages/PaymentLoader";
 import AllOrders from "./Pages/AllOrders";
 import Order from "./components/Order";
+import AdminLogin from "./Pages/auth/AdminLogin"
 export  {
     Button ,
     Header , 
@@ -80,6 +81,6 @@ AllCollection,
 CategoryName,
 PaymentLoader, 
 AllOrders, 
-Order
-
+Order,
+AdminLogin
 }

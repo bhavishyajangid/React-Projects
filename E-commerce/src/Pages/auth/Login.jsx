@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { login as authLogin } from "../../Store/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-const Login = () => {
+const Login = ({admin = false}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loader , setLoader] = useState(false)
@@ -17,8 +17,10 @@ const Login = () => {
   // making login funcationalty
   const Login = async (data) => {
    setLoader(true);
+   const controller = new AbortController();
     try {
       const session = await authService.login(data);
+
       if (session) {
         const userData = await authService.getCurrentUser();
         if (userData) dispatch(authLogin(userData));
@@ -34,7 +36,7 @@ const Login = () => {
     <div className="w-4/5 h-[70vh] max-lg:w-11/12 m-auto flex items-center justify-center">
       <div className=" flex flex-col items-center gap-5 p-5 ">
         <h1 className="text-3xl text-[#414753] prata-regular">
-          Log In{" "}
+        {  admin ? "Admin Log In" : " Log In"}
           <span className="inline-block w-9 max-sm:h-[1.5px] h-[2px] bg-gray-900"></span>
         </h1>
         <form
