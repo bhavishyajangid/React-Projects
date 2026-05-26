@@ -58,15 +58,15 @@ export class AuthService {
         }
     }
 
-    async signupWithGoogle({authTitle , redirectUrl}){
+    async signupWithGoogle(){
         try{
-           await this.account.createOAuth2Session(
-                authTitle,
-                redirectUrl,
-                "http://localhost:5173/login"
-            )
+          await this.account.createOAuth2Session(
+  "google",
+  "http://localhost:5173/",
+  "http://localhost:5173/login"
+)
         }catch(error){
-            return error
+            throw new Error(error.message || "Failed to sign up with Google");
         }
     }
 

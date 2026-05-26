@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleSearchBar } from "../../Store/allproduct";
 const Header = () => {
   const navigate = useNavigate()
-  const {status} = useSelector(state => state.authSlice)
+  const {status , userData} = useSelector(state => state.authSlice)
   const {searchbar} = useSelector(state => state.allProducts)
   const {cartItem} = useSelector(state => state.addToCart)
   const dispatch = useDispatch()
@@ -66,7 +66,8 @@ const handleSearchBar = () => {
        <Logo/>
       </div>
       <ul className="flex gap-6 font-medium items-center max-md:hidden min-w-60 ">
-        {navItem.map((item , index) => (
+        {
+           userData && navItem.map((item , index) => (
             item.active  && 
           <li key={index}>
             <NavLink to={item.path}>
@@ -80,7 +81,7 @@ const handleSearchBar = () => {
       </ul>
 
       <ul className="flex items-center gap-3 max-sm:gap-2">
-        {status ? (
+        {status  ? (
           <li className="flex gap-5 text-xl items-center ">
             <HeaderBtn className="max-sm:hidden" />
             <FiSearch onClick={handleSearchBar} className="cursor-pointer" />
