@@ -13,9 +13,12 @@ const handleLogout = () => {
       navigate('/')
       
   })
+  
   }
      const {userData} = useSelector(state => state.authSlice)
     return (
+<>
+         <button className='text-sm capitalize text-gray-600 text-left' onClick={handleLogout}>LOGOUT</button>
             <div className={` absolute top-0 right-0  h-full w-48 bg-white shadow-lg transform transition-transform duration-300    ${isOpen ? '-translate-x-0 block' : 'translate-x-48  hidden'}`}>
                 <nav className="p-4">
                     <div className='w-full flex justify-start items-center'>
@@ -45,7 +48,7 @@ const handleLogout = () => {
                     </ul>
                 </nav>
             </div>
-
+</>
     );
 };
 

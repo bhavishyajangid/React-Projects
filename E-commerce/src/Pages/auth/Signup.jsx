@@ -65,7 +65,7 @@ const Signup = () => {
   let options = [
     {
       id: "name",
-      label: "name",
+      label: "userName",
       show: true,
       placeholder: "Enter your name",
       type: "text",

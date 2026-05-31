@@ -19,11 +19,9 @@ const Login = ({admin = false}) => {
    setLoader(true);
    const controller = new AbortController();
     try {
-      const session = await authService.login(data);
-
-      if (session) {
-        const userData = await authService.getCurrentUser();
-        if (userData) dispatch(authLogin(userData));
+      const user = await authService.login(data);
+      if (user) {
+        dispatch(authLogin(userData));
         navigate("/");
       }
     } catch (error) {

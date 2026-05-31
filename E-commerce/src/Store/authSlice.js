@@ -12,7 +12,7 @@ const authSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.status = true;
-            const updatedData = state.userData
+            let updatedData = state.userData
 
             if(state.userData?.labels.includes("admin")){
                  updatedData = {

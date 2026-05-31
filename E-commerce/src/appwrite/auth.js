@@ -1,6 +1,7 @@
 import { Client, Account, ID } from "appwrite";
 import conf from '../config/config.js'
 import emailjs from "@emailjs/browser";
+import dataBaseServices from "./Database.js";
 
 export class AuthService {
     client = new Client();
@@ -15,28 +16,51 @@ export class AuthService {
         
     }
     
-    async createAccount({email, password, name}) {
+    async createAccount({email, password, userName}) {
         try {
-            const userAccount = await this.account.create(ID.unique(), email, password, name);
+            const userAccount = await this.account.create(ID.unique(), email, password, userName);
+            console.log(userAccount , "userAccount");
             if (userAccount) {
                 // call another method
+                const savedDataInDb = await dataBaseServices.saveUserToDb  ({
+                    userId : userAccount.$id,
+                    id: ID.unique(),
+                    userName,
+                    email,
+                    password,
+                    isAdmin : false,
+                    createdAt : new Date().toISOString(),
+                    updatedAt : new Date().toISOString()
+                })
+
+                console.log(savedDataInDb , "savedDataInDb");
+
                 return this.login({email, password});
-            } else {
-               return  userAccount;
-            }
+            } 
         } catch (error) {
             throw error;
         }
     }
 
 
-    async login({email, password }) {
-        try {
-            return await this.account.createEmailPasswordSession(email, password);
-        } catch (error) {
-            throw error;
-        }
-    }
+   async login({ email, password }) {
+  try {
+      await this.account.createEmailPasswordSession(
+      email,
+      password
+    );
+
+    const user = await this.account.get();
+    const isAdmin = user?.labels?.includes("admin");
+
+    return {
+      user,
+      isAdmin,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
 
 
     async getCurrentUser() {

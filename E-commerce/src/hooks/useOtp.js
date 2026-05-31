@@ -65,10 +65,7 @@ const useOtp = (data) => {
 
   const validateOtp = useCallback(
     async (generatedOtp, userOtp) => {
-      if (!/^\d{6}$/.test(userOtp)) {
-        toast.error("Please enter a valid 6-digit OTP");
-        return false;
-      }
+    
 
       setOtpLoading(true);
       try {
