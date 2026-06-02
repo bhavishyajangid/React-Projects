@@ -8,9 +8,13 @@ const Button = ({
 
 }) => {
   return (
-    <button className={`${className}`} {...props}>
-        {children}
-    </button>
+   <button
+  type={type}
+  className={className}
+  {...props}
+>
+  {children}
+</button>
   )
 }
 

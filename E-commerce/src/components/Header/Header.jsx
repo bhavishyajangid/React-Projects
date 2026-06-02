@@ -83,7 +83,6 @@ const handleSearchBar = () => {
       <ul className="flex items-center gap-3 max-sm:gap-2">
         {status  ? (
           <li className="flex gap-5 text-xl items-center ">
-            <HeaderBtn className="max-sm:hidden" />
             <FiSearch onClick={handleSearchBar} className="cursor-pointer" />
             <FaUser className="cursor-pointer" onClick={toggleSidebar} />
            <Link to="/cart">

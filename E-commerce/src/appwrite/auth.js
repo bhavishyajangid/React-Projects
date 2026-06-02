@@ -18,25 +18,31 @@ export class AuthService {
     
     async createAccount({email, password, userName}) {
         try {
+          console.log("Creating account with:", { email, password, userName });
             const userAccount = await this.account.create(ID.unique(), email, password, userName);
             console.log(userAccount , "userAccount");
             if (userAccount) {
                 // call another method
                 const savedDataInDb = await dataBaseServices.saveUserToDb  ({
                     userId : userAccount.$id,
-                    id: ID.unique(),
+                    $id: ID.unique(),
                     userName,
                     email,
                     password,
                     isAdmin : false,
-                    createdAt : new Date().toISOString(),
-                    updatedAt : new Date().toISOString()
+                    $createdAt : new Date().toISOString(),
+                    $updatedAt : new Date().toISOString()
                 })
 
                 console.log(savedDataInDb , "savedDataInDb");
+                if(savedDataInDb){
+                  return this.login({email, password});
+                }
 
-                return this.login({email, password});
+                throw new Error("Failed to save user data in database");
             } 
+
+            throw new Error("Failed to create account");
         } catch (error) {
             throw error;
         }
@@ -49,14 +55,19 @@ export class AuthService {
       email,
       password
     );
-
     const user = await this.account.get();
-    const isAdmin = user?.labels?.includes("admin");
+    if(user){
+      const userData = await dataBaseServices.getUser(user.$id);
+      if(userData) {
+        return userData;
+      }
 
-    return {
-      user,
-      isAdmin,
-    };
+    }
+    console.log(user , "user from login function");
+    
+     await this.account.deleteSession("current");
+     throw new Error("User data not found in database");
+    
   } catch (error) {
     throw error;
   }

@@ -19,11 +19,11 @@ export class databaseService {
     try {
       const response = await this.database.listDocuments(
         conf.appwriteDatabaseId,
-        conf.appwriteAuthCollectionId,
+        conf.appwriteAuthdbCollectionId,
         [Query.equal("email", emailToCheck)]
       );
 
-      return response.documents.length > 0 ? true : false;
+      return response.documents.length > 0 ? response.documents[0] : null;
     } catch (error) {
       console.log(error, "come when the chech email is exist");
       return false;
@@ -39,6 +39,7 @@ export class databaseService {
       const userPersonalData = await this.database.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteAuthdbCollectionId,
+        ID.unique(),
         profile
       );
       return userPersonalData;

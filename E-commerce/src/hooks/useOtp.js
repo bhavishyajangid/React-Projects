@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import authService from "../appwrite/auth";
 
-const useOtp = (data) => {
+const useOtp = (data  , formLocked) => {
   const abortRef = useRef(null);
   const [otpLoading , setOtpLoading] = useState(false);
   const [allSettings, setAllSettings] = useState({
@@ -131,6 +131,8 @@ const useOtp = (data) => {
 
   // ================= RETURN =================
 
+
+
   return {
     sendOtp,
     validateOtp,
@@ -145,11 +147,13 @@ const useOtp = (data) => {
       allSettings.otpStatus === "sent",
 
     otpLoading,
-
-    formLocked:
-      allSettings.otpStatus === "sent" &&
-      allSettings.seconds > 0,
-
+    formLocked :  allSettings.otpStatus === "verified"
+    ? true
+    : allSettings.otpStatus === "sent"
+      ? true
+      : otpLoading
+        ? true
+        : false,
     generatedOtp: allSettings.generatedOtp,
   };
 };

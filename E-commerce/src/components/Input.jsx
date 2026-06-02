@@ -23,15 +23,14 @@ const Input = React.forwardRef(function (
 
         {error && <p className="text-red-600 text-xs">{error}</p>}
       </div>
-      <input
-        ref={ref}
-        className={`${className}`}
-        type={type}
-        placeholder={placeholder}
-        id="1"
-        $
-        {...props}
-      />
+     <input
+  ref={ref}
+  className={className}
+  type={type}
+  placeholder={placeholder}
+  id={id}
+  {...props}
+/>
     </>
   );
 });

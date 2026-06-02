@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import VerifyOtp from "../../components/VerifyOtp";
 import { toast } from "react-toastify";
 import useOtp from "../../hooks/useOtp";
+import dataBaseServices from "../../appwrite/Database";
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,9 +29,9 @@ const Signup = () => {
     generatedOtp,
     validateOtp,
     resendOtp,
-    formattedTime,
     formLocked,
-    otpLoading
+    formattedTime,
+    otpLoading,
   } = useOtp(userData.current);
   // using react-form library for handle form
   const {
@@ -39,18 +40,27 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
+  
+
   // making signup funcationalty
   const Signup = async (data) => {
     userData.current = data;
     setLoader(true);
     try {
+      const emailExists = await dataBaseServices.emailIsExists(data.email);
+
+      if (emailExists) {
+        toast.error("Email already exists. Please use a different email.");
+        return;
+      }
+
       if (!otpVerified) {
         await sendOtp(data);
         return;
       }
+
       const userData = await authService.createAccount(data);
       if (userData) {
-        const userData = await authService.getCurrentUser();
         if (userData) dispatch(login(userData));
         navigate("/");
       }
@@ -128,7 +138,9 @@ const Signup = () => {
                     id={option.id}
                     label={option.label}
                     error={errors[option.label] && errors[option.label].message}
-                    className="w-96 h-10 border border-black border-solid outline-none px-2 placeholder:text-sm"
+                    className={`w-96 h-10 border border-black border-solid outline-none px-2 placeholder:text-sm ${
+                      formLocked && "bg-gray-100"
+                    }`}
                     placeholder={option.placeholder}
                     type={option.type}
                     {...register(option.label, option.registerOptions)}
@@ -154,11 +166,15 @@ const Signup = () => {
           </div>
 
           <Button
-            disabled={formLocked | loader | otpLoading}
-            className={`${formLocked | loader | otpLoading ? "bg-gray-500" : "bg-black"} w-96 h-10 rounded-md  text-white`}
+            disabled={loader | otpLoading}
+            className={` w-96 h-10 rounded-md  text-white bg-black`}
             type="submit"
           >
-            {loader || otpLoading ? <span className="loader"></span> : <span>Sign Up </span>}
+            {loader || otpLoading ? (
+              <span className="loader"></span>
+            ) : (
+              <span>Sign Up </span>
+            )}
           </Button>
           {/* <Button
             disabled={formLocked | loader | otpLoading}
