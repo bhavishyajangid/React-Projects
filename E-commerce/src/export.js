@@ -11,6 +11,9 @@ import Policies from "./Pages/Policies";
 import Home from "./Pages/Home";
 import Subscription from "./Pages/Subscription";
 import Input from "./components/Input";
+import Textarea from "./components/Textarea";
+import Select from "./components/Select";
+import Checkbox from "./components/Checkbox";
 import Footer from "./components/Footer/Footer";
 import CardInfo from "./Pages/CardInfo";
 import Starlogo from "./Pages/Starlogo";
@@ -39,48 +42,59 @@ import CategoryName from "./components/CategoryName";
 import PaymentLoader from "./Pages/PaymentLoader";
 import AllOrders from "./Pages/AllOrders";
 import Order from "./components/Order";
-import AdminLogin from "./Pages/auth/AdminLogin"
-export  {
-    Button ,
-    Header , 
-    Logo , 
-    Sidebar, 
-    HeroImg, 
-    Allcards, 
-    Card, 
-    Tittle, 
-    PolicyCard, 
-    Policies, 
-    Home, 
-    Subscription, 
-    Input, 
-    Footer, 
-    CardInfo , 
-    Starlogo, 
-    QuantityBtn, 
-    Review, 
-    ReviewPage , 
+import AdminLogin from "./Pages/auth/AdminLogin";
+import ProtectedRoutes from './routes/ProtectedRoutes';
+import AuthRoutes from "./routes/AuthRoutes";
+import AdminDashboard from "./Pages/admin/AdminDashboard";
+import UserDashboard from "./Pages/UserDashboard/UserDashboard";
+export {
+    Button,
+    Header,
+    Logo,
+    Sidebar,
+    HeroImg,
+    Allcards,
+    Card,
+    Tittle,
+    PolicyCard,
+    Policies,
+    Home,
+    Subscription,
+    Input,
+    Textarea,
+    Select,
+    Checkbox,
+    Footer,
+    CardInfo,
+    Starlogo,
+    QuantityBtn,
+    Review,
+    ReviewPage,
     ReletedProducts,
-    HeaderBtn , 
-    Signup, 
-    Login, 
-    Allcart ,
+    HeaderBtn,
+    Signup,
+    Login,
+    Allcart,
     Cart,
     Loader,
     CartTotal,
-    Promo, 
+    Promo,
     OrderInfo,
     PaymentOption,
     AllPaymentOption,
-Collection,
-About ,
-Contactus,
-Searchbar, 
-Filter, 
-AllCollection, 
-CategoryName,
-PaymentLoader, 
-AllOrders, 
-Order,
-AdminLogin
+    Collection,
+    About,
+    Contactus,
+    Searchbar,
+    Filter,
+    AllCollection,
+    CategoryName,
+    PaymentLoader,
+    AllOrders,
+    Order,
+    AdminLogin,
+    AuthRoutes,
+    ProtectedRoutes,
+    AdminDashboard,
+    UserDashboard
 }

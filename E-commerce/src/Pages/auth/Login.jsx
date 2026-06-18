@@ -14,7 +14,11 @@ const Login = ({ admin = false }) => {
   const [loader, setLoader] = useState(false);
 
   // use react-form-library for handle form
-  const { register, handleSubmit, errors } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   // making login funcationalty)
   const Login = async (data) => {
     setLoader(true);
@@ -36,7 +40,15 @@ const Login = ({ admin = false }) => {
 
       if (userData) {
         dispatch(authLogin(userData));
-        navigate("/");
+        if (userData.isAdmin) {
+          console.log("Before navigate");
+          navigate("/admin/dashboard");
+          console.log("After navigate");
+          console.log(window.location.pathname);
+        } else {
+          navigate("/");
+          console.log("else is working");
+        }
       }
     } catch (error) {
       console.log(error);

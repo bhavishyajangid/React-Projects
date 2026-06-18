@@ -1,13 +1,13 @@
 import React from "react";
 
-const Input = React.forwardRef(function (
+const Select = React.forwardRef(function (
   {
     label = "",
-    placeholder = "Enter your email",
     className = "",
-    type = "text",
     id,
     error,
+    options = [],
+    placeholder = "Select an option",
     ...props
   },
   ref,
@@ -20,19 +20,18 @@ const Input = React.forwardRef(function (
             {label}
           </label>
         )}
-
         {error && <p className="text-red-600 text-xs font-medium">{error}</p>}
       </div>
-      <input
-        ref={ref}
-        className={className}
-        type={type}
-        placeholder={placeholder}
-        id={id}
-        {...props}
-      />
+      <select ref={ref} className={className} id={id} {...props}>
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 });
 
-export default Input;
+export default Select;

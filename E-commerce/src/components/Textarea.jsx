@@ -1,13 +1,13 @@
 import React from "react";
 
-const Input = React.forwardRef(function (
+const Textarea = React.forwardRef(function (
   {
     label = "",
-    placeholder = "Enter your email",
+    placeholder = "",
     className = "",
-    type = "text",
     id,
     error,
+    rows = 4,
     ...props
   },
   ref,
@@ -20,19 +20,18 @@ const Input = React.forwardRef(function (
             {label}
           </label>
         )}
-
         {error && <p className="text-red-600 text-xs font-medium">{error}</p>}
       </div>
-      <input
+      <textarea
         ref={ref}
         className={className}
-        type={type}
         placeholder={placeholder}
         id={id}
+        rows={rows}
         {...props}
       />
     </div>
   );
 });
 
-export default Input;
+export default Textarea;

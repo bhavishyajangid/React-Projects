@@ -1,15 +1,21 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const PublicRoute = ({ children }) => {
+const ProtectedRoutes = ({ isAdmin = false }) => {
   const { userData } = useSelector((state) => state.authSlice);
 
-  if (userData) {
+  // User not logged in
+  if (!userData) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If route is admin-only but user is not an admin, redirect to home
+  if (isAdmin && !userData.isAdmin) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
-export default PublicRoute;
+export default ProtectedRoutes;

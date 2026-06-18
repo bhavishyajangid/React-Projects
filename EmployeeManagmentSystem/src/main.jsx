@@ -54,10 +54,12 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
       <Route index element={<HomeRedirect />} />
+      
       <Route element={<PreventLoginAcess />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Route>
+
       <Route element={<ProtectedLayout />}>
         <Route element={<Home />}>
           <Route path="/employee" element={<EmployeeDashboard />} />
