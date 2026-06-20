@@ -15,7 +15,24 @@ const allProductsSlice = createSlice({
           state.allProducts = action.payload
           state.filterProducts = action.payload
         }, 
-
+        addProduct : (state, action) => {
+          state.allProducts = [...state.allProducts, action.payload];
+          state.filterProducts = [...state.filterProducts, action.payload];
+        },
+        updateProductInState : (state, action) => {
+          const updatedProduct = action.payload;
+          state.allProducts = state.allProducts.map((p) =>
+            p.$id === updatedProduct.$id ? updatedProduct : p
+          );
+          state.filterProducts = state.filterProducts.map((p) =>
+            p.$id === updatedProduct.$id ? updatedProduct : p
+          );
+        },
+        deleteProductFromState : (state, action) => {
+          const id = action.payload;
+          state.allProducts = state.allProducts.filter((p) => p.$id !== id);
+          state.filterProducts = state.filterProducts.filter((p) => p.$id !== id);
+        },
         increaseQuantity : (state , action) => {
           const quantity = state.Quantity[action.payload] || 1;
           const updatedQuantity = {
@@ -77,5 +94,16 @@ const allProductsSlice = createSlice({
       }
     }
 })
-export const {setAllProducts, decreaseQunatity , increaseQuantity , toggleSearchBar , setFilterProducts , setSortedArray , FilterSearchItem} = allProductsSlice.actions
-export default allProductsSlice
+export const {
+  setAllProducts,
+  addProduct,
+  updateProductInState,
+  deleteProductFromState,
+  decreaseQunatity,
+  increaseQuantity,
+  toggleSearchBar,
+  setFilterProducts,
+  setSortedArray,
+  FilterSearchItem
+} = allProductsSlice.actions;
+export default allProductsSlice;

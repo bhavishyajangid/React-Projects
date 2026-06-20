@@ -24,9 +24,15 @@ const ProductForm = ({
   defaultValues: editValues,
   onSubmit,
 }) => {
+  // Ensure images is always an array, even if editValues is malformed
+  const safeEditValues = {
+    ...editValues,
+    images: Array.isArray(editValues?.images) ? editValues.images : [null, null, null, null]
+  };
+
   const initialValues = {
     ...productDefaultValues,
-    ...editValues,
+    ...safeEditValues,
     sellingPrice: editValues?.sellingPrice ?? editValues?.price ?? "",
     productPrice: editValues?.productPrice ?? editValues?.price ?? "",
     inventory: editValues?.inventory ?? "",
@@ -40,16 +46,20 @@ const ProductForm = ({
     setValue,
     getValues,
     trigger,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: initialValues,
   });
 
-  const handleFormSubmit = (data) => {
-    onSubmit({
+  const handleFormSubmit = async (data) => {
+    const success = await onSubmit({
       ...data,
       price: data.sellingPrice,
     });
+    if (success && mode === "add") {
+      reset(productDefaultValues);
+    }
   };
 
   const selectedCategory = watch("category");
@@ -90,7 +100,7 @@ const ProductForm = ({
         className={inputClass}
         placeholder="Type here"
         error={errors.name?.message}
-        {...register("name", productValidation.name)}
+        {...register("productName", productValidation.productName)}
       />
 
       <Textarea

@@ -1,6 +1,6 @@
 export const productDefaultValues = {
   images: [null, null, null, null],
-  name: "",
+  productName: "",
   description: "",
   category: "",
   subCategory: "",
@@ -12,7 +12,7 @@ export const productDefaultValues = {
 };
 
 export const productValidation = {
-  name: {
+  productName: {
     required: "Product name is required",
   },
   description: {

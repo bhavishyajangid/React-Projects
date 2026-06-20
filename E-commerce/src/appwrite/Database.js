@@ -44,7 +44,7 @@ export class databaseService {
       );
       return userPersonalData;
     } catch (error) {
-      throw Error(error , 'error come when save user data to database');
+      throw Error(error, 'error come when save user data to database');
     }
   }
 
@@ -55,7 +55,7 @@ export class databaseService {
     try {
       const userDetails = await this.database.listDocuments(
         conf.appwriteDatabaseId, // Your database ID
-        conf.appwriteAuthCollectionId, // Your collection ID
+        conf.appwriteAuthdbCollectionId, // Your collection ID
         [Query.equal(queryType, indentifier)] // Query to find the user by userId
       );
 
@@ -70,10 +70,10 @@ export class databaseService {
     try {
       const allUserList = this.database.listDocuments(
         conf.appwriteDatabaseId,
-        conf.appwriteAuthCollectionId,
+        conf.appwriteAuthdbCollectionId,
         [Query.equal("admin", false)]
       );
-        return allUserList || []
+      return allUserList || []
     } catch (error) {
       throw new Error(error || "Network Problem Try After Some time")
     }
@@ -84,7 +84,7 @@ export class databaseService {
       // Assuming you have a "users" collection and the userId is the document ID
       const response = await this.database.deleteDocument(
         conf.appwriteDatabaseId, // Replace with your database ID
-        conf.appwriteAuthCollectionId, // Replace with your collection ID
+        conf.appwriteAuthdbCollectionId, // Replace with your collection ID
         userId // User document ID to delete
       );
       console.log("User deleted from database:", response);
@@ -116,7 +116,7 @@ export class databaseService {
     try {
       const user = await this.database.updateDocument(
         conf.appwriteDatabaseId,
-        conf.appwriteAuthCollectionId,
+        conf.appwriteAuthdbCollectionId,
         userId,
         data
       );
@@ -135,19 +135,19 @@ export class databaseService {
     }
   }
 
-   async getTotalEmployeeCount() {
-  try {
-    const res = await this.database.listDocuments(
-      conf.appwriteDatabaseId,
-      conf.appwriteAuthCollectionId,
-      [Query.limit(1)]
-    );
-    return res.total ?? 0; // use nullish coalescing (??) for better safety
-  } catch (error) {
-    console.error("Failed to get employee count:", error); // helpful during dev
-    return 0;
+  async getTotalEmployeeCount() {
+    try {
+      const res = await this.database.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteAuthdbCollectionId,
+        [Query.limit(1)]
+      );
+      return res.total ?? 0; // use nullish coalescing (??) for better safety
+    } catch (error) {
+      console.error("Failed to get employee count:", error); // helpful during dev
+      return 0;
+    }
   }
-}
 
 }
 
