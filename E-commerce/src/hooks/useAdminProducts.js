@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Query } from "appwrite";
 import productService from "../appwrite/product";
 import {
   setAllProducts,
@@ -9,31 +10,59 @@ import {
 } from "../Store/allproduct";
 import { toast } from "react-toastify";
 
-export const useAdminProducts = () => {
+export const useAdminProducts = (searchTerm = "") => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.allProducts.allProducts || []);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  const fetchProductsIfNeeded = useCallback(async (force = false) => {
-    // Only fetch if products list is empty, or if we explicitly force a reload
-    if (products.length > 0 && !force) {
-      return;
-    }
-
+  // Fetch all products (with pagination) and optionally filter client-side by searchTerm
+  const fetchProducts = useCallback(async () => {
     setLoadingMessage("Fetching products...");
     setIsLoading(true);
     try {
-      const response = await productService.getAllProducts();
-      console.log(response, 'response')
-      dispatch(setAllProducts(response.documents || []));
+      let offset = 0;
+      const limit = 100; // Appwrite max limit per request is 100
+      let allProducts = [];
+
+      while (true) {
+        const queries = [Query.limit(limit), Query.offset(offset)];
+        const response = await productService.getAllProducts(queries);
+        const batch = response.documents || [];
+        allProducts = [...allProducts, ...batch];
+        if (batch.length < limit) {
+          // last batch
+          break;
+        }
+        offset += limit;
+      }
+
+      // Client-side filter if searchTerm provided
+      let filteredProducts = allProducts;
+      if (searchTerm.trim() !== "") {
+        const term = searchTerm.trim().toLowerCase();
+        filteredProducts = allProducts.filter(product => {
+          return (
+            (product.productName?.toLowerCase().includes(term)) ||
+            (product.category?.toLowerCase().includes(term)) ||
+            (product.subCategory?.toLowerCase().includes(term))
+          );
+        });
+      }
+
+      dispatch(setAllProducts(filteredProducts));
     } catch (error) {
       console.error("Fetch products error:", error);
       toast.error(error.message || "Failed to load products.");
     } finally {
       setIsLoading(false);
     }
-  }, [products, dispatch]);
+  }, [searchTerm, dispatch]);
+
+  // Fetch on initial load and when searchTerm changes
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const createProduct = useCallback(async (data) => {
     setLoadingMessage("Adding product...");
@@ -94,7 +123,7 @@ export const useAdminProducts = () => {
     products,
     isLoading,
     loadingMessage,
-    fetchProductsIfNeeded,
+    fetchProducts,
     createProduct,
     updateProduct,
     deleteProduct,
