@@ -15,19 +15,11 @@ const Allcards = () => {
       try {
         // Directly fetch best‑selling products with a limit (e.g., 10)
         const response = await productService.getBestsellerProducts(10);
-        const docs = response.documents || [];
 
-        // Format data for the Card component
-        const formatted = docs.map(doc => ({
-          id: doc.$id,
-          title: doc.productName,
-          price: doc.sellingPrice ?? doc.price,
-          images: doc.images || [],
-        }));
 
-        setBestsellerProducts(formatted);
+        setBestsellerProducts(response);
         // Keep Redux store in sync (optional – other features may rely on it)
-        dispatch(setAllProducts(formatted));
+        dispatch(setAllProducts(response));
       } catch (error) {
         console.error("Error fetching bestseller products:", error);
         setBestsellerProducts([]);

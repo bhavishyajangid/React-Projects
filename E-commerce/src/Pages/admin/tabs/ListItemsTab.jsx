@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import ProductForm from "../components/ProductForm/ProductForm";
@@ -10,30 +10,22 @@ import EditProductModal from "../components/EditProductModal";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 const ListItemsTab = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [productToDelete, setProductToDelete] = useState(null);
-
-  // Debounce searchTerm: update debouncedSearchTerm after 300ms of inactivity
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm]);
-
   const {
     products,
     isLoading,
     loadingMessage,
-    fetchProducts,
-    createProduct,
+    fetchProductsIfNeeded,
     updateProduct,
     deleteProduct,
-  } = useAdminProducts(debouncedSearchTerm);
+  } = useAdminProducts();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+
+  useEffect(() => {
+    fetchProductsIfNeeded();
+  }, [fetchProductsIfNeeded]);
 
   const handleDeleteClick = (product) => {
     setProductToDelete(product);
@@ -48,6 +40,7 @@ const ListItemsTab = () => {
 
   const handleEditClick = (product) => {
     setEditingProduct(product);
+
   };
 
   const handleUpdateSubmit = async (updatedData) => {
@@ -58,6 +51,13 @@ const ListItemsTab = () => {
       setEditingProduct(null);
     }
   };
+
+  const filteredProducts = products.filter(
+    (product) =>
+      (product.productName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.category || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.subCategory || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="w-full">
@@ -82,7 +82,7 @@ const ListItemsTab = () => {
         </div>
       </div>
 
-      {(!isLoading && products.length === 0) ? (
+      {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[30vh] bg-gray-50 rounded-lg border border-dashed border-gray-200 p-8">
           <p className="text-gray-500 text-sm">No products found matching your criteria.</p>
         </div>
@@ -102,7 +102,7 @@ const ListItemsTab = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-sm">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <ProductListTableRow
                     key={product.$id}
                     product={product}
@@ -116,7 +116,7 @@ const ListItemsTab = () => {
 
           {/* Cards for mobile screens */}
           <div className="grid grid-cols-1 divide-y divide-gray-100 md:hidden">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div key={product.$id} className="p-4 flex gap-4 hover:bg-gray-50/50">
                 <div className="w-16 h-16 bg-gray-100 rounded border border-gray-200 overflow-hidden shrink-0">
                   {product.images?.[0] ? (

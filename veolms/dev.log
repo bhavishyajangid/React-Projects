@@ -1,0 +1,213 @@
+
+> veolms@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.190.58.247:3000
+- Environments: .env
+✓ Ready in 1415ms
+
+○ Compiling / ...
+⨯ ./components/Navbar.tsx:2:10
+You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  [90m1 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m'next/link'[0m;
+[31m[1m>[0m [90m2 |[0m [36mimport[0m { useState } [36mfrom[0m [32m'react'[0m;
+  [90m  |[0m          [31m[1m^^^^^^^^[0m
+  [90m3 |[0m
+  [90m4 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mNavbar[0m() {
+  [90m5 |[0m   [36mconst[0m [isOpen, setIsOpen] = useState([36mfalse[0m);
+
+Ecmascript file had an error
+
+Import trace:
+  Server Component:
+    ./components/Navbar.tsx
+    ./app/page.tsx
+
+
+ GET / 500 in 8.0s (next.js: 7.6s, application-code: 451ms)
+[browser] Uncaught Error: ./components/Navbar.tsx:2:10
+You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  1 | import Link from 'next/link';
+> 2 | import { useState } from 'react';
+    |          ^^^^^^^^
+  3 |
+  4 | export default function Navbar() {
+  5 |   const [isOpen, setIsOpen] = useState(false);
+
+Ecmascript file had an error
+
+Import trace:
+  Server Component:
+    ./components/Navbar.tsx
+    ./app/page.tsx
+
+
+    at <unknown> (Error: ./components/Navbar.tsx:2:10)
+    at <unknown> (Error: (./components/Navbar.tsx:2:10)
+[browser] ./components/Navbar.tsx:2:10
+You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  1 | import Link from 'next/link';
+> 2 | import { useState } from 'react';
+    |          ^^^^^^^^
+  3 |
+  4 | export default function Navbar() {
+  5 |   const [isOpen, setIsOpen] = useState(false);
+
+Ecmascript file had an error
+
+Import trace:
+  Server Component:
+    ./components/Navbar.tsx
+    ./app/page.tsx 
+    at handleErrors (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./components/Navbar.tsx:2:10
+You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  1 | import Link from 'next/link';
+> 2 | import { useState } from 'react';
+    |          ^^^^^^^^
+  3 |
+  4 | export default function Navbar() {
+  5 |   const [isOpen, setIsOpen] = useState(false);
+
+Ecmascript file had an error
+
+Import trace:
+  Server Component:
+    ./components/Navbar.tsx
+    ./app/page.tsx 
+    at handleErrors (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./components/Navbar.tsx:2:10
+You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  1 | import Link from 'next/link';
+> 2 | import { useState } from 'react';
+    |          ^^^^^^^^
+  3 |
+  4 | export default function Navbar() {
+  5 |   const [isOpen, setIsOpen] = useState(false);
+
+Ecmascript file had an error
+
+Import trace:
+  Server Component:
+    ./components/Navbar.tsx
+    ./app/page.tsx 
+    at handleErrors (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+✓ Compiled in 650ms
+ GET / 200 in 2.8s (next.js: 1168ms, application-code: 1616ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="geist_a715...">
+                          <body
+                            className="min-h-full flex flex-col"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+ 
+    at <unknown> (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3438:13)
+    at completeWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3439:25)
+ GET / 200 in 157ms (next.js: 135ms, application-code: 22ms)
+ GET / 200 in 93ms (next.js: 12ms, application-code: 81ms)
+ GET /courses 404 in 751ms (next.js: 554ms, application-code: 196ms)
+ GET /courses 404 in 152ms (next.js: 14ms, application-code: 138ms)
+ GET /courses 404 in 102ms (next.js: 11ms, application-code: 91ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/courses" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="geist_a715...">
+                          <body
+                            className="min-h-full flex flex-col"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+ 
+    at <unknown> (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3438:13)
+    at completeWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) (file://C:/Users/hp/Desktop/vs file/React js/projects/veolms/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3439:25)
