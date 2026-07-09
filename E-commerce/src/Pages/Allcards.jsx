@@ -16,6 +16,7 @@ const Allcards = () => {
         // Directly fetch best‑selling products with a limit (e.g., 10)
         const response = await productService.getBestsellerProducts(10);
 
+        console.log("Fetched bestseller products:", response);
 
         setBestsellerProducts(response);
         // Keep Redux store in sync (optional – other features may rely on it)
@@ -51,7 +52,7 @@ const Allcards = () => {
         )
           : (
             bestsellerProducts.map(item => (
-              <Card key={item.id} item={item} id={item.id} />
+              <Card key={item.id} item={item} />
             ))
           )}
       </div>

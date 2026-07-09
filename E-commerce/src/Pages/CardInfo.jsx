@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   Starlogo,
   QuantityBtn,
@@ -13,6 +13,7 @@ import { TbTruckReturn } from "react-icons/tb";
 import { GiShakingHands } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import dataBaseService from "../appwrite/cart";
+import productService from "../appwrite/product";
 const CardInfo = () => {
   const { Quantity } = useSelector((state) => state.allProducts);
   const { userData } = useSelector((state) => state.authSlice);
@@ -24,8 +25,7 @@ const CardInfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://dummyjson.com/products/${id}`);
-        const response = await res.json();
+        const response = await productService.getProduct(id);
         setCardInfo(response);
       } catch (error) {
         console.error("Fetch error:", error);
@@ -34,31 +34,31 @@ const CardInfo = () => {
 
     fetchData();
   }, [id]);
-  
+
   // make add to card funcationalty
-  const addToCart = async() => { 
-    const quantity =  Quantity[id] || 1
+  const addToCart = async () => {
+    const quantity = Quantity[id] || 1
     try {
       await dataBaseService.addToCart(
         {
-          userId : userData.$id,
-        Id : String(cardInfo.id) ,
-        Tittle : String(cardInfo.title) ,
-        Image : String(cardInfo.images[0]),
-        Price : Math.round(cardInfo.price) ,
-        Quantity : Number(Quantity[id] || 1) ,
-        Total : Math.round(cardInfo.price * quantity),
-      }).then((res) => {
-          if(res) {
+          userId: userData.$id,
+          Id: String(cardInfo.$id || cardInfo.id),
+          Tittle: String(cardInfo.productName || cardInfo.title),
+          Image: String(cardInfo.images[0]),
+          Price: Math.round(cardInfo.sellingPrice || cardInfo.price),
+          Quantity: Number(Quantity[id] || 1),
+          Total: Math.round((cardInfo.sellingPrice || cardInfo.price) * quantity),
+        }).then((res) => {
+          if (res) {
             toast.success('product is added into cart')
           }
-      }) 
+        })
     } catch (error) {
       console.log(error);
-      
-        toast.error('ERROR : not added' );
+
+      toast.error('ERROR : not added');
     }
-    
+
   };
 
   return (
@@ -89,16 +89,25 @@ const CardInfo = () => {
 
             <div className="w-1/2 max-sm:w-full   px-5 ">
               <div className="w-full flex items-center justify-between">
-                <h1 className="text-xl ">{cardInfo.title}</h1>
+                <h1 className="text-xl ">{cardInfo.productName || cardInfo.title}</h1>
                 <span className="text-sm bg-green-300 px-2 py-1  rounded-md">
-                  {cardInfo.availabilityStatus}
+                  {cardInfo.availabilityStatus || (cardInfo.inventory > 0 ? "In Stock" : "Out of Stock")}
                 </span>
               </div>
               <div className="w-full flex items-center gap-2 mt-2">
                 <Starlogo />
-                <span>({cardInfo.rating})</span>
+                <span>({cardInfo.rating || 4.5})</span>
               </div>
-              <h2 className="text-2xl font-medium mt-7"> ${Math.round(cardInfo.price)}</h2>
+              <div className="flex gap-3 items-center mt-4">
+
+                <span className="text-2xl font-semibold text-gray-700">
+                  ${cardInfo.sellingPrice}
+                </span>
+
+                <span className="text-lg text-gray-500 line-through">
+                  ${cardInfo.productPrice}
+                </span>
+              </div>
               <p className="text-[15px] mt-4">{cardInfo.description}</p>
               <div className="w-full mt-8">
                 <QuantityBtn id={id} />
@@ -120,20 +129,20 @@ const CardInfo = () => {
           </div>
           <div className="w-4/5 max-lg:w-11/12 flex justify-evenly max-sm:flex-wrap  mt-14 m-auto">
             <PolicyCard
-              text1={cardInfo.returnPolicy}
+              text1={cardInfo.returnPolicy || "30 days return policy"}
               icon={<TbTruckReturn />}
             />
-            <PolicyCard text1={cardInfo.shippingInformation} />
+            <PolicyCard text1={cardInfo.shippingInformation || "Ships in 3-5 days"} />
             <PolicyCard
-              text1={cardInfo.warrantyInformation}
+              text1={cardInfo.warrantyInformation || "1 year warranty"}
               icon={<GiShakingHands />}
             />
           </div>
-          <ReletedProducts category={cardInfo.category} />
+          <ReletedProducts category={cardInfo.category} subCategory={cardInfo.subCategory} currentProductId={cardInfo.$id || id} />
           {cardInfo.reviews && <ReviewPage reviews={cardInfo.reviews} />}
         </div>
       ) : (
-        <Loader/>
+        <Loader />
       )}
     </>
   );
