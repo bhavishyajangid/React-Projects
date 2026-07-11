@@ -15,6 +15,7 @@ import { AiOutlineGift, AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import dataBaseService from "../appwrite/cart";
 import productService from "../appwrite/product";
+import { parseReviews } from "../utils/parseReviews";
 const CardInfo = () => {
   const { Quantity } = useSelector((state) => state.allProducts);
   const { userData } = useSelector((state) => state.authSlice);
@@ -45,6 +46,28 @@ const CardInfo = () => {
     fetchData();
     window.scrollTo(0, 0);
   }, [id]);
+
+  const handleAddReview = async (reviewData) => {
+    if (!userData?.$id) {
+      toast.error("Please login to add a review");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const updated = await productService.addReview(cardInfo.$id || id, {
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+        reviewerName: userData.name,
+        reviewerEmail: userData.email,
+      });
+      setCardInfo(updated);
+      toast.success("Review added successfully!");
+    } catch (error) {
+      console.error("Add review error:", error);
+      toast.error(error?.message || "Failed to add review");
+    }
+  };
 
   // make add to card funcationalty
   const addToCart = async () => {
@@ -256,7 +279,11 @@ const CardInfo = () => {
             />
           </div>
           <ReletedProducts category={cardInfo.category} subCategory={cardInfo.subCategory} currentProductId={cardInfo.$id || id} />
-          {cardInfo.reviews && <ReviewPage reviews={cardInfo.reviews} />}
+          <ReviewPage
+            reviews={parseReviews(cardInfo.reviews)}
+            onAddReview={handleAddReview}
+            userData={userData}
+          />
         </div>
       ) : (
         <Loader />

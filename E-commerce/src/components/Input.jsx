@@ -5,6 +5,7 @@ const Input = React.forwardRef(function (
     label = "",
     placeholder = "Enter your email",
     className = "",
+    wrapperClassName = "w-full",
     type = "text",
     id,
     error,
@@ -13,7 +14,7 @@ const Input = React.forwardRef(function (
   ref,
 ) {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className={`flex flex-col gap-2 ${wrapperClassName}`}>
       <div className="flex justify-between items-center">
         {label && (
           <label htmlFor={id} className="text-sm font-medium text-[#414753] capitalize">

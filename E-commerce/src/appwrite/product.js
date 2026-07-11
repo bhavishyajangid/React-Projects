@@ -201,6 +201,38 @@ class ProductService {
 
 
     // ===========================
+    // Add Review to Product
+    // ===========================
+
+    async addReview(productId, { rating, comment, reviewerName, reviewerEmail }) {
+        try {
+            const product = await this.getProduct(productId);
+            const existingReviews = product.reviews || [];
+
+            const newReview = JSON.stringify({
+                rating: Number(rating),
+                comment,
+                reviewerName,
+                reviewerEmail,
+                date: new Date().toISOString(),
+            });
+
+            const updated = await this.database.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteProductCollectionId,
+                productId,
+                { reviews: [...existingReviews, newReview] }
+            );
+
+            return updated;
+        } catch (error) {
+            console.error("Add Review Error:", error);
+            throw new Error(error.message || "Failed to add review");
+        }
+    }
+
+
+    // ===========================
     // Get Single Product
     // ===========================
 
