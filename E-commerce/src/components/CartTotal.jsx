@@ -16,7 +16,7 @@ const CartTotal = ({ cartTotal, className = "", btn = "true" }) => {
           className="text-[27px] leading-none"
         />
         <p className="text-gray-500 text-xs ">
-          Orders below ₹500 will incur a delivery charge of $10
+          Orders below ₹1000 will incur a delivery charge of ₹200
         </p>
         <div className="w-full h-10 border-b border-b-gray-300 flex justify-between items-center p-1">
           <span>SubTotal</span>
@@ -27,10 +27,12 @@ const CartTotal = ({ cartTotal, className = "", btn = "true" }) => {
           <span>$ {cartTotal.delivery || 0}</span>
         </div>
 
-        {/* <div className={`w-full h-10 border-b border-b-gray-300 flex justify-between items-center p-1 `}>
-        <span className='text-md text-gray-500'>Discount <span>{}</span> % Off</span>
-        <span className='text-md text-gray-500'>₹ {0}</span>
-      </div> */}
+        {cartTotal.promoApplied && (
+          <div className="w-full h-10 border-b border-b-gray-300 flex justify-between items-center p-1">
+            <span className="text-green-600">Discount ({cartTotal.discountPercent}% OFF)</span>
+            <span className="text-green-600 font-medium">- $ {cartTotal.discountAmount || 0}</span>
+          </div>
+        )}
 
         <div className="w-full h-10 flex justify-between items-center p-1">
           <span className="text-base font-semibold">Total</span>

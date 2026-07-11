@@ -4,37 +4,44 @@ import { MdDelete } from "react-icons/md";
 import dataBaseService from "../appwrite/cart";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartItem } from "../Store/addToCart";
+import { addToCartItem, updateCartItemQuantity } from "../Store/addToCart";
 const Cart = ({ item, Id }) => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.authSlice);
   const [loader, setLoader] = useState(false);
-  const [updatedItem, setUpdatedItem] = useState(item);
+  // Initialize state with default values to prevent undefined property access
+  const [updatedItem, setUpdatedItem] = useState({
+    image: "",
+    title: "",
+    price: 0,
+    quantity: 1,
+  });
 
-  const handleQuantity = (Quantity) => {
-    setLoader(true);
-    const total = Quantity * Number(item.Price);
+  // Update state when item prop changes
+  useEffect(() => {
+    if (item) {
+      setUpdatedItem(item);
+    }
+  }, [item]);
+
+  const handleQuantity = (quantity) => {
+    const newQuantity = Number(quantity);
+    
+    // Optimistically update local state
+    setUpdatedItem((prev) => ({ ...prev, quantity: newQuantity }));
+    
+    // Optimistically update Redux store to keep totals in sync immediately
+    dispatch(updateCartItemQuantity({ id: Id, quantity: newQuantity }));
+
+    // Silently update database in the background without loaders
     dataBaseService
       .updateCart({
-        Quantity: Number(Quantity),
-        Total: Number(total),
+        quantity: newQuantity,
         Id: Id,
       })
-      .then((response) => {
-        setUpdatedItem(response);
-        dataBaseService
-          .getCarts(userData.$id)
-          .then((res) => {
-            dispatch(addToCartItem(res.documents));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch(() => toast.error("Error!!!!!"))
-      .finally(() => setLoader(false));
+      .catch(() => toast.error("Error updating quantity"));
   };
-  
+
   const deleteItem = () => {
     setLoader(true);
     dataBaseService.deleteCart(Id).then((res) => {
@@ -58,34 +65,52 @@ const Cart = ({ item, Id }) => {
       {loader ? (
         <Loader />
       ) : (
-        <div className="w-full h-20 flex items-center justify-between border-t border-solid border-gray-300 p-5 max-sm:p-0 text-sm">
-          <div className=" h-16 flex gap-5 max-sm:gap-2 items-center ">
-            <img className="w-16 h-16" src={updatedItem.Image} alt="" />
-            <div className="flex gap-20 max-sm:flex-col max-sm:gap-2">
-          <span className="text-sm  ">{updatedItem.Tittle}</span>
-          <span>$ {updatedItem.Price}</span>
+        <div className="w-full py-4 grid grid-cols-[2fr_1fr_1fr_1fr_auto] max-sm:grid-cols-[2fr_auto_auto] items-center gap-4 border-b border-solid border-gray-200 px-5 max-sm:px-2 text-sm hover:bg-gray-50 transition-colors">
+          
+          {/* Product Details */}
+          <div className="flex items-center gap-4">
+            <img className="w-16 h-16 object-cover rounded-md border border-gray-100" src={updatedItem.image} alt={updatedItem.title} />
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-semibold text-gray-800 line-clamp-2">{updatedItem.title}</span>
+              {updatedItem.size && <span className="text-xs text-gray-500">Size: {updatedItem.size}</span>}
+              <span className="text-sm sm:hidden text-gray-600 font-medium mt-1">$ {updatedItem.price}</span>
             </div>
           </div>
-        
+
+          {/* Price (Hidden on small screens) */}
+          <div className="hidden sm:block text-gray-600 font-medium">
+            $ {updatedItem.price}
+          </div>
+
+          {/* Quantity */}
+          <div>
             <input
               onChange={(e) => {
                 handleQuantity(e.target.value);
               }}
-              className=" w-16 border border-solid border-gray-500 outline-none pl-5 max-sm:w-12 max-sm:pl-3 "
+              className="w-16 h-9 border border-gray-300 rounded outline-none px-2 text-center text-sm focus:border-black transition-colors"
               type="number"
-              value={updatedItem.Quantity}
+              value={updatedItem.quantity}
               min={1}
               max={10}
             />
-         
-          <span>$ {updatedItem.Total}</span>
+          </div>
+
+          {/* Total */}
+          <div className="font-semibold text-gray-900">
+            $ {updatedItem.price * updatedItem.quantity}
+          </div>
+
+          {/* Delete Action */}
           <button
             onClick={() => {
               deleteItem();
             }}
+            className="text-gray-400 hover:text-red-500 transition-colors p-2"
           >
-            <MdDelete className="text-2xl text-red-500" />
+            <MdDelete className="text-xl" />
           </button>
+
         </div>
       )}
     </>

@@ -10,21 +10,21 @@ const QuantityBtn = ({
   const { Quantity } = useSelector((state) => state.allProducts);
   const dispatch = useDispatch();
   return (
-    <div className="w-[120px] h-[35px]  rounded-3xl  bottom-2 right-3 flex justify-between items-center px-1">
+    <div className="w-[110px] h-11 border border-gray-300 rounded-full flex justify-between items-center px-3">
       <button
         onClick={() => {
           dispatch(decreaseQunatity(id));
         }}
-        className="px-2 py-1.5 rounded-lg  text-md  bg-red-500 flex justify-center items-center "
+        className="text-gray-500 hover:text-black text-xl flex justify-center items-center h-full"
       >
         <IoIosRemove />
       </button>
-      <span className="text-xl font-medium">{Quantity[id] || 1}</span>
+      <span className="text-base font-medium text-gray-700">{Quantity[id] || 1}</span>
       <button
         onClick={() => {
           dispatch(increaseQuantity(id));
         }}
-        className="px-2 py-1.5 rounded-lg  text-md  bg-green-500 flex justify-center items-center "
+        className="text-gray-500 hover:text-black text-xl flex justify-center items-center h-full"
       >
         <IoMdAdd />
       </button>
@@ -33,3 +33,4 @@ const QuantityBtn = ({
 };
 
 export default QuantityBtn;
+

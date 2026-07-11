@@ -15,42 +15,38 @@ export class cartService{
         this.Database = new Databases(this.client);
     }
 
-    async addToCart ({userId ,Id , Tittle , Image , Price ,  Quantity , Total}) {
+    async addToCart ({userId, productId, title, image, price, quantity, size}) {
         
          try {
                 return await this.Database.createDocument(
                     conf.appwriteDatabaseId, 
                     conf.appwriteCollectionId, 
-                    Id ,
-                        
+                    ID.unique(),
                         {
                           userId,
-                          Id,
-                          Tittle, 
-                          Image,
-                          Price,
-                          Quantity, 
-                          Total
+                          productId,
+                          title, 
+                          image,
+                          price,
+                          quantity,
+                          size
                          }
-                    
-                   
                 )
          } catch (error) {
              console.log(error);
-             
+             throw error;
          }
     }
 
-    async updateCart ({Quantity ,Total, Id}) {
-        console.log(Quantity , Id);
+    async updateCart ({quantity, Id}) {
+        console.log(quantity, Id);
         try {
             return await this.Database.updateDocument(
                 conf.appwriteDatabaseId, 
                 conf.appwriteCollectionId, 
                 Id ,
                {
-                  Quantity, 
-                  Total
+                  quantity
                 }
             )
      } catch (error) {

@@ -39,7 +39,7 @@ const ReletedProducts = ({ category, subCategory, currentProductId }) => {
     <>
       {reletedProduct.length !== 0 ? (
         <div className="w-4/5 max-lg:w-11/12 m-auto mt-14 ">
-          <Tittle text1={"RELETED"} text2={"COLLECTION"} />
+          <Tittle text1={"YOU MAY ALSO"} text2={"LIKE"} />
           <div></div>
           <div className="w-full grid grid-cols-responsive max-sm:grid-cols-2  gap-2 mt-2   ">
             {reletedProduct.map((item) => (

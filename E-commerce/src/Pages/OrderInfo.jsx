@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setUserDetails } from "../Store/orders";
 import dataBaseService from "../appwrite/cart";
-import { addToCartItem } from "../Store/addToCart";
+import { addToCartItem, removePromo } from "../Store/addToCart";
 
 const OrderInfo = () => {
   const navigate = useNavigate();
@@ -23,6 +23,16 @@ const OrderInfo = () => {
     "-" +
     todayDate.getDate().toString().padStart(2, "0");
 
+  const markCouponAsUsed = (code) => {
+    if (!userData?.$id || !code) return;
+    const key = `usedCoupons_${userData.$id}`;
+    const used = JSON.parse(localStorage.getItem(key) || '[]');
+    if (!used.includes(code)) {
+      used.push(code);
+      localStorage.setItem(key, JSON.stringify(used));
+    }
+  };
+
   console.log(cartTotal.Method, "outer");
   const placeOrder = useCallback(async (data) => {
     console.log(cartTotal.Method, "inner");
@@ -31,22 +41,28 @@ const OrderInfo = () => {
         setLoader(true);
         try {
           cartItem.forEach(async (item) => {
+            const itemTotal = (item.price * item.quantity) || 0;
             const response = await OrderServices.placeOrder({
-              Id: item.Id,
-              Image: item.Image,
-              Price: item.Price,
-              Quantity: item.Quantity,
-              Tittle: item.Tittle,
-              Total: item.Total,
+              Id: item.productId || item.$id,
+              Image: item.image,
+              Price: item.price,
+              Quantity: item.quantity,
+              Tittle: item.title,
+              Total: itemTotal,
               userId: item.userId,
               Status: "Orders",
               Method: cartTotal.Method,
               Date: formattedDate,
             });
             if (response) {
+              // Mark coupon as used if promo was applied
+              if (cartTotal.promoApplied && cartTotal.promoCode) {
+                markCouponAsUsed(cartTotal.promoCode);
+              }
+              dispatch(removePromo());
               navigate("/order");
               cartItem.forEach((item) => {
-                dataBaseService.deleteCart(item.Id);
+                dataBaseService.deleteCart(item.$id);
               });
               dispatch(setUserDetails(data));
             } else {
