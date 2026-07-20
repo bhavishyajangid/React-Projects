@@ -5,8 +5,10 @@ import dataBaseService from "../appwrite/cart";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartItem, updateCartItemQuantity } from "../Store/addToCart";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const Cart = ({ item, Id }) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { userData } = useSelector((state) => state.authSlice);
   const [loader, setLoader] = useState(false);
   // Initialize state with default values to prevent undefined property access
@@ -24,40 +26,39 @@ const Cart = ({ item, Id }) => {
     }
   }, [item]);
 
-  const handleQuantity = (quantity) => {
-    const newQuantity = Number(quantity);
-    
-    // Optimistically update local state
-    setUpdatedItem((prev) => ({ ...prev, quantity: newQuantity }));
-    
-    // Optimistically update Redux store to keep totals in sync immediately
-    dispatch(updateCartItemQuantity({ id: Id, quantity: newQuantity }));
+  const updateMutation = useMutation({
+    mutationFn: async (newQuantity) => {
+      return dataBaseService.updateCart({ quantity: newQuantity, Id: Id });
+    },
+    onError: () => toast.error("Error updating quantity"),
+    onSettled: () => queryClient.invalidateQueries(['cart', userData?.$id])
+  });
 
-    // Silently update database in the background without loaders
-    dataBaseService
-      .updateCart({
-        quantity: newQuantity,
-        Id: Id,
-      })
-      .catch(() => toast.error("Error updating quantity"));
-  };
-
-  const deleteItem = () => {
-    setLoader(true);
-    dataBaseService.deleteCart(Id).then((res) => {
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      setLoader(true);
+      return dataBaseService.deleteCart(Id);
+    },
+    onSuccess: (res) => {
       if (res) {
-        dataBaseService
-          .getCarts(userData.$id)
-          .then((res) => {
-            dispatch(addToCartItem(res.documents));
-          })
-          .catch((error) => console.log(error))
-          .finally(() => setLoader(false));
         toast.success("Item Deleted successfully");
+        queryClient.invalidateQueries(['cart', userData?.$id]);
       } else {
         toast.error("ERROR");
       }
-    });
+    },
+    onSettled: () => setLoader(false)
+  });
+
+  const handleQuantity = (quantity) => {
+    const newQuantity = Number(quantity);
+    setUpdatedItem((prev) => ({ ...prev, quantity: newQuantity }));
+    dispatch(updateCartItemQuantity({ id: Id, quantity: newQuantity }));
+    updateMutation.mutate(newQuantity);
+  };
+
+  const deleteItem = () => {
+    deleteMutation.mutate();
   };
 
   return (

@@ -14,7 +14,7 @@ const ListItemsTab = () => {
     products,
     isLoading,
     loadingMessage,
-    fetchProductsIfNeeded,
+    fetchProducts,
     updateProduct,
     deleteProduct,
   } = useAdminProducts();
@@ -24,8 +24,8 @@ const ListItemsTab = () => {
   const [productToDelete, setProductToDelete] = useState(null);
 
   useEffect(() => {
-    fetchProductsIfNeeded();
-  }, [fetchProductsIfNeeded]);
+    fetchProducts();
+  }, [fetchProducts]);
 
   const handleDeleteClick = (product) => {
     setProductToDelete(product);
@@ -119,17 +119,36 @@ const ListItemsTab = () => {
             {filteredProducts.map((product) => (
               <div key={product.$id} className="p-4 flex gap-4 hover:bg-gray-50/50">
                 <div className="w-16 h-16 bg-gray-100 rounded border border-gray-200 overflow-hidden shrink-0">
-                  {product.images?.[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.productName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-xs font-semibold">
-                      N/A
-                    </div>
-                  )}
+                  {(() => {
+                    const getProductImage = (images) => {
+                        if (!images) return null;
+                        if (Array.isArray(images) && images.length > 0) {
+                            if (images[0].startsWith('["')) {
+                                try { return JSON.parse(images[0])[0]; } catch(e) {}
+                            }
+                            return images[0];
+                        }
+                        if (typeof images === 'string') {
+                            if (images.startsWith('[')) {
+                                try { return JSON.parse(images)[0]; } catch(e) {}
+                            }
+                            return images;
+                        }
+                        return null;
+                    };
+                    const imageUrl = getProductImage(product.images);
+                    return imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={product.productName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-xs font-semibold">
+                        N/A
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">

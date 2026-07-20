@@ -2,13 +2,32 @@ import { memo } from "react";
 import ProductActions from "./ProductActions";
 
 function ProductListTableRow({ product, onEdit, onDelete }) {
+    const getProductImage = (images) => {
+        if (!images) return null;
+        if (Array.isArray(images) && images.length > 0) {
+            if (images[0].startsWith('["')) {
+                try { return JSON.parse(images[0])[0]; } catch(e) {}
+            }
+            return images[0];
+        }
+        if (typeof images === 'string') {
+            if (images.startsWith('[')) {
+                try { const parsed = JSON.parse(images); return parsed[0]; } catch(e) {}
+            }
+            return images;
+        }
+        return null;
+    };
+    
+    const imageUrl = getProductImage(product.images);
+
     return (
         <tr className="hover:bg-gray-50/50 transition-colors">
             <td className="py-4 px-6">
                 <div className="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden">
-                    {product.images?.[0] ? (
+                    {imageUrl ? (
                         <img
-                            src={product.images[0]}
+                            src={imageUrl}
                             alt={product.productName}
                             className="w-full h-full object-cover"
                         />

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Query } from "appwrite";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import productService from "../appwrite/product";
 import {
   setAllProducts,
@@ -12,17 +13,16 @@ import { toast } from "react-toastify";
 
 export const useAdminProducts = (searchTerm = "") => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.allProducts.allProducts || []);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const reduxProducts = useSelector((state) => state.allProducts.allProducts || []);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  // Fetch all products (with pagination) and optionally filter client-side by searchTerm
-  const fetchProducts = useCallback(async () => {
-    setLoadingMessage("Fetching products...");
-    setIsLoading(true);
-    try {
+  const { data: queryProducts, isLoading, refetch: fetchProducts } = useQuery({
+    queryKey: ['adminProducts'],
+    queryFn: async () => {
+      setLoadingMessage("Fetching products...");
       let offset = 0;
-      const limit = 100; // Appwrite max limit per request is 100
+      const limit = 100;
       let allProducts = [];
 
       while (true) {
@@ -30,98 +30,95 @@ export const useAdminProducts = (searchTerm = "") => {
         const response = await productService.getAllProducts(queries);
         const batch = response.documents || [];
         allProducts = [...allProducts, ...batch];
-        if (batch.length < limit) {
-          // last batch
-          break;
-        }
+        if (batch.length < limit) break;
         offset += limit;
       }
-
-      // Client-side filter if searchTerm provided
-      let filteredProducts = allProducts;
-      if (searchTerm.trim() !== "") {
-        const term = searchTerm.trim().toLowerCase();
-        filteredProducts = allProducts.filter(product => {
-          return (
-            (product.productName?.toLowerCase().includes(term)) ||
-            (product.category?.toLowerCase().includes(term)) ||
-            (product.subCategory?.toLowerCase().includes(term))
-          );
-        });
-      }
-
-      dispatch(setAllProducts(filteredProducts));
-    } catch (error) {
+      return allProducts;
+    },
+    onSuccess: (data) => {
+      dispatch(setAllProducts(data));
+    },
+    onError: (error) => {
       console.error("Fetch products error:", error);
       toast.error(error.message || "Failed to load products.");
-    } finally {
-      setIsLoading(false);
     }
-  }, [searchTerm, dispatch]);
+  });
 
-  // Fetch on initial load and when searchTerm changes
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  // Client-side filtering
+  let products = queryProducts || reduxProducts;
+  if (searchTerm.trim() !== "") {
+    const term = searchTerm.trim().toLowerCase();
+    products = products.filter(product => (
+      (product.productName?.toLowerCase().includes(term)) ||
+      (product.category?.toLowerCase().includes(term)) ||
+      (product.subCategory?.toLowerCase().includes(term))
+    ));
+  }
 
-  const createProduct = useCallback(async (data) => {
-    setLoadingMessage("Adding product...");
-    setIsLoading(true);
-    try {
-      const product = await productService.createProduct(data);
+  const createMutation = useMutation({
+    mutationFn: async (data) => {
+      setLoadingMessage("Adding product...");
+      return await productService.createProduct(data);
+    },
+    onSuccess: (product) => {
       dispatch(addProductAction(product));
+      queryClient.invalidateQueries(['adminProducts']);
       toast.success("Product added successfully!");
-      return true;
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Create product error:", error);
       toast.error(error.message || "Failed to add product. Please try again.");
-      return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [dispatch]);
+  });
 
-  const updateProduct = useCallback(async (productId, updatedData, oldImageUrls) => {
-    setLoadingMessage("Updating product...");
-    setIsLoading(true);
-    try {
-      const updatedProduct = await productService.updateProduct(
-        productId,
-        updatedData,
-        oldImageUrls
-      );
+  const updateMutation = useMutation({
+    mutationFn: async ({ productId, updatedData, oldImageUrls }) => {
+      setLoadingMessage("Updating product...");
+      return await productService.updateProduct(productId, updatedData, oldImageUrls);
+    },
+    onSuccess: (updatedProduct) => {
       dispatch(updateProductInState(updatedProduct));
+      queryClient.invalidateQueries(['adminProducts']);
       toast.success("Product updated successfully");
-      return true;
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Update product error:", error);
       toast.error(error.message || "Failed to update product.");
-      return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [dispatch]);
+  });
 
-  const deleteProduct = useCallback(async (productId) => {
-    setLoadingMessage("Deleting product...");
-    setIsLoading(true);
-    try {
+  const deleteMutation = useMutation({
+    mutationFn: async (productId) => {
+      setLoadingMessage("Deleting product...");
       await productService.deleteProduct(productId);
+      return productId;
+    },
+    onSuccess: (productId) => {
       dispatch(deleteProductFromState(productId));
+      queryClient.invalidateQueries(['adminProducts']);
       toast.success("Product deleted successfully");
-      return true;
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Delete product error:", error);
       toast.error(error.message || "Failed to delete product.");
-      return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [dispatch]);
+  });
+
+  const createProduct = useCallback(async (data) => {
+    return createMutation.mutateAsync(data).then(() => true).catch(() => false);
+  }, [createMutation]);
+
+  const updateProduct = useCallback(async (productId, updatedData, oldImageUrls) => {
+    return updateMutation.mutateAsync({ productId, updatedData, oldImageUrls }).then(() => true).catch(() => false);
+  }, [updateMutation]);
+
+  const deleteProduct = useCallback(async (productId) => {
+    return deleteMutation.mutateAsync(productId).then(() => true).catch(() => false);
+  }, [deleteMutation]);
 
   return {
     products,
-    isLoading,
+    isLoading: isLoading || createMutation.isPending || updateMutation.isPending || deleteMutation.isPending,
     loadingMessage,
     fetchProducts,
     createProduct,

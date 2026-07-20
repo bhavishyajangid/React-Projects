@@ -3,25 +3,26 @@ import { Cart, Tittle ,Loader, CartTotal, Promo  } from '../export'
 import dataBaseService from '../appwrite/cart'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCartItem } from '../Store/addToCart'
+import { useQuery } from '@tanstack/react-query'
 
 const Allcart = ({data}) => {
   console.log('render allcarts');
   const dispatch =useDispatch()
   const {userData} = useSelector(state => state.authSlice);
   const {cartItem , cartTotal} = useSelector(state => state.addToCart)
-  const [loader , setLoader] = useState(true)
-
-  useEffect(() => {
-
-    if(userData && userData.$id){
-      dataBaseService.getCarts(userData.$id)
-      .then((res) => {
-            dispatch(addToCartItem(res.documents))
-      }).catch((error) => console.log(error))
-      .finally(() => setLoader(false))
-    }
-
-  }, [userData ])
+  const { isLoading: loader } = useQuery({
+    queryKey: ['cart', userData?.$id],
+    queryFn: async () => {
+      if (!userData?.$id) return [];
+      const res = await dataBaseService.getCarts(userData.$id);
+      return res.documents || [];
+    },
+    enabled: !!userData?.$id,
+    onSuccess: (data) => {
+      dispatch(addToCartItem(data));
+    },
+    onError: (error) => console.log(error)
+  });
 
 
   return (
