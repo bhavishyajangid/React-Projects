@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { FiPackage } from "react-icons/fi";
+import { FiPackage, FiUser, FiMapPin, FiPhone, FiMail } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import OrderServices from "../../../appwrite/orders";
-import dataBaseServices from "../../../appwrite/Database";
 
 const ORDER_STATUS_OPTIONS = [
   "Order Placed",
@@ -13,6 +12,24 @@ const ORDER_STATUS_OPTIONS = [
   "Delivered",
   "Cancelled",
 ];
+
+// Statuses that are terminal — no further changes allowed
+const TERMINAL_STATUSES = ["Delivered", "Cancelled"];
+
+// Given a current status, return only the statuses that are forward in the pipeline
+const getForwardStatuses = (currentStatus) => {
+  const currentIndex = ORDER_STATUS_OPTIONS.indexOf(currentStatus);
+  // If current status isn't in the list or is terminal, no options available
+  if (currentIndex === -1 || currentIndex >= ORDER_STATUS_OPTIONS.length - 2) {
+    return [];
+  }
+  // Return statuses that come after the current one (excluding "Cancelled" which is last)
+  const forward = ORDER_STATUS_OPTIONS.slice(currentIndex + 1);
+  // Move "Cancelled" to the end of available options (it's always an option from any non-terminal state)
+  const withoutCancelled = forward.filter(s => s !== "Cancelled");
+  const hasCancelled = forward.includes("Cancelled");
+  return hasCancelled ? [...withoutCancelled, "Cancelled"] : withoutCancelled;
+};
 
 const getStatusBadgeStyles = (status) => {
   switch (status) {
@@ -63,26 +80,9 @@ const OrdersTab = () => {
       console.log('Admin getAllOrders response:', res);
       if (!res || !res.documents) return [];
       
-      const rawOrders = res.documents;
-      
-      // Fetch users for unique userIds
-      const userIds = [...new Set(rawOrders.map(o => o.userId).filter(Boolean))];
-      const userPromises = userIds.map(id => 
-        dataBaseServices.getUser(id)
-          .then(u => ({ id, user: u }))
-          .catch(() => ({ id, user: null }))
-      );
-      const usersData = await Promise.all(userPromises);
-      const userMap = usersData.reduce((acc, curr) => {
-        acc[curr.id] = curr.user;
-        return acc;
-      }, {});
-
-      // Map user data to orders
-      return rawOrders.map(order => ({
-        ...order,
-        customer: userMap[order.userId] || null
-      }));
+      // Orders now contain delivery info directly (firstName, lastName, street, city, etc.)
+      // No need to fetch user data separately
+      return res.documents;
     }
   });
 
@@ -101,30 +101,39 @@ const OrdersTab = () => {
     onError: () => toast.error('Failed to update status')
   });
 
-  const handleStatusChange = (orderId, newStatus) => {
-    updateStatusMutation.mutate({ id: orderId, status: newStatus });
+  const handleStatusChange = (order, newStatus) => {
+    // Prevent changing terminal orders
+    if (TERMINAL_STATUSES.includes(order.status)) {
+      toast.error(`Cannot change status: order is already "${order.status}"`);
+      return;
+    }
+    // Prevent rolling back to a previous status
+    const available = getForwardStatuses(order.status);
+    if (!available.includes(newStatus)) {
+      toast.error('Cannot rollback to a previous status');
+      return;
+    }
+    updateStatusMutation.mutate({ id: order.$id, status: newStatus });
   };
 
   const filteredOrders = statusFilter === "All"
     ? orders
     : orders.filter((o) => o.status === statusFilter);
 
-  // Get customer display name from user record
-  const getCustomerName = (customer) => {
-    if (!customer) return 'Unknown User';
-    return customer.userName || customer.name || customer.email || 'Unknown User';
+  const getCustomerName = (order) => {
+    const first = order.firstname || '';
+    const last = order.lastname || '';
+    const name = [first, last].filter(Boolean).join(' ');
+    return name || order.emailaddress || 'Unknown User';
   };
 
-  const getCustomerPhone = (customer) => {
-    if (!customer) return 'N/A';
-    return customer.number || customer.phone || 'N/A';
-  };
+  const getCustomerPhone = (order) => order.phone || '—';
 
-  const getCustomerAddress = (customer) => {
-    if (!customer) return 'N/A';
-    const parts = [customer.street, customer.city, customer.state, customer.zipCode, customer.country].filter(Boolean);
-    if (parts.length > 0) return parts.join(', ');
-    return customer.address || 'N/A';
+  const getCustomerEmail = (order) => order.emailaddress || '—';
+
+  const getCustomerAddress = (order) => {
+    const parts = [order.street, order.city, order.state, order.zipcode, order.country].filter(Boolean);
+    return parts.length > 0 ? parts.join(', ') : '—';
   };
 
   return (
@@ -198,13 +207,35 @@ const OrdersTab = () => {
                     </div>
                   </div>
 
-                  {/* Customer details */}
-                  <div className="border-t border-gray-100 pt-2 flex flex-col gap-1 text-xs text-gray-600">
-                    <p className="font-semibold text-gray-900">{getCustomerName(order.customer)}</p>
-                    <p className="leading-relaxed text-gray-500">{getCustomerAddress(order.customer)}</p>
-                    <p className="mt-1">
-                      <span className="font-medium text-gray-800">Phone:</span> {getCustomerPhone(order.customer)}
-                    </p>
+                  {/* Customer details — clean card with icons and labels */}
+                  <div className="border-t border-gray-100 pt-3 mt-1">
+                    <h4 className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                      Shipping Details
+                    </h4>
+                    <div className="bg-gray-50 rounded-md p-3 space-y-2">
+                      <div className="flex items-start gap-2.5">
+                        <FiUser className="text-gray-400 shrink-0 mt-0.5" size={14} />
+                        <div>
+                          <p className="text-xs font-semibold text-gray-900">
+                            {getCustomerName(order)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2.5">
+                        <FiMapPin className="text-gray-400 shrink-0 mt-0.5" size={14} />
+                        <p className="text-xs text-gray-600 leading-relaxed">
+                          {getCustomerAddress(order)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <FiPhone className="text-gray-400 shrink-0" size={14} />
+                        <p className="text-xs text-gray-600">{getCustomerPhone(order)}</p>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <FiMail className="text-gray-400 shrink-0" size={14} />
+                        <p className="text-xs text-gray-600 truncate">{getCustomerEmail(order)}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -236,25 +267,40 @@ const OrdersTab = () => {
                         Status:
                       </span>
                       <span
-                        className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold border ${getStatusBadgeStyles(
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold border ${getStatusBadgeStyles(
                           order.status
                         )}`}
                       >
                         {order.status}
                       </span>
                     </div>
-                    <select
-                      value={order.status}
-                      onChange={(e) => handleStatusChange(order.$id, e.target.value)}
-                      disabled={updateStatusMutation.isPending}
-                      className="h-10 border border-gray-300 rounded outline-none px-3 text-xs bg-white text-gray-800 font-medium cursor-pointer w-full sm:w-40 focus:border-black focus:ring-1 focus:ring-black disabled:opacity-50"
-                    >
-                      {ORDER_STATUS_OPTIONS.map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
-                    </select>
+
+                    {TERMINAL_STATUSES.includes(order.status) ? (
+                      <div className="flex items-center gap-1.5 h-10 w-full sm:w-40 px-3 bg-gray-100 border border-gray-200 rounded text-xs text-gray-400 font-medium cursor-not-allowed">
+                        <FiPackage className="shrink-0" size={12} />
+                        <span>Status locked</span>
+                      </div>
+                    ) : (
+                      <>
+                        <select
+                          onChange={(e) => handleStatusChange(order, e.target.value)}
+                          defaultValue=""
+                          className="h-10 border border-gray-300 rounded outline-none px-3 text-xs bg-white text-gray-800 font-medium cursor-pointer w-full sm:w-40 focus:border-black focus:ring-1 focus:ring-black"
+                        >
+                          <option value="" disabled>
+                            — Select next status —
+                          </option>
+                          {getForwardStatuses(order.status).map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-[10px] text-gray-400 italic">
+                          Forward statuses only
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

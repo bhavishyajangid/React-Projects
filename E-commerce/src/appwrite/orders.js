@@ -37,14 +37,15 @@ export class Order {
 
     async cancelOrder(id) {
         try {
-            await this.Database.deleteDocument(
+            const res = await this.Database.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteOrdersCollectionId,
-                id
+                id,
+                { status: "cancelled" }
             )
-            return true
+            return res
         } catch (error) {
-            return false
+            throw error
         }
     }
 

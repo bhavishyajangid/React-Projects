@@ -54,6 +54,16 @@ const OrderInfo = () => {
             userId: item.userId,
             status: "Order Placed",
             method: cartTotal.Method,
+            // Delivery info from the checkout form — lowercase to match Appwrite DB attributes
+            firstname: data.firstName,
+            lastname: data.lastName,
+            emailaddress: data.email,
+            street: data.street,
+            city: data.city,
+            state: data.state,
+            zipcode: data.zipcode,
+            country: data.country,
+            phone: data.phone,
           });
         });
 

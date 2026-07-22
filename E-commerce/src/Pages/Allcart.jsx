@@ -10,7 +10,7 @@ const Allcart = ({data}) => {
   const dispatch =useDispatch()
   const {userData} = useSelector(state => state.authSlice);
   const {cartItem , cartTotal} = useSelector(state => state.addToCart)
-  const { isLoading: loader } = useQuery({
+  const { data: cartData, isLoading: loader } = useQuery({
     queryKey: ['cart', userData?.$id],
     queryFn: async () => {
       if (!userData?.$id) return [];
@@ -18,11 +18,14 @@ const Allcart = ({data}) => {
       return res.documents || [];
     },
     enabled: !!userData?.$id,
-    onSuccess: (data) => {
-      dispatch(addToCartItem(data));
-    },
-    onError: (error) => console.log(error)
   });
+
+  // Sync fetched cart data into Redux store whenever it changes
+  useEffect(() => {
+    if (cartData) {
+      dispatch(addToCartItem(cartData));
+    }
+  }, [cartData, dispatch]);
 
 
   return (
